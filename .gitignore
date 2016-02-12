@@ -1,0 +1,6 @@
+target/*
+/target/
+build/*
+/build/
+/bin/
+bin/*
