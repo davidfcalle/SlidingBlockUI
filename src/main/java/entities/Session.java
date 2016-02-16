@@ -2,8 +2,14 @@ package entities;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 @Entity
 public class Session {
+	
+	
 	@Id
 	@GeneratedValue
 	private Long id;
