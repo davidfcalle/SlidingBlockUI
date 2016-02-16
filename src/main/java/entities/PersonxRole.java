@@ -1,11 +1,11 @@
 package entities;
 
-public class PersonxRol {
+public class PersonxRole {
 	private Long id;
-	private Rol rol;
+	private Role role;
 	private Person person;
 	
-	public PersonxRol() {
+	public PersonxRole() {
 		super();
 	}
 	public Long getId() {
@@ -14,11 +14,11 @@ public class PersonxRol {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Rol getRol() {
-		return rol;
+	public Role getRole() {
+		return role;
 	}
-	public void setRol(Rol rol) {
-		this.rol = rol;
+	public void setRole(Role rol) {
+		this.role = rol;
 	}
 	public Person getPerson() {
 		return person;

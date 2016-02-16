@@ -6,5 +6,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import entities.Person;
 @RepositoryRestResource
 public interface PersonRepository extends JpaRepository< Person, Long > {
-
+	
 }

@@ -6,6 +6,7 @@ import javax.persistence.Id;
 
 @Entity
 public class Person {
+	
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -21,7 +22,9 @@ public class Person {
 		this.age = age;
 	}
 
-	public Person(){ }
+	public Person(){ 
+		super();
+	}
 	
 	public Long getId() {
 		return id;
