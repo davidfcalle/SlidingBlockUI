@@ -10,8 +10,8 @@ public class BoardxFunction {
 	@Id
 	@GeneratedValue
 	private Long id; 
-	private Board board;
-	private Function function;
+	//private Board board;
+	//private Function function;
 	public BoardxFunction() {
 		super();
 	}
@@ -21,7 +21,7 @@ public class BoardxFunction {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Board getBoard() {
+/*	public Board getBoard() {
 		return board;
 	}
 	public void setBoard(Board board) {
@@ -33,7 +33,7 @@ public class BoardxFunction {
 	public void setFunction(Function function) {
 		this.function = function;
 	} 
-
+*/
 		
 
 }

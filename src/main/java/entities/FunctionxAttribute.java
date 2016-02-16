@@ -9,8 +9,8 @@ public class FunctionxAttribute {
 	@Id
 	@GeneratedValue
 	private Long id; 
-	private Function function;
-	private Attribute attribute;
+	//private Function function;
+	//private Attribute attribute;
 	
 	public FunctionxAttribute() {
 		super();
@@ -23,7 +23,7 @@ public class FunctionxAttribute {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+/*
 	public Function getFunction() {
 		return function;
 	}
@@ -39,7 +39,7 @@ public class FunctionxAttribute {
 	public void setAttribute(Attribute attribute) {
 		this.attribute = attribute;
 	}
-
+*/
 	
 	
 }

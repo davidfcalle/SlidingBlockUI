@@ -1,9 +1,16 @@
 package entities;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class PersonxRole {
+	@Id
+	@GeneratedValue
 	private Long id;
-	private Role role;
-	private Person person;
+	//private Role role;
+	//private Person person;
 	
 	public PersonxRole() {
 		super();
@@ -14,6 +21,8 @@ public class PersonxRole {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	/*
 	public Role getRole() {
 		return role;
 	}
@@ -27,5 +36,5 @@ public class PersonxRole {
 		this.person = person;
 	}
 	
-	
+	*/
 }
