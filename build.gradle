@@ -33,7 +33,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-websocket')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile("org.springframework:spring-messaging")
-	runtime('com.h2database:h2')
+	compile("org.postgresql:postgresql:9.4-1201-jdbc4")
 	testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 

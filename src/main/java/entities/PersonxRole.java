@@ -3,14 +3,17 @@ package entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class PersonxRole {
 	@Id
 	@GeneratedValue
 	private Long id;
-	//private Role role;
-	//private Person person;
+	@ManyToOne
+	private Role role;
+	@ManyToOne
+	private Person person;
 	
 	public PersonxRole() {
 		super();
@@ -21,13 +24,11 @@ public class PersonxRole {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	/*
 	public Role getRole() {
 		return role;
 	}
-	public void setRole(Role rol) {
-		this.role = rol;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	public Person getPerson() {
 		return person;
@@ -36,5 +37,6 @@ public class PersonxRole {
 		this.person = person;
 	}
 	
-	*/
+	
+	
 }

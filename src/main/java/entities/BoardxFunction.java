@@ -4,14 +4,17 @@ package entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class BoardxFunction {
 	@Id
 	@GeneratedValue
-	private Long id; 
-	//private Board board;
-	//private Function function;
+	private Long id;
+	@ManyToOne	
+	private Board board;
+	@ManyToOne
+	private Function function;
 	public BoardxFunction() {
 		super();
 	}

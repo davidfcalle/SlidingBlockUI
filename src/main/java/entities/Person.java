@@ -1,8 +1,13 @@
 package entities;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import entities.PersonxRole;;
 
 @Entity
 public class Person {
@@ -13,7 +18,30 @@ public class Person {
 	private String name;
 	private String secondName;
 	private Integer age;
+	@OneToMany(mappedBy="person")
+	private List<PersonxRole> roles;
+	@OneToMany(mappedBy="user")
+	private List<Board> boards;
 	
+	
+	
+	
+	public List<Board> getBoards() {
+		return boards;
+	}
+
+	public void setBoards(List<Board> boards) {
+		this.boards = boards;
+	}
+
+	public List<PersonxRole> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<PersonxRole> roles) {
+		this.roles = roles;
+	}
+
 	public Person(Long id, String name, String secondName, Integer age) {
 		super();
 		this.id = id;

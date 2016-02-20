@@ -26,7 +26,9 @@ import org.springframework.web.socket.config.annotation.AbstractWebSocketMessage
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
+import entities.Board;
 import entities.Person;
+import repositories.BoardRepository;
 import repositories.PersonRepository;
 
 @EnableWebMvc
@@ -54,13 +56,25 @@ class CommandLineRun implements  CommandLineRunner{
 	@Autowired
 	private PersonRepository personRepository;
 	
+	@Autowired
+	private BoardRepository boardRepository;
 	
 	@Override
 	public void run(String... args) throws Exception {
+		/*
 		Arrays.asList("Alfredo", "Bermeo", "Juan Pablo", "Maria Jose", "Fabian").forEach( name ->{
 			Person newPerson = new Person(null, name, name, 10);
 			personRepository.save(newPerson);
+			Arrays.asList("b1", "b2", "b3", "b4").forEach( b ->{
+				Board newBoard = new Board();
+				newBoard.setMac(b);
+				newBoard.setMac(b);
+				newBoard.setUser(newPerson);
+				boardRepository.save(newBoard);
+			});
+			
 		});
+		*/
 	}
 }
 
@@ -134,7 +148,6 @@ class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/login").setViewName("login");
 		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
 	}
 }

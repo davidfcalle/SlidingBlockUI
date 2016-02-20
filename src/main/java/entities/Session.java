@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Session {
@@ -16,6 +17,8 @@ public class Session {
 	private String socketid;
 	private Date timestamp;
 	private Boolean end;
+	@ManyToOne
+	private Board board;
 	
 	public Session() {
 		super();

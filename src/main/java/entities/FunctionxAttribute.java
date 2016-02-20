@@ -8,7 +8,7 @@ import javax.persistence.Id;
 public class FunctionxAttribute {
 	@Id
 	@GeneratedValue
-	private Long id; 
+	private Long id;
 	//private Function function;
 	//private Attribute attribute;
 	

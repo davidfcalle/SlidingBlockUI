@@ -3,14 +3,27 @@ package entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Attribute {
 	@Id
 	@GeneratedValue
-	private Long id; 
+	private Long id;  
 	private String type;
 	private Boolean input;
+	@ManyToOne
+	private Function function;
+	
+	
+	public Function getFunction() {
+		return function;
+	}
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+
 	public Attribute() {
 		super();
 	}
