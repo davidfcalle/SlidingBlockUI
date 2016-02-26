@@ -8,6 +8,6 @@ public class MainViewController {
 	
 	@RequestMapping(value="/hi/")
 	public String webSocketExample(){
-		return "index";
+		return "/index";
 	}	
 }

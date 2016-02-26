@@ -49,10 +49,6 @@
     </script>
 </head>
 <body onload="disconnect()">
-<noscript>
-	<h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being enabled. Please enable
-    	Javascript and reload this page!</h2>
-</noscript>
 <div>
     <div>
         <button id="connect" onclick="connect();">Connect</button>
@@ -63,6 +59,32 @@
         <button id="sendName" onclick="sendName();">Send</button>
         <p id="response"></p>
     </div>
+   	<div class="">
+   	</div>
 </div>
+<div id="animate" style="background-color:red; position:absolute;">
+	<h1 > Saludo </h1>
+</div>
+
+<script>
+
+function myMove() {
+    var elem = document.getElementById("animate"); 
+    var pos = 0;
+    var id = setInterval(frame, 5);
+    function frame() {
+        if (pos == 350) {
+            clearInterval(id);
+        } else {
+            pos++; 
+            elem.style.top = pos + 'px'; 
+            elem.style.left = pos + 'px'; 
+        }
+    }
+}
+
+myMove();
+
+</script>
 </body>
 </html>
