@@ -17,6 +17,7 @@ import entities.Player;
 
 @RestController
 public class GameController {
+	
 	public final static String TOPIC_URI = "/topics/game";
 	private Game game;
 	

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Board {
 	
-	public final static Integer BOARD_SIZE = 3;
+	public Integer BOARD_SIZE = 3;
 	
 	private String[][] currentState;
 	
@@ -15,9 +15,11 @@ public class Board {
 	
 	private Integer movements;
 	
-	
+	private Piece blank;
 	
 	public Board(){
+		Random bSize = new Random();
+		BOARD_SIZE = bSize.nextInt( 6 ) + 2;
 		movements = 0;
 		currentState = new String [BOARD_SIZE][BOARD_SIZE];
 		solution = new String [BOARD_SIZE][BOARD_SIZE];
@@ -32,6 +34,18 @@ public class Board {
 	}
 	
 	
+
+	public Piece getBlank() {
+		return blank;
+	}
+
+
+
+	public void setBlank(Piece blank) {
+		this.blank = blank;
+	}
+
+
 
 	public Integer getMovements() {
 		return movements;

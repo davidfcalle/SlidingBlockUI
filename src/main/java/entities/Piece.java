@@ -2,26 +2,20 @@ package entities;
 
 public class Piece {
 
+	private Integer x;
+	private Integer y;
 	public Piece(){}
-	
-	private String content;
-	private Boolean isBlank;
-	
-	
-	public String getContent() {
-		return content;
+	public Integer getX() {
+		return x;
 	}
-	
-	public void setContent(String content) {
-		this.content = content;
+	public void setX(Integer x) {
+		this.x = x;
 	}
-	
-	public Boolean getIsBlank() {
-		return isBlank;
+	public Integer getY() {
+		return y;
 	}
-	
-	public void setIsBlank(Boolean isBlank) {
-		this.isBlank = isBlank;
+	public void setY(Integer y) {
+		this.y = y;
 	}
 	
 }
