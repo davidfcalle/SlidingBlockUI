@@ -35,8 +35,9 @@ public class GameController
 	@Autowired
 	public GameController(SimpMessagingTemplate template) 
 	{
-	//	game = new Game();  QUE SE ACTAULIZAN AL ENTRAR.
+		game = new Game();  //QUE SE ACTAULIZAN AL ENTRAR.i
 		this.template = template;
+		//System.out.println("CNSTR");
 	}
 	
 	
@@ -44,26 +45,50 @@ public class GameController
 	 * Crea una instancia de @Game para iniciar un nuevo juego.
 	 * @return game: El @Game creado.
 	 */
+	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/game/new", method = RequestMethod.GET)
 	public Game startNewGame()
 	{
-		game = new Game();
+		this.game.setNewSuscriber(true );
+		//System.out.println("START NEW GAME");
 		this.sendGameUpdate();
 		return game;
+	}
+	
+	/**
+	 * Notifica que ya se ha actualizad el nuevo suscriptor.
+	 */
+	@RequestMapping(value="/api/game/endUpdate", method = RequestMethod.GET)
+	public void gameStarted()
+	{
+		this.game.setNewSuscriber(false );
 	}
 	
 	/**
 	 * Crea una instancia de @Board para agregar un nuevo tablero reto al juego juego.
 	 * @param board: El tablero a crear.
 	 */
-	@RequestMapping(value="/api/board/new", method = RequestMethod.POST)
 	@CrossOrigin(origins="*")
+	@RequestMapping(value="/api/board/new", method = RequestMethod.POST)
 	public void startNewBoard( @RequestBody Board board )
-	{
+	{	
 		this.game.addBoard(board);
 		this.sendGameUpdate();
 	}
 
+	/**
+	 * Crea una instancia de @Board para agregar un nuevo tablero reto al juego juego.
+	 * @param board: El tablero a crear.
+	 */
+	@CrossOrigin(origins="*")
+	@RequestMapping(value="/api/board/edit", method = RequestMethod.POST)
+	public Player editBoard( @RequestBody Player player )
+	{	
+		Player p = this.game.changeBoard( player );
+		this.sendGameUpdate();
+		return p;
+	}
+	
 	/**
 	 * Crea una instancia de @Board para agregar un nuevo tablero reto al juego juego.
 	 * @param board: El tablero a crear.

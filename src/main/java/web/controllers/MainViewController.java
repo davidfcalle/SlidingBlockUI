@@ -15,7 +15,7 @@ public class MainViewController {
 	}	
 	
 	// La vista puede ser para ambos views
-	@RequestMapping(value="/ClienteJS/")
+	@RequestMapping(value="/ClienteJS")
 	public String createClientJS()
 	{
 		return "client1";
