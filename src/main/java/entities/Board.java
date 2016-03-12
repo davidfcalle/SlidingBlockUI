@@ -2,82 +2,91 @@ package entities;
 
 import java.util.Random;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Board {
 	
-	public Integer BOARD_SIZE = 3;
-	
 	private String[][] currentState;
-	
-	@JsonIgnore
-	private String[][] solution;
-	
+		
 	private Integer movements;
 	
+	
+	/**
+	 * @param blank: Representa la ubicación
+	 */
 	private Piece blank;
 	
-	public Board(){
-		Random bSize = new Random();
-		BOARD_SIZE = bSize.nextInt( 6 ) + 2;
-		movements = 0;
-		currentState = new String [BOARD_SIZE][BOARD_SIZE];
-		solution = new String [BOARD_SIZE][BOARD_SIZE];
-		for (int i = 0; i < BOARD_SIZE ; i++) {
-			for (int j = 0; j < BOARD_SIZE ; j++) {
-				Random rnumber = new Random();
-				int number	 = rnumber.nextInt(10) + 1; 
-				currentState[i][j] = number+"";
-				solution[i][j] = number + "";
-			}
-		}
-	}
-	
-	
-
-	public Piece getBlank() {
-		return blank;
+	/**
+	 * 
+	 */
+	public Board() 
+	{
+		super();
 	}
 
-
-
-	public void setBlank(Piece blank) {
-		this.blank = blank;
-	}
-
-
-
-	public Integer getMovements() {
-		return movements;
-	}
-
-
-
-	public void setMovements(Integer movements) {
-		this.movements = movements;
-	}
-
-
-
-	public String[][] getCurrentState() {
+	/**
+	 * @return the currentState
+	 */
+	public String[][] getCurrentState() 
+	{
 		return currentState;
 	}
 
-	public void setCurrentState(String[][] currentState) {
+	/**
+	 * @param currentState the currentState to set
+	 */
+	public void setCurrentState(String[][] currentState) 
+	{
 		this.currentState = currentState;
 	}
 
-	public String[][] getSolution() {
-		return solution;
+	/**
+	 * @return the movements
+	 */
+	public Integer getMovements() 
+	{
+		return movements;
 	}
 
-	public void setSolution(String[][] solution) {
-		this.solution = solution;
+	/**
+	 * @param movements the movements to set
+	 */
+	public void setMovements(Integer movements) 
+	{
+		this.movements = movements;
 	}
-	
-	
-	public void addMovement(){
+
+	/**
+	 * @return the blank
+	 */
+	public Piece getBlank() 
+	{
+		return blank;
+	}
+
+	/**
+	 * @param blank the blank to set
+	 */
+	public void setBlank(Piece blank) 
+	{
+		this.blank = blank;
+	}
+
+	public void addMovement()
+	{
 		movements++;
 	}
-
+	
+	public void randomizeBoard()
+	{	
+		for (int i = 0; i < this.currentState.length ; i++)
+		{
+			for (int j = 0; j < this.currentState.length; j++) 
+			{
+				Random rnumber = new Random();
+				int number	 = rnumber.nextInt( this.currentState.length ) + 1; 
+				currentState[i][j] = number+"";
+			}
+		}
+	
+	}
 }

@@ -2,20 +2,32 @@ package entities;
 
 public class Piece {
 
-	private Integer x;
-	private Integer y;
-	public Piece(){}
-	public Integer getX() {
-		return x;
+	private Integer row;
+	private Integer column;
+	
+	public Piece()
+	{
+		
 	}
-	public void setX(Integer x) {
-		this.x = x;
+	
+	public Integer getRow() 
+	{
+		return row;
 	}
-	public Integer getY() {
-		return y;
+	
+	public void setRow(Integer row) 
+	{
+		this.row = row;
 	}
-	public void setY(Integer y) {
-		this.y = y;
+	
+	public Integer getColumn() 
+	{
+		return column;
+	}
+	
+	public void setColumn(Integer column) 
+	{
+		this.column = column;
 	}
 	
 }
