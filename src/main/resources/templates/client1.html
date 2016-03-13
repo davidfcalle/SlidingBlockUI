@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hola Mundo</title>
+<title>Client JS</title>
 <!-- Compiled and minified CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.5/css/materialize.min.css" />
 <!-- Compiled and minified JavaScript -->
@@ -24,11 +24,53 @@
 
 	<!-- Contenido -->
 	<div id="Tablero">
-		<button type="submit" onclick="generateMatrix()">Generate Board</button>
-		<button type="submit" onclick="generatePlayer()">Generate Player</button>
-		<button type="submit" onclick="moveBoard()">Move Board</button>
-		
+		<div class=" row score">
+			
+			<div class="col s6 score-1">
+				<ul class="collection with-header">
+        			<li class="collection-header" id="playerLabel">
+        				Player Name: <input type = "text" id="playerName"></input>
+        			</li>
+        			<li class="collection-item" id="playerPoints">Points : 0</li>
+        			<li class="collection-item" id="playerMovements">Moves : 0</li>
+          			<li class="collection-item" >Board Size :
+          				<input id="sizeBoard" value="0 X 0" type="number"></input>
+          			</li>      			
+        			<li class="collection-item">Blank Piece:
+        				<label>Row: </label><input id="blankRow" value="0" type="number"></input>
+        				<label>Column: </label><input id="blankColumn" value="0" type="number"></input>
+        			</li>
+      			</ul>
+			</div>
+			
+			<div class="col s6 score-1">
+				<div class="row center-align taquin">
+					<div class="conversationDiv competition col s6 " id="board">
+			    		<div class="piece center-align" style="min-height:25vh; min-width:100%;"> No Board Yet. </div>  	
+					</div>	
+				</div>
+			</div>
+			
+		</div>
+		<div class="row">
+			<div class="large-2 large-offset-9 columns">
+			  <button type="submit" class="button success" onclick="generateMatrix()" style="width: 50%;" >Generate Board </button>
+			  <button type="submit" class="button success" onclick="generatePlayer()" style="width: 50%; float: right;">Create Player</button>
+			</div>
+		</div>
+			
+			<input type="image" src="/static/images/right.png" onclick="moveBoardToRight()" width="75em" height="55em"></input>
+			<input type="image" src="/static/images/left.png" onclick="moveBoardToLeft()" width="75em" height="55em"></input>	
+			
+			<input type="image" src="/static/images/down.png" onclick="moveBoardToDown()" width="75em" height="55em"></input>
+			<input type="image" src="/static/images/up.png" onclick="moveBoardToUp()" width="75em" height="55em"></input>	
 	</div>	
+	
+	
+	<!-- Piece's Template -->
+	<template id="piece-template">
+		<div class="piece center-align" style="min-height:20vh; min-width:32%;"> 9 </div>  
+	</template>
 	
 	<!-- Fin Contenido -->
 
@@ -50,7 +92,7 @@
 						<li><a class="grey-text text-lighten-3" href="#!">Carlos
 								Silva</a></li>
 						<li><a class="grey-text text-lighten-3" href="#!">David
-								Suarez</a></li>
+								Su&aacute;rez</a></li>
 					</ul>
 				</div>
 			</div>

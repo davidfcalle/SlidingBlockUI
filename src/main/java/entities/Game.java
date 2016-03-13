@@ -3,7 +3,6 @@ package entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.util.SocketUtils;
 
 public class Game 
 {
@@ -11,7 +10,7 @@ public class Game
 	private List<Player> jugadores;
 	private int numPlayers;
 	private int idPlayerToUpd;
-	private int typeMovement; // 0 = Move on column; 1 = Move on row
+	private int typeMovement; // 0 = Move to RIGHT; 1 = Move to LEFT; 2 = Move to UP; 3 = Move to DOWN.
 	private int piece_1_ToMove;
 	private int piece_2_ToMove;
 	private boolean newBoard;
@@ -25,6 +24,10 @@ public class Game
 	{
 		jugadores = new ArrayList<>();
 		numPlayers = 0;
+		idPlayerToUpd = -1;
+		piece_1_ToMove = -1;
+		piece_2_ToMove = -1;
+		typeMovement = -1;
 		newBoard = false;
 		newSuscriber = false;
 		rebuildBoard= false;
@@ -155,14 +158,16 @@ public class Game
 	/**
 	 * @return the moveBoard
 	 */
-	public boolean isMoveBoard() {
+	public boolean isMoveBoard() 
+	{
 		return moveBoard;
 	}
 
 	/**
 	 * @param moveBoard the moveBoard to set
 	 */
-	public void setMoveBoard(boolean moveBoard) {
+	public void setMoveBoard(boolean moveBoard) 
+	{
 		this.moveBoard = moveBoard;
 	}
 
@@ -170,14 +175,16 @@ public class Game
 	/**
 	 * @return the piece_1_ToMove
 	 */
-	public int getPiece_1_ToMove() {
+	public int getPiece_1_ToMove() 
+	{
 		return piece_1_ToMove;
 	}
 
 	/**
 	 * @param piece_1_ToMove the piece_1_ToMove to set
 	 */
-	public void setPiece_1_ToMove(int piece_1_ToMove) {
+	public void setPiece_1_ToMove(int piece_1_ToMove) 
+	{
 		this.piece_1_ToMove = piece_1_ToMove;
 	}
 
@@ -244,27 +251,34 @@ public class Game
 	
 	/**
 	 * Identifica hacia que posición se movió la casilla en blanco,
-	 * valida si ese movimiento es válido y avisa a la GUI para repintar.
-	 * @param player
-	 * @return
+	 * verifica si ese movimiento es válido y avisa a la GUI para repintar.
+	 * @param player: Jugador que tiene el tablero donde se moverán las piezas.
+	 * @return player: Jugador con el tablero actualizado luego de mover a pieza en blanco.
 	 */
 	public Player changeBoard( Player p ) 
 	{
 		Player player = this.jugadores.get( p.getId() - 1 );
 		Piece blankActualPos = player.getBoard().getBlank();
 		Piece blankNewPos = p.getBoard().getBlank();
+		int size = player.getBoard().getCurrentState().length;
+		this.piece_1_ToMove = ( size * blankActualPos.getRow() ) + blankActualPos.getColumn();
+		this.piece_2_ToMove = ( size * blankNewPos.getRow() ) + blankNewPos.getColumn();
+		
+		if( blankNewPos.getRow() < 0 || blankNewPos.getRow() > size || blankNewPos.getColumn() < 0 || blankNewPos.getColumn() > size )
+			return null;
 		
 		if( blankActualPos.getRow() == blankNewPos.getRow() )
 		{
-			this.typeMovement = 0;//movio en columna
-			int columnsMoves = blankActualPos.getColumn() - blankNewPos.getColumn();
-			int columnActual = p.getBoard().getCurrentState().length * blankActualPos.getColumn();
-			int columnMoveTo = columnActual + ( p.getBoard().getCurrentState().length * columnsMoves ) ;
+			//Movió en columnas solo puede moverse a izquierda o derecha.
+			
+			int columnsMoves = blankNewPos.getColumn() - blankActualPos.getColumn();
 
 			if( Math.abs( columnsMoves ) == 1 )
 			{
-				this.piece_1_ToMove = columnActual + blankActualPos.getRow();
-				this.piece_2_ToMove = columnMoveTo + blankActualPos.getRow();
+				 if( columnsMoves > 0 )
+					 this.typeMovement = 0; //Se movió a la derecha.
+				 else
+					 this.typeMovement = 1; //Se movió a la izquierda.
 			}
 			else
 			{
@@ -273,15 +287,16 @@ public class Game
 		}	
 		else if( blankActualPos.getColumn() == blankNewPos.getColumn() )
 		{
-			this.typeMovement = 1; //movio en fila
-			int rowsMoves = blankActualPos.getRow() - blankNewPos.getRow();
-			int rowActual = p.getBoard().getCurrentState().length * blankActualPos.getRow();
-			int rowMoveTo = rowActual - ( p.getBoard().getCurrentState().length * rowsMoves ) ;
+			//Movió en filas solo puede moverse arriba o abajo.
+			
+			int rowsMoves = blankNewPos.getRow() - blankActualPos.getRow();
 
 			if( Math.abs( rowsMoves ) == 1 )
 			{
-				this.piece_1_ToMove = rowActual + blankActualPos.getColumn();
-				this.piece_2_ToMove = rowMoveTo + blankActualPos.getColumn();
+				 if( rowsMoves > 0 )
+					 this.typeMovement = 2; //Se movió hacia arriba.
+				 else
+					 this.typeMovement = 3; //Se movió hacia abajo.
 			}
 			else
 			{
@@ -292,14 +307,20 @@ public class Game
 		{
 			return null;
 		}
+		/*Actualizar la tablero de juego del juagdor teniendo en cuenta hacia donde se movió la pieza en blanco*/
+		String board [][] = player.getBoard().getCurrentState();
+		board[blankActualPos.getRow()][blankActualPos.getColumn()] = board[blankNewPos.getRow()][blankNewPos.getColumn()];
+		board[blankNewPos.getRow()][blankNewPos.getColumn()] = "BB";
+		player.getBoard().setCurrentState( board );
+		player.getBoard().setBlank( blankNewPos );
+		player.getBoard().addMovement();
 		
-		System.out.println("P!: "+ piece_1_ToMove + "P: " + piece_2_ToMove );
+		this.idPlayerToUpd = player.getId() - 1;
+		System.out.println("P1: "+ piece_1_ToMove + "P2: " + piece_2_ToMove );
 		this.newBoard = false;
 		this.newPlayer = false;
 		this.newSuscriber = false;
 		this.moveBoard = true;	
-		player.setBoard( p.getBoard() );
-		player.getBoard().addMovement();
 		
 		return player;
 		

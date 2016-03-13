@@ -80,12 +80,15 @@ public class GameController
 	 * Crea una instancia de @Board para agregar un nuevo tablero reto al juego juego.
 	 * @param board: El tablero a crear.
 	 */
-	@CrossOrigin(origins="*")
+	//@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/board/edit", method = RequestMethod.POST)
 	public Player editBoard( @RequestBody Player player )
 	{	
 		Player p = this.game.changeBoard( player );
-		this.sendGameUpdate();
+		
+		if ( p != null ) 
+			this.sendGameUpdate();
+		
 		return p;
 	}
 	
@@ -98,7 +101,9 @@ public class GameController
 	public Player startNewPlayer( @RequestBody Player player )
 	{
 		Player p = this.game.addBoardToPlayer( player );
-		this.sendGameUpdate();
+		
+		if ( p != null ) 
+			this.sendGameUpdate();
 		
 		return p;
 	}

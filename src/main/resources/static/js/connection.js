@@ -148,7 +148,6 @@ function updateGame( game )
 	
 	if( game.moveBoard )
 	{
-		alert(game.piece_1_ToMove + "-- " + game.piece_2_ToMove);
 		moveBoard(player, game.typeMovement, game.piece_1_ToMove, game.piece_2_ToMove);
 	}	
 	
@@ -168,7 +167,7 @@ function updateGame( game )
 function updateUserInfo( player )
 {
 	//console.log($("#NamePlayer"+player.id));
-	$("#NamePlayer"+player.id).html( "Name: " + player.name );
+	$("#NamePlayer"+player.id).html( "Player " + player.id +": " + player.name );
 	$("#PointsPlayer"+player.id).html( "Points: " + player.points );
 	$("#MovementsPlayer"+player.id).html( "Movements: " + player.board.movements );
 }
@@ -185,7 +184,7 @@ function updateUserBoard( player )
 		{
 			if( i == blankPos.row && j == blankPos.column )
 			{
-				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "B" );
+				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "BB" );
 			}
 			else
 			{
@@ -217,12 +216,21 @@ function moveBoard( player, typeMovement, piece_1, piece_2 )
 
 	blankPieceTo.animate({right : "+="+correrC2 },1000, function(){ });
 	
-	if( typeMovement == 0 )
+	switch( typeMovement ) 
 	{
-		
-	}
-	else
-	{
+	    case 0:
+	        //code block
+	        break;
+	    case 1:
+	        //code block
+	        break;
+	    case 2:
+	        //code block
+	        break;
+	    case 3:
+	       // code block
+	        break;
+
 	}
 }
 
@@ -233,7 +241,7 @@ function moveBoard( player, typeMovement, piece_1, piece_2 )
 function buildBoard( player )
 {
 	var size = player.board.currentState.length;
-	$("#SizeBoardPlayer"+player.id).html( "Size: " + size+"X"+size );
+	$("#SizeBoardPlayer"+player.id).html( "Size: " + size+" X "+size );
 	$("#BoardPlayer"+player.id+" .piece").remove();
 	for( var i = 0 ; i < size * size ; i++)
 	{
@@ -282,17 +290,4 @@ function addBoardsTemplates( addBoardsTemplates )
 	$("#TableroPrincipal").append(templateCopy);
 }
 
-
-function updatePlayer2(player){
-	$("#p2-name").html( "Name: "+player.name );
-	$("#p2-points").html( "Points: " + player.points );
-	$("#p2-moves").html( "Moves: " + player.board.movements );
-	var position = 0;
-	for( var i = 0 ; i < size; i++){
-		for( var j = 0 ; j < size; j++){
-			$($("#player2 .piece")[position]).text( player.board.currentState[i][j] ); // falta aclarar que sea de p1 o de p2
-			position++;
-		}
-	}
-}
 connect();
