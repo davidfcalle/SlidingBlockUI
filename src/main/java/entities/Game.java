@@ -203,8 +203,8 @@ public class Game
 	}
 
 	/**
-	 * Se encarga de crear un Player vacío para asignarle el Board que se agregará.
-	 * @param board: Tablero de juego que se agregará al juego.
+	 * Se encarga de crear un Player vacio para asignarle el Board que se agregara.
+	 * @param board: Tablero de juego que se agregara al juego.
 	 */
 	public void addBoard( Board board ) 
 	{
@@ -227,9 +227,9 @@ public class Game
 	
 	/**
 	 * Se encarga de asignar un Player a un tablero de Taquin disponible.
-	 * @param player: Jugador al que se le asignará un tablero.
+	 * @param player: Jugador al que se le asignara un tablero.
 	 * @return actualPlayer: Una instancia de Player ID y tablero asignados 
-	 * 						 Null si no existe tablero disponible aún.
+	 * 						 Null si no existe tablero disponible aun.
 	 */
 	public Player addBoardToPlayer( Player player ) 
 	{
@@ -250,9 +250,9 @@ public class Game
 	}
 	
 	/**
-	 * Identifica hacia que posición se movió la casilla en blanco,
-	 * verifica si ese movimiento es válido y avisa a la GUI para repintar.
-	 * @param player: Jugador que tiene el tablero donde se moverán las piezas.
+	 * Identifica hacia que posicion se movi la casilla en blanco,
+	 * verifica si ese movimiento es valido y avisa a la GUI para repintar.
+	 * @param player: Jugador que tiene el tablero donde se moveran las piezas.
 	 * @return player: Jugador con el tablero actualizado luego de mover a pieza en blanco.
 	 */
 	public Player changeBoard( Player p ) 
@@ -269,16 +269,16 @@ public class Game
 		
 		if( blankActualPos.getRow() == blankNewPos.getRow() )
 		{
-			//Movió en columnas solo puede moverse a izquierda o derecha.
+			//Movi en columnas solo puede moverse a izquierda o derecha.
 			
 			int columnsMoves = blankNewPos.getColumn() - blankActualPos.getColumn();
 
 			if( Math.abs( columnsMoves ) == 1 )
 			{
 				 if( columnsMoves > 0 )
-					 this.typeMovement = 0; //Se movió a la derecha.
+					 this.typeMovement = 0; //Se movi a la derecha.
 				 else
-					 this.typeMovement = 1; //Se movió a la izquierda.
+					 this.typeMovement = 1; //Se movi a la izquierda.
 			}
 			else
 			{
@@ -287,16 +287,16 @@ public class Game
 		}	
 		else if( blankActualPos.getColumn() == blankNewPos.getColumn() )
 		{
-			//Movió en filas solo puede moverse arriba o abajo.
+			//Movi en filas solo puede moverse arriba o abajo.
 			
 			int rowsMoves = blankNewPos.getRow() - blankActualPos.getRow();
 
 			if( Math.abs( rowsMoves ) == 1 )
 			{
 				 if( rowsMoves > 0 )
-					 this.typeMovement = 2; //Se movió hacia arriba.
+					 this.typeMovement = 2; //Se movi hacia arriba.
 				 else
-					 this.typeMovement = 3; //Se movió hacia abajo.
+					 this.typeMovement = 3; //Se movi hacia abajo.
 			}
 			else
 			{
@@ -307,7 +307,7 @@ public class Game
 		{
 			return null;
 		}
-		/*Actualizar la tablero de juego del juagdor teniendo en cuenta hacia donde se movió la pieza en blanco*/
+		/*Actualizar la tablero de juego del juagdor teniendo en cuenta hacia donde se movi la pieza en blanco*/
 		String board [][] = player.getBoard().getCurrentState();
 		board[blankActualPos.getRow()][blankActualPos.getColumn()] = board[blankNewPos.getRow()][blankNewPos.getColumn()];
 		board[blankNewPos.getRow()][blankNewPos.getColumn()] = "BB";

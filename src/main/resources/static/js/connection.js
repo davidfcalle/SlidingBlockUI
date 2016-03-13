@@ -1,45 +1,45 @@
 /**
- * @param TAG_ID_NAME: Variable estática y constante que contiene 
+ * @param TAG_ID_NAME: Variable estatica y constante que contiene 
  * 					   como se se debe nombrar el ID para referecniar 
  * 					   el elemento HTML que muestra el nombre de cada jugador.
  */
 var TAG_ID_NAME = "NamePlayer"; // + No. de Jugador.
 
 /**
- * @param TAG_ID_POINTS: Variable estática y constante que contiene 
+ * @param TAG_ID_POINTS: Variable estatica y constante que contiene 
  * 					     como se se debe nombrar el ID para referecniar 
  * 					     el elemento HTML que muestra los puntos de cada jugador.
  */
 var TAG_ID_POINTS = "PointsPlayer"; // + No. de Jugador.
 
 /**
- * @param TAG_ID_MOVEMENTS: Variable estática y constante que contiene 
+ * @param TAG_ID_MOVEMENTS: Variable estatica y constante que contiene 
  * 					        como se se debe nombrar el ID para referecniar 
  * 					        el elemento HTML que muestra los movimientos que ha hehco de cada jugador.
  */
 var TAG_ID_MOVEMENTS = "MovementsPlayer"; // + No. de Jugador.
 
 /**
- * @param TAG_ID_BOARD: Variable estática y constante que contiene 
+ * @param TAG_ID_BOARD: Variable estatica y constante que contiene 
  * 					    como se se debe nombrar el ID para referecniar 
- * 					    el elmento HTML que muestra el tablero Taquín de cada jugador.
+ * 					    el elmento HTML que muestra el tablero Taquin de cada jugador.
  */
 var TAG_ID_BOARD = "BoardPlayer"; // + No. de Jugador.
 
 /**
- * @param TAG_ID_BOARD: Variable estática y constante que contiene 
+ * @param TAG_ID_BOARD: Variable estatica y constante que contiene 
  * 					    como se se debe nombrar el ID para referecniar 
- * 					    el elmento HTML que muestra el tablero Taquín de cada jugador.
+ * 					    el elmento HTML que muestra el tablero Taquin de cada jugador.
  */
 var TAG_ID_SIZE_BOARD = "SizeBoardPlayer"; // + No. de Jugador.
 
 /**
- * @param numBoards: Representa la cantidad de Tableros Taquín que se han pintado en la página.
+ * @param numBoards: Representa la cantidad de Tableros Taquin que se han pintado en la pagina.
  */
 var numBoards = 2;
 
 /**
- * @param stompClient: Controla la comunicación vía WebSocket.
+ * @param stompClient: Controla la comunicacion via WebSocket.
  */
 var stompClient = null;
 var size = null;
@@ -94,8 +94,8 @@ function disconnect()
 }
 
 /**
- * Se encarga de actualizar la interfaz gráfica por primera vez 
- * que se suscribe al topico por si ya contiene información.
+ * Se encarga de actualizar la interfaz grafica por primera vez 
+ * que se suscribe al topico por si ya contiene informacion.
  * @param game: Estado actual del juego.
  */
 function firstUpdate( game )
@@ -120,7 +120,7 @@ function firstUpdate( game )
 	getForObject( null, "/api/game/endUpdate/", function(){} );
 }
 /**
- * Se encarga de actualizar la interfaz gráfica cada ves que llega un mensaje desde el WebSocket.
+ * Se encarga de actualizar la interfaz grafica cada ves que llega un mensaje desde el WebSocket.
  * @param game: Estado actual del juego.
  */
 function updateGame( game )
@@ -161,8 +161,8 @@ function updateGame( game )
 }
 
 /**
- * Se encarga de actualizar la información de un jugador: Nombre, Puntos y Movimientos.
- * @param game: Jugador al que se actualizará la información.
+ * Se encarga de actualizar la informacion de un jugador: Nombre, Puntos y Movimientos.
+ * @param game: Jugador al que se actualizara la informacion.
  */
 function updateUserInfo( player )
 {
@@ -196,7 +196,7 @@ function updateUserBoard( player )
 }
 
 /**
- * Se encarga de mover la pieza blanca a la posición indicada pro el usuario.
+ * Se encarga de mover la pieza blanca a la posicion indicada pro el usuario.
  * @param player: Jugador que posee el tablero a mover.
  * @param typeMovement: Indica si a pieza blanca se mueve en Fila(1) o COlumnas(0).
  */
@@ -253,7 +253,7 @@ function buildBoard( player )
 
 /**
  * Se encarga de aregar 2 templates HTML para representar 
- * información del usuario y su tablero Taquín asociado.
+ * informacion del usuario y su tablero Taquin asociado.
  */
 function addBoardsTemplates( addBoardsTemplates )
 {

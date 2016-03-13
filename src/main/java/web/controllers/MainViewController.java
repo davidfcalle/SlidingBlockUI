@@ -14,7 +14,6 @@ public class MainViewController {
 		return "index";
 	}	
 	
-	// La vista puede ser para ambos views
 	@RequestMapping(value="/ClienteJS")
 	public String createClientJS()
 	{

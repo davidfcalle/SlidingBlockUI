@@ -11,7 +11,7 @@ public class Board {
 	
 	
 	/**
-	 * @param blank: Representa la ubicación
+	 * @param blank: Representa la ubicacion
 	 */
 	private Piece blank;
 	

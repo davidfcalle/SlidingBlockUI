@@ -1,7 +1,7 @@
 
 /**
- * Función encargada de verificar si un código se encuentra en el formato correcto (000-000-0).
- * @para codigo: Código al que se le verificará el formato.
+ * Funcion encargada de verificar si un codigo se encuentra en el formato correcto (000-000-0).
+ * @para codigo: Codigo al que se le verificara el formato.
  */
 function verificarFormatoCodigo( codigo )
 {
@@ -10,10 +10,10 @@ function verificarFormatoCodigo( codigo )
 }
 
 /**
- * Función encargada de formatear los nùmeros con una mínima cantidad de digistos
+ * Funcion encargada de formatear los nùmeros con una minima cantidad de digistos
  * Tomada de
  * http://stackoverflow.com/questions/2998784/how-to-output-integers-with-leading-zeros-in-javascript
- * función encargada de formatear con ceros
+ * funcion encargada de formatear con ceros
  */
 function zeroPad(num, places)
 {
@@ -22,7 +22,7 @@ function zeroPad(num, places)
 }
 
 /**
- * Función encargada de obtener el nùmero que representa el código
+ * Funcion encargada de obtener el nùmero que representa el codigo
  */
 function obtenerNumeroAPartirDeCodigo(codigo)
 {
@@ -39,7 +39,7 @@ function darCheckSumDeCodigo(codigo)
 }
 
 /**
- * Función encargada de obtener el nùmero escrito como un codigo valido
+ * Funcion encargada de obtener el nùmero escrito como un codigo valido
  */
 function darCodigoFormateado(numero)
 {
@@ -52,8 +52,8 @@ function darCodigoFormateado(numero)
 }
 
 /**
- * Función encargada de calcular un checksum a partir de un código.
- * @param codigo: Codigo, CON formato, del articulo al que se le calcula el digito de verificación.  
+ * Funcion encargada de calcular un checksum a partir de un codigo.
+ * @param codigo: Codigo, CON formato, del articulo al que se le calcula el digito de verificacion.  
  */
 function obtenerCheckSumConFormato( codigo )
 {
@@ -62,8 +62,8 @@ function obtenerCheckSumConFormato( codigo )
 }
 
 /**
- * Función encargada de calcular un checksum a partir de un código.
- * @param codigo: Codigo, SIN formato, del articulo al que se le calcula el digito de verificación.  
+ * Funcion encargada de calcular un checksum a partir de un codigo.
+ * @param codigo: Codigo, SIN formato, del articulo al que se le calcula el digito de verificacion.  
  */
 function obtenerCheckSum(numero)
 {
@@ -78,7 +78,7 @@ function obtenerCheckSum(numero)
 }
 
 /**
- * función encargada de serializar un formulario y volverlo un objeto JS
+ * funcion encargada de serializar un formulario y volverlo un objeto JS
  */
 $.fn.serializeObject = function()
 {
@@ -97,7 +97,7 @@ $.fn.serializeObject = function()
    return o;
 };
 /**
- * cambiar la configuración de XHR de Jquery
+ * cambiar la configuracion de XHR de Jquery
  */
 $.ajaxSetup({
 	  xhrFields: {
@@ -105,7 +105,7 @@ $.ajaxSetup({
 	  }
 });
 /**
- * Da el valor de llave con nombre name de los parámetros GET de la URL
+ * Da el valor de llave con nombre name de los parametros GET de la URL
  * Obtenido de http://stackoverflow.com/questions/831030/how-to-get-get-request-parameters-in-javascript  usuario Rafael
  */
 function get(name)
@@ -115,7 +115,7 @@ function get(name)
 }
 
 /**
- * Función que convierte @fecha en
+ * Funcion que convierte @fecha en
  * el formato dd/mm/yyyy.
  */
 function formatearFecha( fecha )
@@ -128,7 +128,7 @@ function formatearFecha( fecha )
 }
 
 /**
- * Función que convierte @fecha en
+ * Funcion que convierte @fecha en
  * el formato ISO yyyy/mm/dd.
  */
 function formatearFechaISO( fecha )
@@ -141,7 +141,7 @@ function formatearFechaISO( fecha )
 }
 
 /**
- * Función de regresa la fecha actual como una cadena
+ * Funcion de regresa la fecha actual como una cadena
  * en formato dd/mm/yyyy
  */
 function darFechaActual()
@@ -154,7 +154,7 @@ function darFechaActual()
 }
 
 /**
- * Función que se encarga de poner en un input type text
+ * Funcion que se encarga de poner en un input type text
  * con nombre llace, el valor valor
  */
 function llenarDatoFormulario(llave, valor)
@@ -164,11 +164,11 @@ function llenarDatoFormulario(llave, valor)
 }
 
 /**
- * función que funciona como un wrapper para los requet ajax
+ * funcion que funciona como un wrapper para los requet ajax
  * @param object, objecto a agregar
  * @param url, URI que identifica el recurso
- * @param todo, función  asociada a la creación exitossa
- * @param error, función asociada al error
+ * @param todo, funcion  asociada a la creacion exitossa
+ * @param error, funcion asociada al error
  */
 function getForObject(object, url, toDo)
 {
@@ -187,11 +187,11 @@ function getForObject(object, url, toDo)
 }
 
 /**
- * función que funciona como un wrapper para los requet ajax
+ * funcion que funciona como un wrapper para los requet ajax
  * @param object, objecto a agregar
  * @param url, URI que identifica el recurso
- * @param todo, función  asociada a la creación exitossa
- * @param error, función asociada al error
+ * @param todo, funcion  asociada a la creacion exitossa
+ * @param error, funcion asociada al error
  */
 function getForObject(object, url, toDo,error)
 {
@@ -210,11 +210,11 @@ function getForObject(object, url, toDo,error)
 }
 
 /**
- * función que funciona como un wrapper para los requet ajax
+ * funcion que funciona como un wrapper para los requet ajax
  * @param1 object, objecto a agregar
  * @param url, URI que identifica el recurso
- * @param todo, función  asociada a la creación exitossa
- * @param error, función asociada al error
+ * @param todo, funcion  asociada a la creacion exitossa
+ * @param error, funcion asociada al error
  */
 function postForObject(object, url, todo, error)
 {
@@ -232,11 +232,11 @@ function postForObject(object, url, todo, error)
 	});
 }
 /**
- * función que funciona como un wrapper para los requet ajax
+ * funcion que funciona como un wrapper para los requet ajax
  * @param object, objecto a agregar
  * @param url, URL que identifica el recurso
- * @param todo, función  asociada a la creación exitossa
- * @param error, función asociada al error
+ * @param todo, funcion  asociada a la creacion exitossa
+ * @param error, funcion asociada al error
  */
 function putForObject(object, url, todo, error)
 {

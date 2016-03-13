@@ -16,7 +16,7 @@ import entities.Player;
 
 
 /**
- * @author root
+ * @author dadsez
  *
  */
 @RestController
@@ -29,8 +29,8 @@ public class GameController
 	private SimpMessagingTemplate template;
 	
 	/**
-	 * COnstructor de @GameController .
-	 * @param template: Encargado de enviar mensajes usando WebSokets pra actualizar las GUI.
+	 * Constructor de @GameController .
+	 * @param template: Encargado de enviar mensajes usando WebSokets para actualizar la GUI.
 	 */
 	@Autowired
 	public GameController(SimpMessagingTemplate template) 
@@ -56,7 +56,7 @@ public class GameController
 	}
 	
 	/**
-	 * Notifica que ya se ha actualizad el nuevo suscriptor.
+	 * Notifica que ya se ha actualizado el nuevo suscriptor.
 	 */
 	@RequestMapping(value="/api/game/endUpdate", method = RequestMethod.GET)
 	public void gameStarted()
