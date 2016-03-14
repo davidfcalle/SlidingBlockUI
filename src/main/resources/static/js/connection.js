@@ -1,3 +1,4 @@
+//--------------------------------------------------------------Variables---------------------------------------------------------------
 /**
  * @param TAG_ID_NAME: Variable estatica y constante que contiene 
  * 					   como se se debe nombrar el ID para referecniar 
@@ -42,7 +43,6 @@ var numBoards = 2;
  * @param stompClient: Controla la comunicacion via WebSocket.
  */
 var stompClient = null;
-var size = null;
 
 
 function voltear()
@@ -61,6 +61,16 @@ function voltear()
 }
 
 
+//--------------------------------------------------------------Funciones------------------------------------------------------------------
+
+/**--------------------------------------------------------------Comunicacion-------------------------------------------------------------*/
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Establece la comunicacion via WebSocket en "/hello".
+ * Suscribiendose al topico "/topics/game", donde 
+ * se notificaran las respectivas actualizaciones a la vista
+ */
 function connect() 
 {
 	var socket = new SockJS('/hello');
@@ -76,10 +86,11 @@ function connect()
 								updateGame( game );
 						});
 			});
-	getForObject(null, "/api/game/new/", function(data) {});
+	//getForObject(null, "/api/game/new/", function(data) {});
 	
 }
 
+//-------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Se encarga de desconectar el WebSocket.
  */
@@ -93,34 +104,73 @@ function disconnect()
 //	console.log("Disconnected");
 }
 
+/**--------------------------------------------------------------Creacion-----------------------------------------------------------------*/
+
+//-------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Se encarga de actualizar la interfaz grafica por primera vez 
- * que se suscribe al topico por si ya contiene informacion.
- * @param game: Estado actual del juego.
+ * Se encarga de construir y representar un tablero Taquin con elementos HTML.
+ * @param player: Jugador que tiene el tabler Taquin a pintar.
  */
-function firstUpdate( game )
+function buildBoard( player )
 {
-	var player;
-	var boardsTam = game.jugadores.length;
-	//console.log(game)
-	
-	for( var i = 0; i < boardsTam; i++ )
+	var size = player.board.currentState.length;
+	$("#SizeBoardPlayer"+player.id).html( "Size: " + size+" X "+size );
+	$("#BoardPlayer"+player.id+" .piece").remove();
+	for( var i = 0 ; i < size * size ; i++)
 	{
-		if( game.jugadores.length > numBoards )
-		{
-			addBoardsTemplates( );
-		}
-		
-		player = game.jugadores[i]
-		updateUserInfo( player );
-		buildBoard( player );			
-		updateUserBoard( player, 0 );
+		var templateCopy = $( $( $("#piece-template").html() ).clone() );
+		templateCopy.css( { minWidth : ( (100 / size ) - 1 +"%" ), minHeight : 70 / size + "vh"  } );
+		$("#BoardPlayer"+player.id).append(templateCopy);
 	}
-	
-	getForObject( null, "/api/game/endUpdate/", function(){} );
 }
+
+//-------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Se encarga de actualizar la interfaz grafica cada ves que llega un mensaje desde el WebSocket.
+ * Se encarga de aregar 2 templates HTML para representar 
+ * informacion del usuario y su tablero Taquin asociado.
+ */
+function addBoardsTemplates( )
+{
+	var templateCopy = $( $( $("#board-template").html() ).clone() );
+	
+	//Se recuperan elementos HTML de cada jugador para cambiarles su ID (NamePlayer1 -> NamePlayerN).
+	var namePlayerField = templateCopy.find("#Name1");
+	//console.log(namePlayerField);
+	var pointsPlayerField = templateCopy.find("#Points1");
+	var movementsPlayerField = templateCopy.find("#Movements1");
+	var boardPlayerField = templateCopy.find("#Board1");
+	var sizeBoardPlayerField = templateCopy.find("#Size1");
+	
+	numBoards++;
+	namePlayerField.attr( "id",TAG_ID_NAME+numBoards );
+	pointsPlayerField.attr( "id",TAG_ID_POINTS+numBoards );
+	movementsPlayerField.attr( "id", TAG_ID_MOVEMENTS+numBoards );
+	boardPlayerField.attr( "id", TAG_ID_BOARD+numBoards );
+	sizeBoardPlayerField.attr( "id", TAG_ID_SIZE_BOARD+numBoards );
+	
+	//Se recuperan elementos HTML de cada jugador para cambiarles su ID (NamePlayer2 -> NamePlayerN).
+	namePlayerField = templateCopy.find("#Name2");
+	pointsPlayerField = templateCopy.find("#Point2");
+	movementsPlayerField = templateCopy.find("#Movements2");
+	boardPlayerField = templateCopy.find("#Board2");
+	sizeBoardPlayerField = templateCopy.find("#Size2");
+
+	numBoards++;
+	namePlayerField.attr( "id",TAG_ID_NAME+numBoards );
+	pointsPlayerField.attr( "id",TAG_ID_POINTS+numBoards );
+	movementsPlayerField.attr( "id", TAG_ID_MOVEMENTS+numBoards );
+	boardPlayerField.attr( "id", TAG_ID_BOARD+numBoards );
+	sizeBoardPlayerField.attr( "id", TAG_ID_SIZE_BOARD+numBoards );
+	
+	$("#TableroPrincipal").append(templateCopy);
+}
+
+/**--------------------------------------------------------------ActualizacionVista-------------------------------------------------------*/
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Se encarga de actualizar las respectivas secciones informadas por game
+ * a traves de una notificacion via WebSocket en el topico.
  * @param game: Estado actual del juego.
  */
 function updateGame( game )
@@ -148,21 +198,15 @@ function updateGame( game )
 	
 	if( game.moveBoard )
 	{
-		moveBoard(player, game.typeMovement, game.piece_1_ToMove, game.piece_2_ToMove);
+		movePieceOnBoard(player, game.typeMovement, game.piece_1_ToMove, game.piece_2_ToMove);
 	}	
-	
-	//--------------------------
-/*	if( game.p1.board.currentState.length != size ){
-		size = game.p1.board.currentState.length ;
-		rebuildBoard( size );
-	}
-	updatePlayer1(game.p1);
-	updatePlayer2(game.p1); // OJO, toca cambiarlo a p2, es solo para las pruebas.*/
 }
 
+//-------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Se encarga de actualizar la informacion de un jugador: Nombre, Puntos y Movimientos.
- * @param game: Jugador al que se actualizara la informacion.
+ * Se encarga de actualizar la seccion de informacion 
+ * de un jugador: Nombre, Puntos y Movimientos.
+ * @param game: Informacion con la que se actualizara esta seccion.
  */
 function updateUserInfo( player )
 {
@@ -172,7 +216,11 @@ function updateUserInfo( player )
 	$("#MovementsPlayer"+player.id).html( "Movements: " + player.board.movements );
 }
 
-
+//-------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Se encarga de actualizar la seccion donde se encuentra el tablero Taquin
+ * @param game: Informacion con la que se actualizara esta seccion.
+ */
 function updateUserBoard( player )
 {
 	var position = 0;
@@ -184,7 +232,7 @@ function updateUserBoard( player )
 		{
 			if( i == blankPos.row && j == blankPos.column )
 			{
-				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "BB" );
+				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "B" );
 			}
 			else
 			{
@@ -195,26 +243,70 @@ function updateUserBoard( player )
 	}
 }
 
+//-------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Se encarga de mover la pieza blanca a la posicion indicada pro el usuario.
- * @param player: Jugador que posee el tablero a mover.
- * @param typeMovement: Indica si a pieza blanca se mueve en Fila(1) o COlumnas(0).
+ * Se encarga de actualizar la interfaz grafica por primera vez 
+ * que se suscribe al topico por si ya contiene informacion.
+ * @param game: Estado actual del juego.
  */
-function moveBoard( player, typeMovement, piece_1, piece_2 )
+function firstUpdate( game )
 {
-	var blankPos = player.board.blank;
-	var blankPiece = $($("#BoardPlayer"+player.id+" .piece")[piece_1]);
-	var blankPieceTo = $($("#BoardPlayer"+player.id+" .piece")[piece_2]);
+	var player;
+	var boardsTam = game.jugadores.length;
+	//console.log(game)
+	
+	for( var i = 0; i < boardsTam; i++ )
+	{
+		if( game.jugadores.length > numBoards )
+		{
+			addBoardsTemplates( );
+		}
+		
+		player = game.jugadores[i]
+		updateUserInfo( player );
+		buildBoard( player );			
+		updateUserBoard( player, 0 );
+	}
+	
+	getForObject( null, "/api/game/endUpdate/", function(){} );
+}
 
+/**--------------------------------------------------------------Movimiento---------------------------------------------------------------*/
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Se encarga de intercmbiar las piezas (en las posiciones piece_1 y piece_2).
+ * Simulando el movimiento de la pieza blanca a la direccion indicada.
+ * @param player: Jugador que posee el tablero donde se moera la pieza blanca.
+ * @param typeMovement: Indica la direccion hacia donde se movera la pieza blanca.
+ *		   0: Hacia la derecha. 
+ *		   1: Hacia la izquierda.
+ *		   2: Hacia arriba.
+ *		   3: Hacia abajo.
+ * @param piece_1: Posicion de la pieza blanca actual.
+ * @param piece_2: Posicion de la pieza hacia donde se movera la pieza blanca.
+ */
+function movePieceOnBoard( player, typeMovement, piece_1, piece_2 )
+{	
+	var board = player.board;
+	var blankPiece = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_1] );
+	var blankPieceTo = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_2] );
+
+	$("#MovementsPlayer" + player.id ).text( "Movements: " + board.movements );
+	
 	blankPiece.css({position: "relative"});
 	blankPieceTo.css({position: "relative"});
 	var posC1 = blankPiece.offset();
 	var posC2 = blankPieceTo.offset();
+	alert("POS_C1: " + posC1 + "POS_C2: " posC2 );
 	var correrC1 = posC2.left;
 	var correrC2 = posC1.left + correrC1;
-	blankPiece.animate({right : "-="+correrC1 },1000, function(){ });
+	
+	alert("correrC1: " + correrC1 + "correrC2: " correrC2 );
+	
+	blankPiece.animate({right : "-="+correrC1 },9000, function(){ });
 
-	blankPieceTo.animate({right : "+="+correrC2 },1000, function(){ });
+	blankPieceTo.animate({right : "+="+correrC2 },9000, function(){ });
 	
 	switch( typeMovement ) 
 	{
@@ -232,62 +324,6 @@ function moveBoard( player, typeMovement, piece_1, piece_2 )
 	        break;
 
 	}
-}
-
-/**
- * Se encarga de construir y representar un tablero Taquin con elementos HTML.
- * @param player: Jugador que tiene el tabler Taquin a pintar.
- */
-function buildBoard( player )
-{
-	var size = player.board.currentState.length;
-	$("#SizeBoardPlayer"+player.id).html( "Size: " + size+" X "+size );
-	$("#BoardPlayer"+player.id+" .piece").remove();
-	for( var i = 0 ; i < size * size ; i++)
-	{
-		var templateCopy = $( $( $("#piece-template").html() ).clone() );
-		templateCopy.css( { minWidth : ( (100 / size ) - 1 +"%" ), minHeight : 70 / size + "vh"  } );
-		$("#BoardPlayer"+player.id).append(templateCopy);
-	}
-}
-
-/**
- * Se encarga de aregar 2 templates HTML para representar 
- * informacion del usuario y su tablero Taquin asociado.
- */
-function addBoardsTemplates( addBoardsTemplates )
-{
-	var templateCopy = $( $( $("#board-template").html() ).clone() );
-	
-	//Se recuperan elementos HTML de cada jugador para cambiarles su ID (NamePlayer1 -> NamePlayerN).
-	var namePlayerField = templateCopy.find("#Name1");
-	//console.log(namePlayerField);
-	var pointsPlayerField = templateCopy.find("#Points1");
-	var movementsPlayerField = templateCopy.find("#Movements1");
-	var boardPlayerField = templateCopy.find("#Board1");
-	var sizeBoardPlayerField = templateCopy.find("#Size1");
-	
-	numBoards++;
-	namePlayerField.attr( "id",TAG_ID_NAME+numBoards );
-	pointsPlayerField.attr( "id",TAG_ID_POINTS+numBoards );
-	movementsPlayerField.attr( "id", TAG_ID_MOVEMENTS+numBoards );
-	boardPlayerField.attr( "id", TAG_ID_BOARD+numBoards );
-	sizeBoardPlayerField.attr( "id", TAG_ID_SIZE_BOARD+numBoards );
-	
-	namePlayerField = templateCopy.find("#Name2");
-	pointsPlayerField = templateCopy.find("#Point2");
-	movementsPlayerField = templateCopy.find("#Movements2");
-	boardPlayerField = templateCopy.find("#Board2");
-	sizeBoardPlayerField = templateCopy.find("#Size2");
-
-	numBoards++;
-	namePlayerField.attr( "id",TAG_ID_NAME+numBoards );
-	pointsPlayerField.attr( "id",TAG_ID_POINTS+numBoards );
-	movementsPlayerField.attr( "id", TAG_ID_MOVEMENTS+numBoards );
-	boardPlayerField.attr( "id", TAG_ID_BOARD+numBoards );
-	sizeBoardPlayerField.attr( "id", TAG_ID_SIZE_BOARD+numBoards );
-	
-	$("#TableroPrincipal").append(templateCopy);
 }
 
 connect();

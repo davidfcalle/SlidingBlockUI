@@ -28,15 +28,20 @@
 			
 			<div class="col s6 score-1">
 				<ul class="collection with-header">
-        			<li class="collection-header" id="playerLabel">
+
+       				<li class="collection-item" id="playerIdLabel" >Player Id:
+          				<input id="playerId" value="0" type="number"></input>
+          			</li>
+
+        			<li class="collection-header" id="playerNameLabel">
         				Player Name: <input type = "text" id="playerName"></input>
         			</li>
         			<li class="collection-item" id="playerPoints">Points : 0</li>
-        			<li class="collection-item" id="playerMovements">Moves : 0</li>
+        			<li class="collection-item" id="playerMovements">Movements : 0</li>
           			<li class="collection-item" >Board Size :
-          				<input id="sizeBoard" value="0 X 0" type="number"></input>
+          				<input id="sizeBoard" value="2" type="number"></input>
           			</li>      			
-        			<li class="collection-item">Blank Piece:
+        			<li class="collection-item">Blank Piece:<br></br>
         				<label>Row: </label><input id="blankRow" value="0" type="number"></input>
         				<label>Column: </label><input id="blankColumn" value="0" type="number"></input>
         			</li>
@@ -58,12 +63,34 @@
 			  <button type="submit" class="button success" onclick="generatePlayer()" style="width: 50%; float: right;">Create Player</button>
 			</div>
 		</div>
+
+<br></br>
+		<center>
+			<div class="row">
+				<div class="large-2 large-offset-9 columns">
+					<input type="image" src="/static/images/blank.png" width="75em" height="55em"></input>
+					<input type="image" src="/static/images/up.png" onclick="moveBoardToUp()" width="75em" height="55em"></input>		
+					<input type="image" src="/static/images/blank.png" width="75em" height="55em"></input>		
+				</div>
+			</div>	
 			
-			<input type="image" src="/static/images/right.png" onclick="moveBoardToRight()" width="75em" height="55em"></input>
-			<input type="image" src="/static/images/left.png" onclick="moveBoardToLeft()" width="75em" height="55em"></input>	
+			<div class="row">
+				<div class="large-2 large-offset-9 columns">
+					<input type="image" src="/static/images/left.png" onclick="moveBoardToLeftPro()" width="75em" height="55em"></input>
+					<input type="image" src="/static/images/blank.png" width="75em" height="55em"></input>
+					<input type="image" src="/static/images/right.png" onclick="moveBoardToRightPro()" width="75em" height="55em"></input>
+				</div>
+			</div>	
 			
-			<input type="image" src="/static/images/down.png" onclick="moveBoardToDown()" width="75em" height="55em"></input>
-			<input type="image" src="/static/images/up.png" onclick="moveBoardToUp()" width="75em" height="55em"></input>	
+			<div class="row">
+				<div class="large-2 large-offset-9 columns">
+					<input type="image" src="/static/images/blank.png"  width="75em" height="55em"></input>
+					<input type="image" src="/static/images/down.png" onclick="moveBoardToDown()" width="75em" height="55em"></input>
+					<input type="image" src="/static/images/blank.png" width="75em" height="55em"></input>	
+				</div>
+			</div>				
+		</center>	
+
 	</div>	
 	
 	
