@@ -51,10 +51,10 @@ function voltear()
 	var c2 = $("#score-2");
 	c1.css({position: "relative"});
 	c2.css({position: "relative"});
-	var posC1 = c1.offset();
-	var posC2 = c2.offset();
-	var correrC1 = posC2.left;
-	var correrC2 = posC1.left + correrC1;
+	var posBlankBiece = c1.offset();
+	var posPiece = c2.offset();
+	var correrC1 = posPiece.left;
+	var correrC2 = posBlankBiece.left + correrC1;
 	c1.animate({right : "-="+correrC1 },1000, function(){alert("JAJA")});
 
 	c2.animate({right : "+="+correrC2 },1000, function(){alert("C2")});
@@ -274,6 +274,90 @@ function firstUpdate( game )
 /**--------------------------------------------------------------Movimiento---------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
+function moveRightAndLeft( player, blankPiece, piece )
+{
+	blankPiece.css({position: "relative"});
+	piece.css({position: "relative"});
+	
+	var posBlankBiece = blankPiece.position();
+	var posPiece = piece.position();
+	console.log( posBlankBiece );
+	console.log( posPiece );
+	var correrC1 = posPiece.left;
+	var correrC2 = posBlankBiece.left + correrC1;
+	
+	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
+	
+	blankPiece.animate({right : "-="+correrC1 },1000, function(){  });
+
+	piece.animate({right : "+="+correrC2 },1000, function(){updateUserBoard(  player ); console.log("ACTUA");} );
+
+}
+/*
+//-------------------------------------------------------------------------------------------------------------------------------------
+function moveToLeft( player, blankPiece, piece )
+{
+	blankPiece.css({position: "relative"});
+	piece.css({position: "relative"});
+	
+	var posBlankBiece = blankPiece.position();
+	var posPiece = piece.position();
+	console.log( posBlankBiece );
+	console.log( posPiece );
+	var correrC1 = posPiece.left + posBlankBiece.left;
+	var correrC2 = posBlankBiece.left;
+	
+	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
+	
+	blankPiece.animate({right : "+="+correrC1 },1000, function(){ });
+
+	piece.animate({right : "-="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
+
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+function moveToDown( player, blankPiece, piece )
+{
+	blankPiece.css({position: "relative"});
+	piece.css({position: "relative"});
+	
+	var posBlankBiece = blankPiece.position();
+	var posPiece = piece.position();
+	console.log( posBlankBiece );
+	console.log( posPiece );
+	var correrC1 = posPiece.top;
+	var correrC2 = posBlankBiece.top + correrC1;
+	
+	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
+	
+	blankPiece.animate({top : "-="+correrC1 },1000, function(){ });
+
+	piece.animate({top : "+="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
+
+}
+*/
+//-------------------------------------------------------------------------------------------------------------------------------------
+function moveUpAndDown( player, blankPiece, piece )
+{
+	blankPiece.css({position: "relative"});
+	piece.css({position: "relative"});
+	
+	var posBlankBiece = blankPiece.position();
+	var posPiece = piece.position();
+	console.log( posBlankBiece );
+	console.log( posPiece );
+	var correrC1 = posPiece.top + posBlankBiece.top;
+	var correrC2 = posBlankBiece.top;
+	
+	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
+	
+	blankPiece.animate({top : "+="+correrC1 },1000, function(){ });
+
+	piece.animate({top : "-="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
+
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Se encarga de intercmbiar las piezas (en las posiciones piece_1 y piece_2).
  * Simulando el movimiento de la pieza blanca a la direccion indicada.
@@ -294,33 +378,19 @@ function movePieceOnBoard( player, typeMovement, piece_1, piece_2 )
 
 	$("#MovementsPlayer" + player.id ).text( "Movements: " + board.movements );
 	
-	blankPiece.css({position: "relative"});
-	blankPieceTo.css({position: "relative"});
-	var posC1 = blankPiece.offset();
-	var posC2 = blankPieceTo.offset();
-	alert("POS_C1: " + posC1 + "POS_C2: " posC2 );
-	var correrC1 = posC2.left;
-	var correrC2 = posC1.left + correrC1;
-	
-	alert("correrC1: " + correrC1 + "correrC2: " correrC2 );
-	
-	blankPiece.animate({right : "-="+correrC1 },9000, function(){ });
-
-	blankPieceTo.animate({right : "+="+correrC2 },9000, function(){ });
-	
 	switch( typeMovement ) 
 	{
 	    case 0:
-	        //code block
+	        moveRightAndLeft( player, blankPiece, blankPieceTo );
 	        break;
 	    case 1:
-	        //code block
+	    	moveRightAndLeft( player, blankPieceTo, blankPiece );
 	        break;
 	    case 2:
-	        //code block
+	        moveUpAndDown( player, blankPiece, blankPieceTo );
 	        break;
 	    case 3:
-	       // code block
+	    	moveUpAndDown( player, blankPieceTo, blankPiece );
 	        break;
 
 	}
