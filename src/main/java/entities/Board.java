@@ -2,82 +2,111 @@ package entities;
 
 import java.util.Random;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Board {
 	
-	public Integer BOARD_SIZE = 3;
-	
+	/**
+	 * @param currentState: Valores del tablero y su organizacion.
+	 */
 	private String[][] currentState;
-	
-	@JsonIgnore
-	private String[][] solution;
-	
+		
+	/**
+	 * @param movements: Cantidad de movimientos que se han ejecutado sobre el tablero.
+	 */
 	private Integer movements;
 	
+	
+	/**
+	 * @param blank: Representa la ubicacion de la pieza blanca en el tablero.
+	 */
 	private Piece blank;
 	
-	public Board(){
-		Random bSize = new Random();
-		BOARD_SIZE = bSize.nextInt( 6 ) + 2;
-		movements = 0;
-		currentState = new String [BOARD_SIZE][BOARD_SIZE];
-		solution = new String [BOARD_SIZE][BOARD_SIZE];
-		for (int i = 0; i < BOARD_SIZE ; i++) {
-			for (int j = 0; j < BOARD_SIZE ; j++) {
-				Random rnumber = new Random();
-				int number	 = rnumber.nextInt(10) + 1; 
-				currentState[i][j] = number+"";
-				solution[i][j] = number + "";
-			}
-		}
-	}
 	
+/**--------------------------------------------------------------Constructor--------------------------------------------------------------*/	
+	/**
+	 * Constructor.
+	 */
+	public Board() 
+	{
+		super();
+	}
+
 	
-
-	public Piece getBlank() {
-		return blank;
-	}
-
-
-
-	public void setBlank(Piece blank) {
-		this.blank = blank;
-	}
-
-
-
-	public Integer getMovements() {
-		return movements;
-	}
-
-
-
-	public void setMovements(Integer movements) {
-		this.movements = movements;
-	}
-
-
-
-	public String[][] getCurrentState() {
+/**--------------------------------------------------------------Getter&Setter----------------------------------------------------------*/	
+	/**
+	 * @return the currentState
+	 */
+	public String[][] getCurrentState() 
+	{
 		return currentState;
 	}
 
-	public void setCurrentState(String[][] currentState) {
+	/**
+	 * @param currentState the currentState to set
+	 */
+	public void setCurrentState(String[][] currentState) 
+	{
 		this.currentState = currentState;
 	}
 
-	public String[][] getSolution() {
-		return solution;
+	/**
+	 * @return the movements
+	 */
+	public Integer getMovements() 
+	{
+		return movements;
 	}
 
-	public void setSolution(String[][] solution) {
-		this.solution = solution;
+	/**
+	 * @param movements the movements to set
+	 */
+	public void setMovements(Integer movements) 
+	{
+		this.movements = movements;
 	}
+
+	/**
+	 * @return the blank
+	 */
+	public Piece getBlank() 
+	{
+		return blank;
+	}
+
+	/**
+	 * @param blank the blank to set
+	 */
+	public void setBlank(Piece blank) 
+	{
+		this.blank = blank;
+	}
+
+/**--------------------------------------------------------------Negocio-----------------------------------------------------------------*/
 	
-	
-	public void addMovement(){
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Incrementa en 1 la cantidad de movimientos ejecutados sobre el tablero.
+	 */
+	public void addMovement()
+	{
 		movements++;
 	}
-
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Asigna valores aleatorios a la matriz que representa el tablero Taquin.
+	 */
+	public void randomizeBoard()
+	{	
+		for (int i = 0; i < this.currentState.length ; i++)
+		{
+			for (int j = 0; j < this.currentState.length; j++) 
+			{
+				Random rnumber = new Random();
+				int number	 = rnumber.nextInt( this.currentState.length ) + 1; 
+				currentState[i][j] = number+"";
+			}
+		}
+	
+	}
 }

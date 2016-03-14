@@ -1,4 +1,12 @@
-.competition{
+.btn 
+{
+	position:relative;
+	left: 350px;
+	bottom: 150px;
+}
+
+.competition
+{
 	max-width: 100%;
 	min-height: 60vh;
 	margin-top: 20px;
@@ -15,29 +23,51 @@
     width: 33.33%;
 
 }
-.piece.center-align{
-	font-size: 4rem;
+
+.piece.center-align
+{
+	font-size: 2rem;
 	background-color: #03A9F4;
 	border-style: solid ;
-    border-width: 5px;
+    border-width: 3.5px;
     border-color: black;
 }
-.row{
+
+.row
+{
 	margin: 0px;
 }
 
-footer {
+footer 
+{
 	margin : 0px;
 }
 
-.player-board{
+.player-board
+{
 	width : 50%;
 }
-.taquin{
+
+.taquin
+{
 	display: flex;
 	flex-wrap:  wrap ;
 	justify-content: center;
 }
-.row .col.s5{
+
+.row .col.s5
+{
 	margin-left:0px;
+}
+
+table, th, td 
+{
+   border: 1px solid black;
+   text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    height: 50px;
 }

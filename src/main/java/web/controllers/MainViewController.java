@@ -8,8 +8,15 @@ public class MainViewController {
 	
 	
 	// La vista puede ser para ambos views
-	@RequestMapping(value="/hi/")
-	public String webSocketExample(){
+	@RequestMapping(value="/Taquin")
+	public String webSocketExample()
+	{
 		return "index";
 	}	
+	
+	@RequestMapping(value="/ClienteJS")
+	public String createClientJS()
+	{
+		return "client1";
+	}
 }
