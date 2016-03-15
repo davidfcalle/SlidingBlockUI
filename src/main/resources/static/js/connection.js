@@ -45,21 +45,6 @@ var numBoards = 2;
 var stompClient = null;
 
 
-function voltear()
-{
-	var c1 = $("#score-1");
-	var c2 = $("#score-2");
-	c1.css({position: "relative"});
-	c2.css({position: "relative"});
-	var posBlankBiece = c1.offset();
-	var posPiece = c2.offset();
-	var correrC1 = posPiece.left;
-	var correrC2 = posBlankBiece.left + correrC1;
-	c1.animate({right : "-="+correrC1 },1000, function(){alert("JAJA")});
-
-	c2.animate({right : "+="+correrC2 },1000, function(){alert("C2")});
-}
-
 
 //--------------------------------------------------------------Funciones------------------------------------------------------------------
 
@@ -86,7 +71,7 @@ function connect()
 								updateGame( game );
 						});
 			});
-	//getForObject(null, "/api/game/new/", function(data) {});
+	//postForObject(null, "/api/game/new/", function(data) {});
 	
 }
 
@@ -236,8 +221,12 @@ function updateUserBoard( player )
 			}
 			else
 			{
-				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( player.board.currentState[i][j] );
+				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( position );
 			}
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({position: ""});
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({top: ""});
+
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({right: ""});
 			position++;
 		}
 	}
@@ -278,82 +267,28 @@ function moveRightAndLeft( player, blankPiece, piece )
 {
 	blankPiece.css({position: "relative"});
 	piece.css({position: "relative"});
-	
-	var posBlankBiece = blankPiece.position();
-	var posPiece = piece.position();
-	console.log( posBlankBiece );
-	console.log( posPiece );
-	var correrC1 = posPiece.left;
-	var correrC2 = posBlankBiece.left + correrC1;
-	
-	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
-	
-	blankPiece.animate({right : "-="+correrC1 },1000, function(){  });
 
-	piece.animate({right : "+="+correrC2 },1000, function(){updateUserBoard(  player ); console.log("ACTUA");} );
+	var correrC1 = blankPiece.width();
+	var correrC2 = blankPiece.width();
+		
+	blankPiece.animate({right : "-="+correrC1 },400, function(){  });
 
-}
-/*
-//-------------------------------------------------------------------------------------------------------------------------------------
-function moveToLeft( player, blankPiece, piece )
-{
-	blankPiece.css({position: "relative"});
-	piece.css({position: "relative"});
-	
-	var posBlankBiece = blankPiece.position();
-	var posPiece = piece.position();
-	console.log( posBlankBiece );
-	console.log( posPiece );
-	var correrC1 = posPiece.left + posBlankBiece.left;
-	var correrC2 = posBlankBiece.left;
-	
-	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
-	
-	blankPiece.animate({right : "+="+correrC1 },1000, function(){ });
-
-	piece.animate({right : "-="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
+	piece.animate({right : "+="+correrC2 },400, function(){updateUserBoard(  player ); console.log("ACTUA");} );
 
 }
 
-//-------------------------------------------------------------------------------------------------------------------------------------
-function moveToDown( player, blankPiece, piece )
-{
-	blankPiece.css({position: "relative"});
-	piece.css({position: "relative"});
-	
-	var posBlankBiece = blankPiece.position();
-	var posPiece = piece.position();
-	console.log( posBlankBiece );
-	console.log( posPiece );
-	var correrC1 = posPiece.top;
-	var correrC2 = posBlankBiece.top + correrC1;
-	
-	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
-	
-	blankPiece.animate({top : "-="+correrC1 },1000, function(){ });
-
-	piece.animate({top : "+="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
-
-}
-*/
 //-------------------------------------------------------------------------------------------------------------------------------------
 function moveUpAndDown( player, blankPiece, piece )
 {
 	blankPiece.css({position: "relative"});
 	piece.css({position: "relative"});
-	
-	var posBlankBiece = blankPiece.position();
-	var posPiece = piece.position();
-	console.log( posBlankBiece );
-	console.log( posPiece );
-	var correrC1 = posPiece.top + posBlankBiece.top;
-	var correrC2 = posBlankBiece.top;
-	
-	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
-	
-	blankPiece.animate({top : "+="+correrC1 },1000, function(){ });
 
-	piece.animate({top : "-="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
+	var correrC1 = blankPiece.height()
+	var correrC2 = blankPiece.height()
+	
+	blankPiece.animate({top : "+="+correrC1 },400, function(){ });
+
+	piece.animate({top : "-="+correrC2 },400, function(){ updateUserBoard(  player ); console.log("ACTUA");});
 
 }
 

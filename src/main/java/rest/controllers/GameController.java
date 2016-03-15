@@ -56,7 +56,7 @@ public class GameController
 	 * @return game: El Game creado.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/game/new", method = RequestMethod.GET)
+	@RequestMapping(value="/api/game/new", method = RequestMethod.POST)
 	public Game startNewGame()
 	{
 		this.game.setNewSuscriber(true );
@@ -111,7 +111,7 @@ public class GameController
 	 * 			  debido a que no hay tableros disponibles.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/player{idPlayer}/new{namePlayer}", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/new/{namePlayer}", method = RequestMethod.POST)
 	public Player startNewPlayer( @PathVariable Integer idPlayer, @PathVariable String namePlayer )
 	{
 		Player player  = new Player( );
@@ -168,7 +168,7 @@ public class GameController
 	 * 			  Null si el movimiento no es valido.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/board{idPlayer}/move/right", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/board/move/right", method = RequestMethod.POST)
 	public Player movePieceOnBoardToRight( @PathVariable Integer idPlayer )
 	{
 		Player p = this.game.movePieceOnBoardToRight( idPlayer );
@@ -187,7 +187,7 @@ public class GameController
 	 * 			  Null si el movimiento no es valido.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/board{idPlayer}/move/left", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/board/move/left", method = RequestMethod.POST)
 	public Player movePieceOnBoardToLeft( @PathVariable Integer idPlayer )
 	{
 		Player p = this.game.movePieceOnBoardToLeft( idPlayer );
@@ -206,7 +206,7 @@ public class GameController
 	 * 			  Null si el movimiento no es valido.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/board{idPlayer}/move/up", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/board/move/up", method = RequestMethod.POST)
 	public Player movePieceOnBoardToUp( @PathVariable Integer idPlayer )
 	{
 		Player p = this.game.movePieceOnBoardToUp( idPlayer );
@@ -225,7 +225,7 @@ public class GameController
 	 * 			  Null si el movimiento no es valido.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/board{idPlayer}/move/down", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/board/move/down", method = RequestMethod.POST)
 	public Player movePieceOnBoardToDown( @PathVariable Integer idPlayer )
 	{
 		Player p = this.game.movePieceOnBoardToDown( idPlayer );

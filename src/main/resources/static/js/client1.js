@@ -53,7 +53,6 @@ function generateMatrix( )
 			board.currentState[i][j] = Math.round ( Math.random( ) * size );
 		}
 	}
-	console.log( board );
 	postForObject( board, "/api/board/new/", function(data){}, function(data){})
 	//showGeneratedBoard( );
 }
@@ -95,20 +94,21 @@ function generatePlayerPro( )
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Informa nombre y id para identificarse como nuevo jugador ante la vista
- * consumiendo el servicio de la URL "/api/player{idPlayer}/new{namePlayer}/", 
+ * consumiendo el servicio de la URL "/api/player/{idPlayer}/new/{namePlayer}/", 
  * donde en {idPlayer} se debe colocar el id unico del jugador y en 
  * {namePlayer} el nombre a asignar al jugador.
- * Ejemplo: url: /api/player1/newdadsez/
+ * Ejemplo: url: /api/player/1/new/dadsez/
  * 			Se identifica ante la vista como jugador No. 1 con el nombre dadsez.
  * NO se usa SERIALIZACION.
  */
 function generatePlayer( )
 {
 	createPlayer();
-	var url = "/api/player"+idPlayer+"/new"+namePlayer+"/";
+	var url = "/api/player/"+idPlayer+"/new/"+namePlayer+"/";
 
 	$.ajax(
 	{
+		type : "post",
 		url : url,
 	    contentType: 'application/json; charset=utf-8',
 		success : function(data){
@@ -150,60 +150,60 @@ function createPlayer( )
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia la derecha.
- * Para esto consume el servicio de la URL "/api/board{idPlayer}/move/right"
+ * Para esto consume el servicio de la URL "/api/player/{idPlayer}/board/move/right"
  * donde en {idPlayer} se debe colocar el id unico del jugador con el fin de saber que tablero editar.
- * Ejemplo: url: /api/board{1}/move/right/
+ * Ejemplo: url: /api/player/1/board/move/right/
  * 			Se movera la pieza blanca hacia la derecha del tablero del jugador No. 1.
  * NO se usa SERIALIZACION.
  */
 function moveBoardToRight( )
 {
-	var url = "/api/board"+idPlayer+"/move/right/";
+	var url = "/api/player/"+idPlayer+"/board/move/right/";
 	moveBoard( url );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia la izquierda.
- * Para esto consume el servicio de la URL "/api/board{idPlayer}/move/left"
+ * Para esto consume el servicio de la URL "/api/player/{idPlayer}/board/move/left"
  * donde en {idPlayer} se debe colocar el id unico del jugador con el fin de saber que tablero editar.
- * Ejemplo: url: /api/board{1}/move/left/
+ * Ejemplo: url: /api/player/{1}/board/move/left/
  * 			Se movera la pieza blanca hacia la izquierda del tablero del jugador No. 1.
  * NO se usa SERIALIZACION.
  */
 function moveBoardToLeft( )
 {
-	var url = "/api/board"+idPlayer+"/move/left/";
+	var url = "/api/player/"+idPlayer+"/board/move/left/";
 	moveBoard( url );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia arriba.
- * Para esto consume el servicio de la URL "/api/board{idPlayer}/move/up"
+ * Para esto consume el servicio de la URL "/api/player/{idPlayer}/board/move/up"
  * donde en {idPlayer} se debe colocar el id unico del jugador con el fin de saber que tablero editar.
- * Ejemplo: url: /api/board{1}/move/up/
+ * Ejemplo: url: /api/player/{1}/board/move/up/
  * 			Se movera lapieza blanca hacia arriba del tablero del jugador No. 1.
  * NO se usa SERIALIZACION.
  */
 function moveBoardToUp( )
 {
-	var url = "/api/board"+idPlayer+"/move/up/";
+	var url = "/api/player/"+idPlayer+"/board/move/up/";
 	moveBoard( url );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia abajo.
- * Para esto consume el servicio de la URL "/api/board{idPlayer}/move/down"
+ * Para esto consume el servicio de la URL "/api/player/{idPlayer}/board/move/down"
  * donde en {idPlayer} se debe colocar el id unico del jugador con el fin de saber que tablero editar.
- * Ejemplo: url: /api/board{1}/move/down/
+ * Ejemplo: url: /api/player/{1}/board/move/down/
  * 			Se movera la pieza blanca hacia abajo del tablero del jugador No. 1.
  * NO se usa SERIALIZACION.
  */
 function moveBoardToDown( )
 {
-	var url = "/api/board"+idPlayer+"/move/down/";
+	var url = "/api/player/"+idPlayer+"/board/move/down/";
 	moveBoard( url );	
 }
 
@@ -216,6 +216,7 @@ function moveBoard( url )
 {
 	$.ajax(
 		{
+			type : "post",
 			url : url,
 			contentType: 'application/json; charset=utf-8',
 			success : function(data){
@@ -223,9 +224,7 @@ function moveBoard( url )
 			{
 				//Solo se usa para actualizar el tablero del Cliente JS. Se puede quitar no es relevante.
 				playerPlay.board = data.board;
-				board = data.board;
-				console.log("VA A MOSTRAR MATRIZ");
-				console.log( data );				
+				board = data.board;				
 				showGeneratedBoard( );
 			}
 			else
@@ -241,7 +240,7 @@ function moveBoard( url )
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia la izquierda.
- * Para esto consume el servicio de la URL "/api/board/move/" y se debe 
+ * Para esto consume el servicio de la URL "/api/player//board/move/" y se debe 
  * enviar como datos de la peticion HTTP un objeto Player, serializado, 
  * donde su objeto Piece de Board este moificado de tal manera que represente el
  * movimiento hacia la izquierda.
@@ -259,7 +258,7 @@ function moveBoardToLeftPro( )
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia la derecha.
- * Para esto consume el servicio de la URL "/api/board/move/" y se debe 
+ * Para esto consume el servicio de la URL "/api/player//board/move/" y se debe 
  * enviar como datos de la peticion HTTP un objeto Player, serializado, 
  * donde su objeto Piece de Board este moificado de tal manera que represente el
  * movimiento hacia la derecha.
@@ -277,7 +276,7 @@ function moveBoardToRightPro( )
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia arriba.
- * Para esto consume el servicio de la URL "/api/board/move/" y se debe 
+ * Para esto consume el servicio de la URL "/api/player//move/" y se debe 
  * enviar como datos de la peticion HTTP un objeto Player, serializado, 
  * donde su objeto Piece de Board este moificado de tal manera que represente el
  * movimiento hacia arriba.
@@ -295,7 +294,7 @@ function moveBoardToUpPro( )
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia abajo.
- * Para esto consume el servicio de la URL "/api/board/move/" y se debe 
+ * Para esto consume el servicio de la URL "/api/player//move/" y se debe 
  * enviar como datos de la peticion HTTP un objeto Player, serializado, 
  * donde su objeto Piece de Board este moificado de tal manera que represente el
  * movimiento hacia abajo.
@@ -329,8 +328,6 @@ function moveBoardPro( )
 				board = data.board;
 				playerPlay.points = data.points;
 				playerPlay.board = data.board;
-				console.log("VA A MOSTRAR MATRIZ");
-				console.log( data );
 				showGeneratedBoard( data.board );
 			}
 			else

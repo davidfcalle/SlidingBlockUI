@@ -391,7 +391,7 @@ public class Game
 		int size = player.getBoard().getCurrentState().length;
 		this.piece_1_ToMove = ( size * blankActualPos.getRow() ) + blankActualPos.getColumn();
 		this.piece_2_ToMove = ( size * blankNewPos.getRow() ) + blankNewPos.getColumn();
-		System.out.println("P1: " + piece_1_ToMove + " P2: " + piece_2_ToMove );
+
 		if( blankNewPos.getRow() < 0 || blankNewPos.getRow() >= size || blankNewPos.getColumn() < 0 || blankNewPos.getColumn() >= size )
 			return null;
 		
