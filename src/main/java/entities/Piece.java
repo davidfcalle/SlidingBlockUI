@@ -51,4 +51,12 @@ public class Piece {
 	{
 		this.column = column;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Piece [row=" + row + ", column=" + column + "]";
+	}
 }

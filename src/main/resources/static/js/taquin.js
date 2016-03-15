@@ -268,12 +268,11 @@ function moveRightAndLeft( player, blankPiece, piece )
 	blankPiece.css({position: "relative"});
 	piece.css({position: "relative"});
 
-	var correrC1 = blankPiece.width();
-	var correrC2 = blankPiece.width();
+	var animationSize = blankPiece.width();
+	var animationSize = blankPiece.width();
 		
-	blankPiece.animate({right : "-="+correrC1 },400, function(){  });
-
-	piece.animate({right : "+="+correrC2 },400, function(){updateUserBoard(  player ); console.log("ACTUA");} );
+	blankPiece.animate( { right : "-="+animationSize }, 100, function(){  });
+	piece.animate( { right : "+="+animationSize }, 100, function(){ updateUserBoard(  player ); } );
 
 }
 
@@ -283,12 +282,10 @@ function moveUpAndDown( player, blankPiece, piece )
 	blankPiece.css({position: "relative"});
 	piece.css({position: "relative"});
 
-	var correrC1 = blankPiece.height()
-	var correrC2 = blankPiece.height()
-	
-	blankPiece.animate({top : "+="+correrC1 },400, function(){ });
+	var animationSize = blankPiece.height()
 
-	piece.animate({top : "-="+correrC2 },400, function(){ updateUserBoard(  player ); console.log("ACTUA");});
+	blankPiece.animate( { top : "+="+animationSize }, 100, function(){ });
+	piece.animate( { top : "-="+animationSize }, 100, function(){ updateUserBoard(  player );});
 
 }
 

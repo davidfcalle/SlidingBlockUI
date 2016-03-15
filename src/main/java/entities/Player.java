@@ -79,6 +79,14 @@ public class Player {
 		this.board = board;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Player [id=" + id + ", name=" + name + ", points=" + points + ", board=" + board + "]";
+	}
+
 	
 	
 }

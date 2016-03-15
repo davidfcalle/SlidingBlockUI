@@ -1,5 +1,6 @@
 package entities;
 
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -81,6 +82,15 @@ public class Board {
 		this.blank = blank;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Board [currentState=" + Arrays.toString(currentState) + ", movements=" + movements + ", blank=" + blank
+				+ "]";
+	}
+	
 /**--------------------------------------------------------------Negocio-----------------------------------------------------------------*/
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------
