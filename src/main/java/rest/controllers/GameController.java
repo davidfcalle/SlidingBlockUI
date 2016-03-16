@@ -19,13 +19,14 @@ import entities.Player;
 
 
 /**
- * @author dadsez
+ * @author David Suarez
  *
  */
 @RestController
 public class GameController 
 {
-	
+
+/**--------------------------------------------------------------Attributtes--------------------------------------------------------------*/
 	public final static String TOPIC_URI = "/topics/game";
 	
 	private Game game;
@@ -33,8 +34,9 @@ public class GameController
 	private boolean updatingQueue;
 	private Reviewer reviewer;
 	private SimpMessagingTemplate template;
+
 	
-/**-------------------------------------------------------------------Comunicacion---------------------------------------------------------*/
+/**-------------------------------------------------------------------Comunicaction---------------------------------------------------------*/
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------
 	/**
@@ -72,7 +74,8 @@ public class GameController
 		template.convertAndSend( TOPIC_URI , newGame );
 	}
 	
-/**--------------------------------------------------------------Creacion-----------------------------------------------------------------*/
+	
+/**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------		
 	/**
@@ -160,7 +163,32 @@ public class GameController
 		this.game.setNewSuscriber(false );
 	}
 
-/**--------------------------------------------------------------Movimiento---------------------------------------------------------------*/
+/**--------------------------------------------------------------Assignment---------------------------------------------------------------*/
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Delega al objeto Game reasignar el tablero board a un Player con id idPlayer. 
+	 * Para luego actualizar la vista con la nueva configuracion 
+	 * del juagdor si el jugador existe.
+	 * @param idPlayer: Identificador unico del jugador al que se le asignara el nuevo tablero.
+	 * @param board: Instancia de Board, tablero que se le asiganara el jugador cuyo id es idPlayer.
+	 * @return p: Objeto Player que posee el nuevo tablero asignado.
+	 * 			  Null si el jugador con idPlayer no existe.
+	 */
+	@CrossOrigin(origins="*")
+	@RequestMapping(value="/api/player/{idPlayer}/challenge", method = RequestMethod.POST)
+	public Player assignBoardToPlayer( @PathVariable Integer idPlayer, @RequestBody Board board )
+	{
+		Player p = this.game.assignBoardToPlayer( idPlayer, board );
+		
+		if ( p != null ) 
+			this.addEvent();
+		
+		return p;
+	}
+	
+	
+/**--------------------------------------------------------------Movement---------------------------------------------------------------*/
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
@@ -288,7 +316,7 @@ public class GameController
 	        	
 	        	try 
 	        	{
-					Thread.sleep( 50 );
+					Thread.sleep( 150 );
 				} 
 	        	catch (InterruptedException e) 
 	        	{
@@ -297,7 +325,7 @@ public class GameController
 	        }
 	        try 
         	{
-				Thread.sleep( 200 );
+				Thread.sleep( 300 );
 			} 
 	        catch (InterruptedException e) 
         	{

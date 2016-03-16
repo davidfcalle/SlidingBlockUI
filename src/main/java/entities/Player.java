@@ -1,8 +1,12 @@
 package entities;
 
-public class Player {
-	public final static Integer PLAYER_1 = 1;
-	public final static Integer PLAYER_2 = 2	;
+
+/**
+ * @author David Suarez.
+ *
+ */
+public class Player 
+{
 	
 	private Integer id;
 	private String name;

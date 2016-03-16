@@ -1,25 +1,33 @@
 package entities;
 
-public class Piece {
+/**
+ * @author David Suarez
+ *
+ */
+public class Piece 
+{
 
 	/**
-	 * @param row: Fila donde se ubicara la pieza blanca.
+	 * row: Fila donde se ubicara la pieza blanca.
 	 */
 	private Integer row;
 
 
 	/**
-	 * @param column: Columna donde se ubicara la pieza blanca.
+	 * column: Columna donde se ubicara la pieza blanca.
 	 */
 	private Integer column;
 	
 /**--------------------------------------------------------------Constructor--------------------------------------------------------------*/
+	
 	public Piece()
 	{
 		
 	}
 
+	
 /**--------------------------------------------------------------Getter&Setter----------------------------------------------------------*/		
+	
 	/**
 	 * @return the row
 	 */

@@ -46,9 +46,9 @@ var stompClient = null;
 
 
 
-//--------------------------------------------------------------Funciones------------------------------------------------------------------
+//--------------------------------------------------------------Functions------------------------------------------------------------------
 
-/**--------------------------------------------------------------Comunicacion-------------------------------------------------------------*/
+/**--------------------------------------------------------------Comunication-------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
@@ -86,10 +86,9 @@ function disconnect()
 		stompClient.disconnect();
 	}
 	
-//	console.log("Disconnected");
 }
 
-/**--------------------------------------------------------------Creacion-----------------------------------------------------------------*/
+/**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
@@ -120,7 +119,6 @@ function addBoardsTemplates( )
 	
 	//Se recuperan elementos HTML de cada jugador para cambiarles su ID (NamePlayer1 -> NamePlayerN).
 	var namePlayerField = templateCopy.find("#Name1");
-	//console.log(namePlayerField);
 	var pointsPlayerField = templateCopy.find("#Points1");
 	var movementsPlayerField = templateCopy.find("#Movements1");
 	var boardPlayerField = templateCopy.find("#Board1");
@@ -150,7 +148,7 @@ function addBoardsTemplates( )
 	$("#TableroPrincipal").append(templateCopy);
 }
 
-/**--------------------------------------------------------------ActualizacionVista-------------------------------------------------------*/
+/**--------------------------------------------------------------ViewActualization-------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
@@ -172,13 +170,10 @@ function updateGame( game )
 		updateUserInfo( player );
 	}
 	
-	if( game.rebuildBoard )
+	if( game.newBoard )
 	{	
-		if( game.newBoard )
-		{
-			buildBoard( player );			
-		}
-		updateUserBoard( player, game.typeMovement );
+		buildBoard( player );			
+		updateUserBoard( player );
 	}
 	
 	if( game.moveBoard )
@@ -195,10 +190,8 @@ function updateGame( game )
  */
 function updateUserInfo( player )
 {
-	//console.log($("#NamePlayer"+player.id));
 	$("#NamePlayer"+player.id).html( "Player " + player.id +": " + player.name );
 	$("#PointsPlayer"+player.id).html( "Points: " + player.points );
-	$("#MovementsPlayer"+player.id).html( "Movements: " + player.board.movements );
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -211,22 +204,25 @@ function updateUserBoard( player )
 	var position = 0;
 	var blankPos = player.board.blank;
 
+	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
 	for( var i = 0 ; i < player.board.currentState.length; i++)
 	{
 		for( var j = 0 ; j < player.board.currentState.length; j++)
 		{
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css( "background-color", ""  );
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({position: ""});
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({top: ""});
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({right: ""});
+			
 			if( i == blankPos.row && j == blankPos.column )
 			{
-				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "B" );
+				$( $("#BoardPlayer"+player.id+" .piece")[position]).css( "background-color", "black" );
+				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( " " );
 			}
 			else
 			{
 				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( position );
 			}
-			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({position: ""});
-			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({top: ""});
-
-			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({right: ""});
 			position++;
 		}
 	}
@@ -242,7 +238,6 @@ function firstUpdate( game )
 {
 	var player;
 	var boardsTam = game.jugadores.length;
-	//console.log(game)
 	
 	for( var i = 0; i < boardsTam; i++ )
 	{
@@ -260,7 +255,7 @@ function firstUpdate( game )
 	getForObject( null, "/api/game/endUpdate/", function(){} );
 }
 
-/**--------------------------------------------------------------Movimiento---------------------------------------------------------------*/
+/**--------------------------------------------------------------Movement---------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 function moveRightAndLeft( player, blankPiece, piece )
@@ -271,8 +266,8 @@ function moveRightAndLeft( player, blankPiece, piece )
 	var animationSize = blankPiece.width();
 	var animationSize = blankPiece.width();
 		
-	blankPiece.animate( { right : "-="+animationSize }, 100, function(){  });
-	piece.animate( { right : "+="+animationSize }, 100, function(){ updateUserBoard(  player ); } );
+	blankPiece.animate( { right : "-="+animationSize }, 70, function(){  });
+	piece.animate( { right : "+="+animationSize }, 70, function(){ updateUserBoard(  player ); } );
 
 }
 
@@ -284,8 +279,8 @@ function moveUpAndDown( player, blankPiece, piece )
 
 	var animationSize = blankPiece.height()
 
-	blankPiece.animate( { top : "+="+animationSize }, 100, function(){ });
-	piece.animate( { top : "-="+animationSize }, 100, function(){ updateUserBoard(  player );});
+	blankPiece.animate( { top : "+="+animationSize }, 70, function(){ });
+	piece.animate( { top : "-="+animationSize }, 70, function(){ updateUserBoard(  player );});
 
 }
 
@@ -308,8 +303,6 @@ function movePieceOnBoard( player, typeMovement, piece_1, piece_2 )
 	var blankPiece = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_1] );
 	var blankPieceTo = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_2] );
 
-	$("#MovementsPlayer" + player.id ).text( "Movements: " + board.movements );
-	
 	switch( typeMovement ) 
 	{
 	    case 0:

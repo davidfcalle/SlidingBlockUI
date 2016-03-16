@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * @author David Suarez
+ *
+ */
 public class Game 
 {
 	
@@ -17,7 +21,7 @@ public class Game
 	private boolean newPlayer;
 	private boolean newSuscriber;
 	private boolean moveBoard;
-	private boolean rebuildBoard;
+	
 	
 /**--------------------------------------------------------------Constructor--------------------------------------------------------------*/	
 	public Game()
@@ -30,7 +34,6 @@ public class Game
 		typeMovement = -1;
 		newBoard = false;
 		newSuscriber = false;
-		rebuildBoard= false;
 		moveBoard = false;
 		newPlayer = false;	
 	}
@@ -45,13 +48,13 @@ public class Game
 		typeMovement = other.typeMovement;
 		newBoard = other.newBoard;
 		newSuscriber = other.newSuscriber;
-		rebuildBoard= other.rebuildBoard;
 		moveBoard = other.moveBoard;
 		newPlayer = other.newPlayer;	
 	}
 	
 	
 /**--------------------------------------------------------------Getter&Setter----------------------------------------------------------*/		
+	
 	/**
 	 * @return the jugadores
 	 */
@@ -115,22 +118,6 @@ public class Game
 	{
 		this.newBoard = newBoard;
 	}
-	
-	/**
-	 * @return the rebuildBoard
-	 */
-	public boolean isRebuildBoard() 
-	{
-		return rebuildBoard;
-	}
-
-	/**
-	 * @param rebuildBoard the rebuildBoard to set
-	 */
-	public void setRebuildBoard(boolean rebuildBoard) 
-	{
-		this.rebuildBoard = rebuildBoard;
-	}	
 	
 	/**
 	 * @return the newPlayer
@@ -233,11 +220,11 @@ public class Game
 		return "Game [players=" + players + ", numPlayers=" + numPlayers + ", idPlayerToUpd=" + idPlayerToUpd
 				+ ", typeMovement=" + typeMovement + ", piece_1_ToMove=" + piece_1_ToMove + ", piece_2_ToMove="
 				+ piece_2_ToMove + ", newBoard=" + newBoard + ", newPlayer=" + newPlayer + ", newSuscriber="
-				+ newSuscriber + ", moveBoard=" + moveBoard + ", rebuildBoard=" + rebuildBoard + "]";
+				+ newSuscriber + ", moveBoard=" + moveBoard + "]";
 	}
 	
 	
-/**--------------------------------------------------------------Creacion-----------------------------------------------------------------*/
+/**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
@@ -259,7 +246,6 @@ public class Game
 		this.addPlayer( player );
 		
 		this.idPlayerToUpd = player.getId() - 1;
-		this.rebuildBoard = true;
 		this.newBoard = true;
 		this.newPlayer = true;
 		this.moveBoard = false;
@@ -276,7 +262,9 @@ public class Game
 	{
 		this.players.add( p );
 	}
-/**--------------------------------------------------------------Asignacion---------------------------------------------------------------*/
+	 
+	 
+/**--------------------------------------------------------------Assignment---------------------------------------------------------------*/
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
@@ -301,17 +289,44 @@ public class Game
 		playerCreated.setId( player.getId() );
 		playerCreated.setName( player.getName( ) );
 		playerCreated.setPoints( player.getPoints() );
+		playerCreated.getBoard().setMovements( 0 );
 		this.numPlayers++;
 		
 		this.idPlayerToUpd = playerCreated.getId() - 1;
-		this.rebuildBoard = false;
 		this.newBoard = false;
 		this.newPlayer = true;
 		this.moveBoard = false;
 		return playerCreated;
 	}
 
-/**--------------------------------------------------------------Movimiento---------------------------------------------------------------*/
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Verifica si el juagdor con id idPlayer existe y esta disponible.
+	 * SI lo anterior se cumple se encarga de asignar el nuevo tablero 
+	 * que viene en board a un Player con id idPlayer
+	 * Por ultimo prende las banderas necesarias para informar a la vista que secciones debe actualizar.
+	 * @param player: Jugador al que se le asignara un tablero.
+	 * @return playerCreated: Una instancia de Player si se pudo crear y asignarle el tablero.
+	 * 						 Null si el tablero pedido aun no existe o no esta disponible.
+	 */
+	public Player assignBoardToPlayer(Integer idPlayer, Board board ) 
+	{
+		if( idPlayer > this.players.size() )
+			return null;
+		
+		Player player = this.players.get( idPlayer - 1 );
+		player.setBoard( board );
+		player.getBoard().setMovements( 0 );
+		
+		this.idPlayerToUpd = player.getId() - 1;
+		this.newBoard = true;
+		this.newPlayer = false;
+		this.moveBoard = false;
+		return player;
+	}
+
+	
+/**--------------------------------------------------------------Movement---------------------------------------------------------------*/
 
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**

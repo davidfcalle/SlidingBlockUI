@@ -100,6 +100,3 @@ class StaticResourceConfiguration extends WebMvcConfigurerAdapter {
 	}
 	
 }
-
-
-
