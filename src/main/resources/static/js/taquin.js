@@ -229,7 +229,6 @@ function updateUserBoard( player )
  */
 function updateBlankPosition(  currentPieceBlank,  newPieceBlank )
 {	
-	console.log( "QUITO BLACK A: " + currentPieceBlank.text() );
 	currentPieceBlank.css( "background-color", ""  );
 	currentPieceBlank.css( { position: "" } );
 	currentPieceBlank.css( { top: "" } );

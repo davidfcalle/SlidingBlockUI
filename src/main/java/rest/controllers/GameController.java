@@ -71,7 +71,7 @@ public class GameController
 	//---------------------------------------------------------------------------------------------------------------------------------------
 	public void sendGameUpdate( Game newGame )
 	{
-		System.out.println("TIPO MOV: "+ newGame.getTypeMovement() );
+		System.out.println("SACO TIPO MOV: "+ newGame.getTypeMovement() +"\n");
 		template.convertAndSend( TOPIC_URI , newGame );
 	}
 	
@@ -88,7 +88,6 @@ public class GameController
 	public Game startNewGame()
 	{
 		this.game.setNewSuscriber(true );
-		//System.out.println("START NEW GAME");
 		this.addEvent();
 		return game;
 	}
@@ -333,7 +332,7 @@ public class GameController
 	        	
 	        	try 
 	        	{
-					Thread.sleep( 150 );
+					Thread.sleep( 200 );
 				} 
 	        	catch (InterruptedException e) 
 	        	{
@@ -342,7 +341,7 @@ public class GameController
 	        }
 	        try 
         	{
-				Thread.sleep( 300 );
+				Thread.sleep( 350 );
 			} 
 	        catch (InterruptedException e) 
         	{

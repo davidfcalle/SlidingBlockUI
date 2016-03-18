@@ -91,6 +91,17 @@ public class Player
 		return "Player [id=" + id + ", name=" + name + ", points=" + points + ", board=" + board + "]";
 	}
 
+	public void print(String[][] board2) {
+		for( int i =0; i < board2.length; i ++ )
+		{
+			for(int j = 0; j < board2.length; j++ )
+			{
+				System.out.print( board2[i][j] + " ");
+			}
+			System.out.println("\n");
+		}
+	}
+
 	
 	
 }

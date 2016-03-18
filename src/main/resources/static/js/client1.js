@@ -101,7 +101,6 @@ function createMatrix( )
 				else
 				{
 					value = Math.round ( Math.random( ) * maxValue );
-					console.log( "GENRO: " + value );
 					if( !usedValues[value] && matrix.currentState[i][j] === "-1" )
 					{
 						usedValues[value] = true;
@@ -358,6 +357,7 @@ function challengePlayer( )
 function moveBoardToRight( )
 {
 	var url = "/api/player/"+idPlayer+"/board/move/right/";
+	console.log("DERECHA");
 	moveBoard( url );
 }
 
@@ -373,6 +373,7 @@ function moveBoardToRight( )
 function moveBoardToLeft( )
 {
 	var url = "/api/player/"+idPlayer+"/board/move/left/";
+	console.log("IZQUIERDA");
 	moveBoard( url );
 }
 
@@ -388,6 +389,7 @@ function moveBoardToLeft( )
 function moveBoardToUp( )
 {
 	var url = "/api/player/"+idPlayer+"/board/move/up/";
+	console.log("ARRIBA");
 	moveBoard( url );
 }
 
@@ -403,6 +405,7 @@ function moveBoardToUp( )
 function moveBoardToDown( )
 {
 	var url = "/api/player/"+idPlayer+"/board/move/down/";
+	console.log("ABAJO");
 	moveBoard( url );	
 }
 
@@ -576,35 +579,16 @@ function guau( )
 	moveBoardToRight();
 	moveBoardToRight();
 	moveBoardToDown();
-	moveBoardToLeft();
-	moveBoardToDown();
-	moveBoardToRight();
-	moveBoardToDown();
-	moveBoardToUp();
-	moveBoardToDown();
-	moveBoardToDown();
-	moveBoardToLeft();
-	moveBoardToLeft();
-	moveBoardToLeft();
-	moveBoardToUp();
-	moveBoardToLeft();
-	moveBoardToUp();
-	moveBoardToUp();
-	moveBoardToUp();
-	moveBoardToRight( );
-	/*	moveBoardToDown();
-	moveBoardToRight();
-	moveBoardToUp();
-	moveBoardToLeft();
-	moveBoardToDown();	
-	moveBoardToLeft();
-	moveBoardToLeft();
-	moveBoardToUp();
 	moveBoardToDown();
 	moveBoardToDown();
 	moveBoardToDown();
-	moveBoardToRight();
+	moveBoardToLeft();
+	moveBoardToLeft();
+	moveBoardToLeft();
+	moveBoardToLeft();
 	moveBoardToUp();
 	moveBoardToUp();
-	moveBoardToUp();*/
+	moveBoardToUp();
+	moveBoardToUp( );
+	
 }
