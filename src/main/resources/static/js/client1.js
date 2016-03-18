@@ -25,53 +25,109 @@ var namePlayer;
 
 //--------------------------------------------------------------Functions------------------------------------------------------------------
 
+
+function missingValues( usedValues )
+{
+	console.log( usedValues );
+ for( var i = 0; i < usedValues.length; i++ )
+ {
+	 if ( !usedValues[i] )
+		 return true;
+ }
+ return false;
+}
+
+
 /**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
+
+/**
+ * Crea un nuevo objeto Board para representar la informacion del tablero Taquin.
+ * Asignar la posicion de la pieza en blanco y asignar valores aleatorios a la matriz.
+ */
+function createMatrix( )
+{
+	var size = $("#sizeBoard").val()
+	var row = $("#blankRow").val() - 1;
+	var column = $("#blankColumn").val() - 1;
+	
+	if( size < 2 )
+	{
+		alert( "Board's size cannot be less than two!!" );
+		return null;
+	}
+	
+	if ( row < 0 || row >= size || column < 0 || column >= size )
+	{
+		alert( "Blank piece's positon invalid!! ")
+		return null;
+	}
+
+	var matrix = new Object( );
+	var value = 0;
+	var maxValue = size * size - 2;
+	var usedValues = new Array( maxValue );
+		
+	console.log( usedValues.length );
+	matrix.movements = 0;	
+	matrix.blank = new Object ();
+	matrix.blank.row = row;
+	matrix.blank.column = column;
+	matrix.currentState = new Array( size );
+	
+		for( var i = 0; i < maxValue; i++ )
+			usedValues[i] = false;
+		
+	for( var i = 0; i < size; i++)
+		matrix.currentState[i] = new Array( size );
+
+	for( var i = 0 ; i < size; i++)
+	{
+		for( var j = 0 ; j < size; j++)
+		{
+			matrix.currentState[i][j] = "-1";
+		}
+	}
+					
+	while( missingValues( usedValues ) )
+	{
+		for( var i = 0 ; i < size; i++)
+		{
+			for( var j = 0 ; j < size; j++)
+			{
+				if( i == row && j == column )
+				{
+					matrix.currentState[i][j] = "B";
+				}
+				else
+				{
+					value = Math.round ( Math.random( ) * maxValue );
+					console.log( "GENRO: " + value );
+					if( !usedValues[value] && matrix.currentState[i][j] === "-1" )
+					{
+						usedValues[value] = true;
+						matrix.currentState[i][j] = (value + 1) + "";
+						
+					}
+				}
+			//	matrix.currentState[i][j] = p++;
+			}
+		}
+	}	
+	
+	return matrix;
+}
 /**
  * Crea un nuevo objeto Board para representar la informacion del tablero Taquin.
  * Asignar la posicion de la pieza en blanco y asignar valores aleatorios a la matriz.
  * consumiendo el servicio de la URL "/api/board/new/", para esto debe enviar el objeto Board serializado como datos de la peticion HTTP.
  * Se debe usar SERIALIZACION pero basica.
  */
-function generateMatrix( )
+function generateBoard( )
 {
-	var create = true;
-	var size = $("#sizeBoard").val()
-	var row = $("#blankRow").val() - 1;
-	var column = $("#blankColumn").val() - 1;
-	var idPlayer = $("#idPlayerToChallenge").val();
-	console.log( "r: "+ row + "c: "+ column +"S: " +size );
-	
-	if( size < 2 )
-	{
-		alert( "Board's size cannot be less than two!!" );
-		create = false;
-	}
-	
-	if ( row < 0 || row >= size || column < 0 || column >= size )
-	{
-		alert( "Blank piece's positon invalid!! ")
-		create = false;
-	}
-
-	if( create )
-	{
-		board.movements = 0;	
-		board.blank = new Object ();
-		board.blank.row = row;
-		board.blank.column = column;
-		board.currentState = new Array( size );
-		for (var i = 0; i < size; i++)
-			board.currentState[i] = new Array( size );
-	
-		for( var i = 0 ; i < size; i++)
-		{
-			for( var j = 0 ; j < size; j++)
-			{
-				board.currentState[i][j] = Math.round ( Math.random( ) * size );
-			}
-		}
+	board = createMatrix ( );
+	if( board != null )
 		postForObject( board, "/api/board/new/", function(data){}, function(data){})
-	}
+	
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -159,7 +215,6 @@ function generatePlayer( )
 					$( "#btnCreateMatrix").attr( "disabled", "disabled" );
 					$( "#btnCreateMatrix").css( "background-color", "gray" );
 					$( "#control").css( { display: "" } );	
-					$( "#control").css( { display: "" } );	
 				}
 			},
 			error :function(data)
@@ -241,7 +296,7 @@ function startChallenge( )
  * consumiendo el servicio de la URL "/api/player/{idPlayer}/challenge/new", 
  * donde en {idPlayer} se debe colocar el id unico del jugador a retar
  * Ejemplo: url: /api/player/3/challenge/new/
- * 			Envia un nuevo tablero reto al jgador  No. 3.
+ * 			Envia un nuevo tablero reto al jugador No. 3.
  * NO se usa SERIALIZACION.
  */
 function challengePlayer( )
@@ -254,34 +309,13 @@ function challengePlayer( )
 	
 	if( idPlayerStr === "N" )
 	{
-		var boardAux = board;
-		generateMatrix( );
-		board = boardAux;
-		$("#labelSize").text( "Board Size :" );	
-		$("#labelBlankPiece").text( "Blank piece:" );
-		$("#blankRow").val( board.blank.row + 1 );
-		$("#blankColumn").val( board.blank.column + 1 );
-		$("#sizeBoard").val( board.currentState.length );	
-		$("#sizeBoard").attr( {readOnly:"readOnly"} );	
-		$("#blankColumn").attr( {readOnly:"readOnly"} );
-		$("#blankRow").attr( {readOnly:"readOnly"} );
-		$( "#btnChallenge ").css( "display", "none");
-		$("#playerToChallenge").css( "display", "none");
+		var boardAux = createMatrix( );
+		if( boardAux != null )
+			postForObject( boardAux, "/api/board/new/", function(data){}, function(data){})
 	}	
 	else
 	{	
 		var idPlayer = parseInt( idPlayerStr );
-		if( size < 2 )
-		{
-			alert( "Challenge board's size cannot be less than two!!" );
-			create = false;
-		}
-		console.log( "r: "+ row + "c: "+ column +"S: " +size );
-		if ( row < 0 || row >= size || column < 0 || column >= size )
-		{
-			alert( "Challenge blank piece's positon invalid!! ")
-			create = false;
-		}
 		
 		if ( idPlayer <= 0 || idPlayer == undefined )
 		{
@@ -291,36 +325,22 @@ function challengePlayer( )
 			
 		if( create )
 		{
-			var boardChallenge = new Object( );
-			boardChallenge.movements = 0;	
-			boardChallenge.blank = new Object ( );
-			boardChallenge.blank.row = row;
-			boardChallenge.blank.column = column;
-			boardChallenge.currentState = new Array( size );
-			
-			for (var i = 0; i < size; i++)
-				boardChallenge.currentState[i] = new Array( size );
-		
-			for( var i = 0 ; i < size; i++)
-			{
-				for( var j = 0 ; j < size; j++)
-				{
-					boardChallenge.currentState[i][j] = Math.round ( Math.random( ) * size );
-				}
-			}
-			postForObject( boardChallenge, "/api/player/"+idPlayer+"/challenge/", function(data){}, function(data){});
-			$("#labelSize").text( "Board Size :" );	
-			$("#labelBlankPiece").text( "Blank piece:" );
-			$("#blankRow").val( board.blank.row + 1 );
-			$("#blankColumn").val( board.blank.column + 1 );
-			$("#sizeBoard").val( board.currentState.length );	
-			$("#sizeBoard").attr( {readOnly:"readOnly"} );	
-			$("#blankColumn").attr( {readOnly:"readOnly"} );
-			$("#blankRow").attr( {readOnly:"readOnly"} );
-			$( "#btnChallenge ").css( "display", "none");
-			$("#playerToChallenge").css( "display", "none");
+			var boardChallenge = createMatrix( );
+			if( boardChallenge != null )
+				postForObject( boardChallenge, "/api/player/"+idPlayer+"/challenge/", function(data){}, function(data){});
 		}
 	}
+	
+	$("#labelSize").text( "Board Size :" );	
+	$("#labelBlankPiece").text( "Blank piece:" );
+	$("#blankRow").val( board.blank.row + 1 );
+	$("#blankColumn").val( board.blank.column + 1 );
+	$("#sizeBoard").val( board.currentState.length );	
+	$("#sizeBoard").attr( {readOnly:"readOnly"} );	
+	$("#blankColumn").attr( {readOnly:"readOnly"} );
+	$("#blankRow").attr( {readOnly:"readOnly"} );
+	$( "#btnChallenge ").css( "display", "none");
+	$("#playerToChallenge").css( "display", "none");
 }
 
 
@@ -540,12 +560,9 @@ function showGeneratedBoard( )
 			templateCopy.css( { minWidth : ( (100 / size ) - 1 +"%" ), minHeight : 70 / size + "vh"  } );
 			
 			if( i == board.blank.row && j == board.blank.column )
-			{
 				templateCopy.css( "background-color", "black" );
-				templateCopy.text( " " );
-			}
-			else
-				templateCopy.text( board.currentState[i][j] );
+			
+			templateCopy.text( board.currentState[i][j] );
 			
 			$( "#board" ).append( templateCopy );
 		}
@@ -556,8 +573,26 @@ function guau( )
 {
 	moveBoardToRight();
 	moveBoardToRight();
+	moveBoardToRight();
+	moveBoardToRight();
+	moveBoardToDown();
 	moveBoardToLeft();
 	moveBoardToDown();
+	moveBoardToRight();
+	moveBoardToDown();
+	moveBoardToUp();
+	moveBoardToDown();
+	moveBoardToDown();
+	moveBoardToLeft();
+	moveBoardToLeft();
+	moveBoardToLeft();
+	moveBoardToUp();
+	moveBoardToLeft();
+	moveBoardToUp();
+	moveBoardToUp();
+	moveBoardToUp();
+	moveBoardToRight( );
+	/*	moveBoardToDown();
 	moveBoardToRight();
 	moveBoardToUp();
 	moveBoardToLeft();
@@ -571,5 +606,5 @@ function guau( )
 	moveBoardToRight();
 	moveBoardToUp();
 	moveBoardToUp();
-	moveBoardToUp();
+	moveBoardToUp();*/
 }

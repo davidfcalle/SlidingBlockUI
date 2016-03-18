@@ -203,29 +203,44 @@ function updateUserBoard( player )
 {
 	var position = 0;
 	var blankPos = player.board.blank;
-
+	
 	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
 	for( var i = 0 ; i < player.board.currentState.length; i++)
 	{
 		for( var j = 0 ; j < player.board.currentState.length; j++)
-		{
-			$( $("#BoardPlayer"+player.id+" .piece")[position]).css( "background-color", ""  );
-			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({position: ""});
-			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({top: ""});
-			$( $("#BoardPlayer"+player.id+" .piece")[position]).css({right: ""});
-			
+		{			
 			if( i == blankPos.row && j == blankPos.column )
 			{
 				$( $("#BoardPlayer"+player.id+" .piece")[position]).css( "background-color", "black" );
-				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( " " );
+				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "B" );
 			}
-			else
-			{
-				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( position );
-			}
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).text( player.board.currentState[i][j] );
 			position++;
 		}
 	}
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Se encarga de actualizar la pieza blanca a la nueva posicion indicada por newPosition.
+ * @param player: Jugador que tiene el tablero donde se actulizara la pieza blanca.
+ * @param currentPosition: Posicion actual de la pieza blanca.
+ * @param newPosition: Nueva posicion de la pieza blanca.
+ */
+function updateBlankPosition(  currentPieceBlank,  newPieceBlank )
+{	
+	console.log( "QUITO BLACK A: " + currentPieceBlank.text() );
+	currentPieceBlank.css( "background-color", ""  );
+	currentPieceBlank.css( { position: "" } );
+	currentPieceBlank.css( { top: "" } );
+	currentPieceBlank.css( { right: "" } );
+	currentPieceBlank.text( newPieceBlank.text( ) );
+
+	newPieceBlank.css( "background-color", "black"  );
+	newPieceBlank.css( { position: "" } );
+	newPieceBlank.css( { top: "" } );
+	newPieceBlank.css( { right: "" } );
+	newPieceBlank.text( "B" );
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -258,30 +273,44 @@ function firstUpdate( game )
 /**--------------------------------------------------------------Movement---------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
-function moveRightAndLeft( player, blankPiece, piece )
+function moveRightAndLeft( player, blankPiece, piece, right )
 {
 	blankPiece.css({position: "relative"});
 	piece.css({position: "relative"});
 
 	var animationSize = blankPiece.width();
-	var animationSize = blankPiece.width();
+	var currentPos = blankPiece;
+	var	newPos = piece;
+	
+	if( !right )
+	{
+		currentPos = piece;
+		newPos = blankPiece;
+	}
 		
-	blankPiece.animate( { right : "-="+animationSize }, 70, function(){  });
-	piece.animate( { right : "+="+animationSize }, 70, function(){ updateUserBoard(  player ); } );
+	blankPiece.animate( { right : "-="+animationSize }, 70, function(){ });
+	piece.animate( { right : "+="+animationSize }, 70, function(){ updateBlankPosition(  currentPos, newPos ); } );
 
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
-function moveUpAndDown( player, blankPiece, piece )
+function moveUpAndDown( player, blankPiece, piece, up )
 {
-	blankPiece.css({position: "relative"});
-	piece.css({position: "relative"});
+	blankPiece.css( {position: "relative" } );
+	piece.css( {position: "relative" } );
 
 	var animationSize = blankPiece.height()
-
+	var currentPos = blankPiece;
+	var	newPos = piece;
+	
+	if( !up )
+	{
+		currentPos = piece;
+		newPos = blankPiece;
+	}
+	
 	blankPiece.animate( { top : "+="+animationSize }, 70, function(){ });
-	piece.animate( { top : "-="+animationSize }, 70, function(){ updateUserBoard(  player );});
-
+	piece.animate( { top : "-="+animationSize }, 70, function(){ updateBlankPosition(  currentPos, newPos ); });
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -302,22 +331,22 @@ function movePieceOnBoard( player, typeMovement, piece_1, piece_2 )
 	var board = player.board;
 	var blankPiece = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_1] );
 	var blankPieceTo = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_2] );
+	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
 
 	switch( typeMovement ) 
 	{
 	    case 0:
-	        moveRightAndLeft( player, blankPiece, blankPieceTo );
+	        moveRightAndLeft( player, blankPiece, blankPieceTo, true );
 	        break;
 	    case 1:
-	    	moveRightAndLeft( player, blankPieceTo, blankPiece );
+	    	moveRightAndLeft( player, blankPieceTo, blankPiece, false );
 	        break;
 	    case 2:
-	        moveUpAndDown( player, blankPiece, blankPieceTo );
+	        moveUpAndDown( player, blankPiece, blankPieceTo, true );
 	        break;
 	    case 3:
-	    	moveUpAndDown( player, blankPieceTo, blankPiece );
+	    	moveUpAndDown( player, blankPieceTo, blankPiece, false );
 	        break;
-
 	}
 }
 

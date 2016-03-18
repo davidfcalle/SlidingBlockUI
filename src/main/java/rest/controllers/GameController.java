@@ -71,6 +71,7 @@ public class GameController
 	//---------------------------------------------------------------------------------------------------------------------------------------
 	public void sendGameUpdate( Game newGame )
 	{
+		System.out.println("TIPO MOV: "+ newGame.getTypeMovement() );
 		template.convertAndSend( TOPIC_URI , newGame );
 	}
 	
@@ -164,6 +165,22 @@ public class GameController
 	}
 
 /**--------------------------------------------------------------Assignment---------------------------------------------------------------*/
+
+	/**
+	 * Delega al objeto Game reasignar el tablero board a un Player con id idPlayer. 
+	 * Para luego actualizar la vista con la nueva configuracion 
+	 * del juagdor si el jugador existe.
+	 * @param idPlayer: Identificador unico del jugador al que se le asignara el nuevo tablero.
+	 * @param board: Instancia de Board, tablero que se le asiganara el jugador cuyo id es idPlayer.
+	 * @return p: Objeto Player que posee el nuevo tablero asignado.
+	 * 			  Null si el jugador con idPlayer no existe.
+	 */
+	@CrossOrigin(origins="*")
+	@RequestMapping(value="/api/board/{idPlayer}/", method = RequestMethod.GET )
+	public Board getCurrentBoard( @PathVariable Integer idPlayer  )
+	{
+		return this.game.getBoardByPlayer( idPlayer );
+	}
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**

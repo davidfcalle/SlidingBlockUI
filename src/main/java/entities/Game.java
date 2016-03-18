@@ -265,7 +265,22 @@ public class Game
 	 
 	 
 /**--------------------------------------------------------------Assignment---------------------------------------------------------------*/
-	
+		
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Verifica si el juagdor con id idPlayer existe y esta disponible.
+	 * SI lo anterior se cumple se encarga retornar el tablero asociado
+	 * al jugdor con idPlayer.
+	 * @param idPlayer: Id del jugador al que se le buscara el tablero.
+	 * @return playerCreated: Board asociado al jugador
+	 * 						 Null si el jugador no existe o no esta disponible.
+	 */	 
+	 public Board getBoardByPlayer(Integer idPlayer) {
+			if( idPlayer > this.numPlayers )
+				return null;
+			
+			return this.players.get( idPlayer - 1 ).getBoard();
+		}
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Verifica si el tablero que se ha pedido (representado en el atributo id de player) 
@@ -475,13 +490,17 @@ public class Game
 		{
 			return null;
 		}
+
 		/*Actualizar la tablero de juego del juagdor teniendo en cuenta hacia donde se movio la pieza en blanco*/
 		String board [][] = player.getBoard().getCurrentState();
+		System.out.println( "A: " +board[blankActualPos.getRow()][blankActualPos.getColumn()] + "LEMETo: " + board[blankNewPos.getRow()][blankNewPos.getColumn()]);
 		board[blankActualPos.getRow()][blankActualPos.getColumn()] = board[blankNewPos.getRow()][blankNewPos.getColumn()];
 		board[blankNewPos.getRow()][blankNewPos.getColumn()] = "B";
+		
 		player.getBoard().setCurrentState( board );
 		player.getBoard().setBlank( blankNewPos );
 		player.getBoard().addMovement();
+
 		
 		this.idPlayerToUpd = player.getId() - 1;
 		this.newBoard = false;
