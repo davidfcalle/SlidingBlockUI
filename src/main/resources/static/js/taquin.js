@@ -103,7 +103,8 @@ function buildBoard( player )
 	for( var i = 0 ; i < size * size ; i++)
 	{
 		var templateCopy = $( $( $("#piece-template").html() ).clone() );
-		templateCopy.css( { minWidth : ( (100 / size ) - 1 +"%" ), minHeight : 70 / size + "vh"  } );
+		var width = size != 10  ? (100 / size ) - 1 +"%" : (100 / size ) +"%";
+		templateCopy.css( { minWidth : width , minHeight : 70 / size + "vh"  } );
 		$("#BoardPlayer"+player.id).append(templateCopy);
 	}
 }
