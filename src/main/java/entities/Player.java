@@ -1,8 +1,12 @@
 package entities;
 
-public class Player {
-	public final static Integer PLAYER_1 = 1;
-	public final static Integer PLAYER_2 = 2	;
+
+/**
+ * @author David Suarez.
+ *
+ */
+public class Player 
+{
 	
 	private Integer id;
 	private String name;
@@ -77,6 +81,14 @@ public class Player {
 	public void setBoard(Board board)
 	{
 		this.board = board;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Player [id=" + id + ", name=" + name + ", points=" + points + ", board=" + board + "]";
 	}
 
 	

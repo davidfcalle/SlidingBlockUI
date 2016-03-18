@@ -45,25 +45,10 @@ var numBoards = 2;
 var stompClient = null;
 
 
-function voltear()
-{
-	var c1 = $("#score-1");
-	var c2 = $("#score-2");
-	c1.css({position: "relative"});
-	c2.css({position: "relative"});
-	var posBlankBiece = c1.offset();
-	var posPiece = c2.offset();
-	var correrC1 = posPiece.left;
-	var correrC2 = posBlankBiece.left + correrC1;
-	c1.animate({right : "-="+correrC1 },1000, function(){alert("JAJA")});
 
-	c2.animate({right : "+="+correrC2 },1000, function(){alert("C2")});
-}
+//--------------------------------------------------------------Functions------------------------------------------------------------------
 
-
-//--------------------------------------------------------------Funciones------------------------------------------------------------------
-
-/**--------------------------------------------------------------Comunicacion-------------------------------------------------------------*/
+/**--------------------------------------------------------------Comunication-------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
@@ -86,7 +71,7 @@ function connect()
 								updateGame( game );
 						});
 			});
-	//getForObject(null, "/api/game/new/", function(data) {});
+	//postForObject(null, "/api/game/new/", function(data) {});
 	
 }
 
@@ -101,10 +86,9 @@ function disconnect()
 		stompClient.disconnect();
 	}
 	
-//	console.log("Disconnected");
 }
 
-/**--------------------------------------------------------------Creacion-----------------------------------------------------------------*/
+/**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
@@ -119,7 +103,8 @@ function buildBoard( player )
 	for( var i = 0 ; i < size * size ; i++)
 	{
 		var templateCopy = $( $( $("#piece-template").html() ).clone() );
-		templateCopy.css( { minWidth : ( (100 / size ) - 1 +"%" ), minHeight : 70 / size + "vh"  } );
+		var width = size != 10  ? (100 / size ) - 1 +"%" : (100 / size ) +"%";
+		templateCopy.css( { minWidth : width , minHeight : 70 / size + "vh"  } );
 		$("#BoardPlayer"+player.id).append(templateCopy);
 	}
 }
@@ -135,7 +120,6 @@ function addBoardsTemplates( )
 	
 	//Se recuperan elementos HTML de cada jugador para cambiarles su ID (NamePlayer1 -> NamePlayerN).
 	var namePlayerField = templateCopy.find("#Name1");
-	//console.log(namePlayerField);
 	var pointsPlayerField = templateCopy.find("#Points1");
 	var movementsPlayerField = templateCopy.find("#Movements1");
 	var boardPlayerField = templateCopy.find("#Board1");
@@ -165,7 +149,7 @@ function addBoardsTemplates( )
 	$("#TableroPrincipal").append(templateCopy);
 }
 
-/**--------------------------------------------------------------ActualizacionVista-------------------------------------------------------*/
+/**--------------------------------------------------------------ViewActualization-------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
@@ -187,13 +171,10 @@ function updateGame( game )
 		updateUserInfo( player );
 	}
 	
-	if( game.rebuildBoard )
+	if( game.newBoard )
 	{	
-		if( game.newBoard )
-		{
-			buildBoard( player );			
-		}
-		updateUserBoard( player, game.typeMovement );
+		buildBoard( player );			
+		updateUserBoard( player );
 	}
 	
 	if( game.moveBoard )
@@ -210,10 +191,8 @@ function updateGame( game )
  */
 function updateUserInfo( player )
 {
-	//console.log($("#NamePlayer"+player.id));
 	$("#NamePlayer"+player.id).html( "Player " + player.id +": " + player.name );
 	$("#PointsPlayer"+player.id).html( "Points: " + player.points );
-	$("#MovementsPlayer"+player.id).html( "Movements: " + player.board.movements );
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -225,22 +204,44 @@ function updateUserBoard( player )
 {
 	var position = 0;
 	var blankPos = player.board.blank;
-
+	
+	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
 	for( var i = 0 ; i < player.board.currentState.length; i++)
 	{
 		for( var j = 0 ; j < player.board.currentState.length; j++)
-		{
+		{			
 			if( i == blankPos.row && j == blankPos.column )
 			{
+				$( $("#BoardPlayer"+player.id+" .piece")[position]).css( "background-color", "black" );
 				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "B" );
 			}
-			else
-			{
-				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( player.board.currentState[i][j] );
-			}
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).text( player.board.currentState[i][j] );
 			position++;
 		}
 	}
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Se encarga de actualizar la pieza blanca a la nueva posicion indicada por newPosition.
+ * @param player: Jugador que tiene el tablero donde se actulizara la pieza blanca.
+ * @param currentPosition: Posicion actual de la pieza blanca.
+ * @param newPosition: Nueva posicion de la pieza blanca.
+ */
+function updateBlankPosition(  currentPieceBlank,  newPieceBlank )
+{	
+	console.log( "QUITO BLACK A: " + currentPieceBlank.text() );
+	currentPieceBlank.css( "background-color", ""  );
+	currentPieceBlank.css( { position: "" } );
+	currentPieceBlank.css( { top: "" } );
+	currentPieceBlank.css( { right: "" } );
+	currentPieceBlank.text( newPieceBlank.text( ) );
+
+	newPieceBlank.css( "background-color", "black"  );
+	newPieceBlank.css( { position: "" } );
+	newPieceBlank.css( { top: "" } );
+	newPieceBlank.css( { right: "" } );
+	newPieceBlank.text( "B" );
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -253,7 +254,6 @@ function firstUpdate( game )
 {
 	var player;
 	var boardsTam = game.jugadores.length;
-	//console.log(game)
 	
 	for( var i = 0; i < boardsTam; i++ )
 	{
@@ -271,90 +271,47 @@ function firstUpdate( game )
 	getForObject( null, "/api/game/endUpdate/", function(){} );
 }
 
-/**--------------------------------------------------------------Movimiento---------------------------------------------------------------*/
+/**--------------------------------------------------------------Movement---------------------------------------------------------------*/
 
 //-------------------------------------------------------------------------------------------------------------------------------------
-function moveRightAndLeft( player, blankPiece, piece )
+function moveRightAndLeft( player, blankPiece, piece, right )
 {
 	blankPiece.css({position: "relative"});
 	piece.css({position: "relative"});
-	
-	var posBlankBiece = blankPiece.position();
-	var posPiece = piece.position();
-	console.log( posBlankBiece );
-	console.log( posPiece );
-	var correrC1 = posPiece.left;
-	var correrC2 = posBlankBiece.left + correrC1;
-	
-	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
-	
-	blankPiece.animate({right : "-="+correrC1 },1000, function(){  });
 
-	piece.animate({right : "+="+correrC2 },1000, function(){updateUserBoard(  player ); console.log("ACTUA");} );
-
-}
-/*
-//-------------------------------------------------------------------------------------------------------------------------------------
-function moveToLeft( player, blankPiece, piece )
-{
-	blankPiece.css({position: "relative"});
-	piece.css({position: "relative"});
+	var animationSize = blankPiece.width();
+	var currentPos = blankPiece;
+	var	newPos = piece;
 	
-	var posBlankBiece = blankPiece.position();
-	var posPiece = piece.position();
-	console.log( posBlankBiece );
-	console.log( posPiece );
-	var correrC1 = posPiece.left + posBlankBiece.left;
-	var correrC2 = posBlankBiece.left;
-	
-	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
-	
-	blankPiece.animate({right : "+="+correrC1 },1000, function(){ });
-
-	piece.animate({right : "-="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
+	if( !right )
+	{
+		currentPos = piece;
+		newPos = blankPiece;
+	}
+		
+	blankPiece.animate( { right : "-="+animationSize }, 70, function(){ });
+	piece.animate( { right : "+="+animationSize }, 70, function(){ updateBlankPosition(  currentPos, newPos ); } );
 
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
-function moveToDown( player, blankPiece, piece )
+function moveUpAndDown( player, blankPiece, piece, up )
 {
-	blankPiece.css({position: "relative"});
-	piece.css({position: "relative"});
-	
-	var posBlankBiece = blankPiece.position();
-	var posPiece = piece.position();
-	console.log( posBlankBiece );
-	console.log( posPiece );
-	var correrC1 = posPiece.top;
-	var correrC2 = posBlankBiece.top + correrC1;
-	
-	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
-	
-	blankPiece.animate({top : "-="+correrC1 },1000, function(){ });
+	blankPiece.css( {position: "relative" } );
+	piece.css( {position: "relative" } );
 
-	piece.animate({top : "+="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
-
-}
-*/
-//-------------------------------------------------------------------------------------------------------------------------------------
-function moveUpAndDown( player, blankPiece, piece )
-{
-	blankPiece.css({position: "relative"});
-	piece.css({position: "relative"});
+	var animationSize = blankPiece.height()
+	var currentPos = blankPiece;
+	var	newPos = piece;
 	
-	var posBlankBiece = blankPiece.position();
-	var posPiece = piece.position();
-	console.log( posBlankBiece );
-	console.log( posPiece );
-	var correrC1 = posPiece.top + posBlankBiece.top;
-	var correrC2 = posBlankBiece.top;
+	if( !up )
+	{
+		currentPos = piece;
+		newPos = blankPiece;
+	}
 	
-	console.log("correrC1: " + correrC1 + "correrC2: " + correrC2 );
-	
-	blankPiece.animate({top : "+="+correrC1 },1000, function(){ });
-
-	piece.animate({top : "-="+correrC2 },1000, function(){ updateUserBoard(  player ); console.log("ACTUA");});
-
+	blankPiece.animate( { top : "+="+animationSize }, 70, function(){ });
+	piece.animate( { top : "-="+animationSize }, 70, function(){ updateBlankPosition(  currentPos, newPos ); });
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -375,24 +332,22 @@ function movePieceOnBoard( player, typeMovement, piece_1, piece_2 )
 	var board = player.board;
 	var blankPiece = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_1] );
 	var blankPieceTo = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_2] );
+	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
 
-	$("#MovementsPlayer" + player.id ).text( "Movements: " + board.movements );
-	
 	switch( typeMovement ) 
 	{
 	    case 0:
-	        moveRightAndLeft( player, blankPiece, blankPieceTo );
+	        moveRightAndLeft( player, blankPiece, blankPieceTo, true );
 	        break;
 	    case 1:
-	    	moveRightAndLeft( player, blankPieceTo, blankPiece );
+	    	moveRightAndLeft( player, blankPieceTo, blankPiece, false );
 	        break;
 	    case 2:
-	        moveUpAndDown( player, blankPiece, blankPieceTo );
+	        moveUpAndDown( player, blankPiece, blankPieceTo, true );
 	        break;
 	    case 3:
-	    	moveUpAndDown( player, blankPieceTo, blankPiece );
+	    	moveUpAndDown( player, blankPieceTo, blankPiece, false );
 	        break;
-
 	}
 }
 

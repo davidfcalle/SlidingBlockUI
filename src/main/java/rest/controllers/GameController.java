@@ -1,6 +1,9 @@
 package rest.controllers;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,39 +19,64 @@ import entities.Player;
 
 
 /**
- * @author dadsez
+ * @author David Suarez
  *
  */
 @RestController
 public class GameController 
 {
-	
+
+/**--------------------------------------------------------------Attributtes--------------------------------------------------------------*/
 	public final static String TOPIC_URI = "/topics/game";
+	
 	private Game game;
-	
+	private List<Game> eventsQueue;
+	private boolean updatingQueue;
+	private Reviewer reviewer;
 	private SimpMessagingTemplate template;
+
 	
-/**-------------------------------------------------------------------Comunicacion---------------------------------------------------------*/
+/**-------------------------------------------------------------------Comunicaction---------------------------------------------------------*/
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------
 	/**
-	 * Constructor de @GameController, donde instancia un objeto Game.
-	 * @param template: Encargado de enviar mensajes usando WebSokets para actualizar la GUI.
+	 * Constructor de GameController, donde instancia un objeto Game.
+	 * @param template: Encargado de enviar mensajes usando WebSokets para actualizar la vista.
 	 */
 	@Autowired
 	public GameController(SimpMessagingTemplate template) 
 	{
-		game = new Game();  //QUE SE ACTAULIZAN AL ENTRAR.i
+		this.game = new Game();  //QUE SE ACTAULIZAN AL ENTRAR.i
+		this.eventsQueue = new ArrayList<>();
+		this.updatingQueue = false;
+		this.reviewer = new Reviewer();
 		this.template = template;
+		this.reviewer.start();
 	}
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------
-	public void sendGameUpdate()
+	/**
+	 * Agrega un nuevo evento, para luego notificar a la vista su respectiva actualizacion,
+	 * a la cola de eventos controlando en no entrar en condicion de carrera.
+	 */
+	public void addEvent()
 	{
-		template.convertAndSend(TOPIC_URI , game);
+		while( updatingQueue );
+		
+		updatingQueue = true;
+		this.eventsQueue.add( new Game( this.game ) );
+		updatingQueue = false;		
 	}
 
-/**--------------------------------------------------------------Creacion-----------------------------------------------------------------*/
+	//---------------------------------------------------------------------------------------------------------------------------------------
+	public void sendGameUpdate( Game newGame )
+	{
+		System.out.println("TIPO MOV: "+ newGame.getTypeMovement() );
+		template.convertAndSend( TOPIC_URI , newGame );
+	}
+	
+	
+/**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------		
 	/**
@@ -56,12 +84,12 @@ public class GameController
 	 * @return game: El Game creado.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/game/new", method = RequestMethod.GET)
+	@RequestMapping(value="/api/game/new", method = RequestMethod.POST)
 	public Game startNewGame()
 	{
 		this.game.setNewSuscriber(true );
 		//System.out.println("START NEW GAME");
-		this.sendGameUpdate();
+		this.addEvent();
 		return game;
 	}
 	
@@ -76,7 +104,7 @@ public class GameController
 	public void startNewBoard( @RequestBody Board board )
 	{	
 		this.game.addBoard( board );
-		this.sendGameUpdate();
+		this.addEvent();
 	}
 	
 	//---------------------------------------------------------------------------------------------------------------------------------------
@@ -95,7 +123,7 @@ public class GameController
 		Player p = this.game.addBoardToPlayer( player );
 		
 		if ( p != null ) 
-			this.sendGameUpdate();
+			this.addEvent();
 		
 		return p;
 	}
@@ -111,7 +139,7 @@ public class GameController
 	 * 			  debido a que no hay tableros disponibles.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/player{idPlayer}/new{namePlayer}", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/new/{namePlayer}", method = RequestMethod.POST)
 	public Player startNewPlayer( @PathVariable Integer idPlayer, @PathVariable String namePlayer )
 	{
 		Player player  = new Player( );
@@ -121,7 +149,7 @@ public class GameController
 		Player p = this.game.addBoardToPlayer( player );
 		
 		if ( p != null ) 
-			this.sendGameUpdate();
+			this.addEvent();
 		
 		return p;
 	}
@@ -136,7 +164,48 @@ public class GameController
 		this.game.setNewSuscriber(false );
 	}
 
-/**--------------------------------------------------------------Movimiento---------------------------------------------------------------*/
+/**--------------------------------------------------------------Assignment---------------------------------------------------------------*/
+
+	/**
+	 * Delega al objeto Game reasignar el tablero board a un Player con id idPlayer. 
+	 * Para luego actualizar la vista con la nueva configuracion 
+	 * del juagdor si el jugador existe.
+	 * @param idPlayer: Identificador unico del jugador al que se le asignara el nuevo tablero.
+	 * @param board: Instancia de Board, tablero que se le asiganara el jugador cuyo id es idPlayer.
+	 * @return p: Objeto Player que posee el nuevo tablero asignado.
+	 * 			  Null si el jugador con idPlayer no existe.
+	 */
+	@CrossOrigin(origins="*")
+	@RequestMapping(value="/api/board/{idPlayer}/", method = RequestMethod.GET )
+	public Board getCurrentBoard( @PathVariable Integer idPlayer  )
+	{
+		return this.game.getBoardByPlayer( idPlayer );
+	}
+	
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Delega al objeto Game reasignar el tablero board a un Player con id idPlayer. 
+	 * Para luego actualizar la vista con la nueva configuracion 
+	 * del juagdor si el jugador existe.
+	 * @param idPlayer: Identificador unico del jugador al que se le asignara el nuevo tablero.
+	 * @param board: Instancia de Board, tablero que se le asiganara el jugador cuyo id es idPlayer.
+	 * @return p: Objeto Player que posee el nuevo tablero asignado.
+	 * 			  Null si el jugador con idPlayer no existe.
+	 */
+	@CrossOrigin(origins="*")
+	@RequestMapping(value="/api/player/{idPlayer}/challenge", method = RequestMethod.POST)
+	public Player assignBoardToPlayer( @PathVariable Integer idPlayer, @RequestBody Board board )
+	{
+		Player p = this.game.assignBoardToPlayer( idPlayer, board );
+		
+		if ( p != null ) 
+			this.addEvent();
+		
+		return p;
+	}
+	
+	
+/**--------------------------------------------------------------Movement---------------------------------------------------------------*/
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
@@ -155,7 +224,7 @@ public class GameController
 		Player p = this.game.movePieceOnBoard( player, player.getBoard().getBlank() );
 		
 		if ( p != null ) 
-			this.sendGameUpdate();
+			this.addEvent();
 		
 		return p;
 	}
@@ -168,13 +237,13 @@ public class GameController
 	 * 			  Null si el movimiento no es valido.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/board{idPlayer}/move/right", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/board/move/right", method = RequestMethod.POST)
 	public Player movePieceOnBoardToRight( @PathVariable Integer idPlayer )
 	{
 		Player p = this.game.movePieceOnBoardToRight( idPlayer );
 		
 		if ( p != null ) 
-			this.sendGameUpdate();
+			this.addEvent();
 		
 		return p;
 	}
@@ -187,13 +256,13 @@ public class GameController
 	 * 			  Null si el movimiento no es valido.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/board{idPlayer}/move/left", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/board/move/left", method = RequestMethod.POST)
 	public Player movePieceOnBoardToLeft( @PathVariable Integer idPlayer )
 	{
 		Player p = this.game.movePieceOnBoardToLeft( idPlayer );
 		
 		if ( p != null ) 
-			this.sendGameUpdate();
+			this.addEvent();
 		
 		return p;
 	}
@@ -206,13 +275,13 @@ public class GameController
 	 * 			  Null si el movimiento no es valido.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/board{idPlayer}/move/up", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/board/move/up", method = RequestMethod.POST)
 	public Player movePieceOnBoardToUp( @PathVariable Integer idPlayer )
 	{
 		Player p = this.game.movePieceOnBoardToUp( idPlayer );
 		
 		if ( p != null ) 
-			this.sendGameUpdate();
+			this.addEvent();
 		
 		return p;
 	}
@@ -225,31 +294,66 @@ public class GameController
 	 * 			  Null si el movimiento no es valido.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/board{idPlayer}/move/down", method = RequestMethod.GET)
+	@RequestMapping(value="/api/player/{idPlayer}/board/move/down", method = RequestMethod.POST)
 	public Player movePieceOnBoardToDown( @PathVariable Integer idPlayer )
 	{
 		Player p = this.game.movePieceOnBoardToDown( idPlayer );
 		
 		if ( p != null ) 
-			this.sendGameUpdate();
+			this.addEvent();
 		
 		return p;
 	}
 	
-	//////////////////////CALLEEEEEEEEEEEEEEEEEEEEEEEE///////////////////////////////////	
-	/*@CrossOrigin(origins="*")
-	@RequestMapping( value = "/api/{player}/board", method = RequestMethod.POST)
-	public Board setNextPosition(@PathVariable Integer player, @RequestBody Board board){
-		if( player == Player.PLAYER_1 ){
-			game.getP1().setBoard(board);
-			game.getP1().getBoard().addMovement();
-			sendGameUpdate();
-			return game.getP1().getBoard();
-		}else {
-			game.getP2().setBoard(board);
-			game.getP2().getBoard().addMovement();
-			sendGameUpdate();
-			return game.getP2().getBoard();
-		}
-	}*/
+	public class Reviewer extends Thread
+	{
+
+		private boolean running;
+	    
+		public Reviewer()
+	    {
+	      this.running = true;
+	    }
+
+	    @Override
+	    public void run()
+	    {
+	      while ( this.running )
+	      {
+	        while ( !updatingQueue )
+	        {
+	        	updatingQueue = true;
+	        	if( eventsQueue.size() > 0 )
+	        	{
+	        		Game newGame = eventsQueue.get( 0 );
+		        	eventsQueue.remove( 0 );
+		        	sendGameUpdate( newGame );
+	        	}
+	        	updatingQueue = false;
+	        	
+	        	try 
+	        	{
+					Thread.sleep( 150 );
+				} 
+	        	catch (InterruptedException e) 
+	        	{
+					e.printStackTrace();
+				}
+	        }
+	        try 
+        	{
+				Thread.sleep( 300 );
+			} 
+	        catch (InterruptedException e) 
+        	{
+				e.printStackTrace();
+			}
+	      }
+	   }
+	    
+	   public void stopReview()
+	   {
+		   this.running = false;
+	   }
+	}
 }

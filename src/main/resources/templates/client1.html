@@ -29,21 +29,21 @@
 			<div class="col s6 score-1">
 				<ul class="collection with-header">
 
-       				<li class="collection-item" id="playerIdLabel" >Player Id:
-          				<input id="playerId" value="0" type="number"></input>
+       				<li class="collection-item" id="playerIdLabel" style="font-style: normal; font-size: 1.5em" >Player Id: 
+          				<input id="playerId" value="0" type="number" style="font-style: normal; font-size: 1.1em" ></input>
           			</li>
 
-        			<li class="collection-header" id="playerNameLabel">
-        				Player Name: <input type = "text" id="playerName"></input>
+        			<li class="collection-header" id="playerNameLabel" style="font-style: normal; font-size: 1.5em">
+        				Player Name: <input type = "text" id="playerName" style="font-style: normal; font-size: 1.1em" ></input>
         			</li>
-        			<li class="collection-item" id="playerPoints">Points : 0</li>
-        			<li class="collection-item" id="playerMovements">Movements : 0</li>
-          			<li class="collection-item" >Board Size :
-          				<input id="sizeBoard" value="2" type="number"></input>
+        			<li class="collection-item" id="playerPoints" style="font-style: normal; font-size: 1.5em" >Points: 0</li>
+        			<li class="collection-item" id="playerMovements" style="font-style: normal; font-size: 1.5em" >Movements: 0</li>
+          			<li class="collection-item" > <label id="labelSize" style="font-style: normal; font-size: 1.4em" >Board Size: </label>
+          				<input id="sizeBoard" value="2" type="number" style="font-style: normal; font-size: 1.2em"></input>
           			</li>      			
-        			<li class="collection-item">Blank Piece:<br></br>
-        				<label>Row: </label><input id="blankRow" value="0" type="number"></input>
-        				<label>Column: </label><input id="blankColumn" value="0" type="number"></input>
+        			<li class="collection-item" ><label id="labelBlankPiece" style="font-style: normal; font-size: 1.4em" >Blank Piece:</label> <br></br>
+        				<label>Row: </label><input id="blankRow" value="0" type="number" style="font-style: normal; font-size: 1.2em" ></input>
+        				<label>Column: </label><input id="blankColumn" value="0" type="number" style="font-style: normal; font-size: 1.2em"></input>
         			</li>
       			</ul>
 			</div>
@@ -59,13 +59,26 @@
 		</div>
 		<div class="row">
 			<div class="large-2 large-offset-9 columns">
-			  <button type="submit" class="button success" onclick="generateMatrix()" style="width: 50%;" >Generate Board </button>
-			  <button type="submit" class="button success" onclick="generatePlayer()" style="width: 50%; float: right;">Create Player</button>
+			  <button type="submit" id= "btnCreateMatrix" class="button success" onclick="generateBoard()" style="width: 50%;" >Generate Board </button>
+			  <button type="submit" id="btnCreatePlayer" class="button success" onclick="generatePlayer()" style="width: 50%; float: right;">Create Player</button>
 			</div>
 		</div>
 
+		<div class="row">
+			<div class="large-2 large-offset-9 columns">
+			  <button id="btnStartChallenge" type="submit" class="button success" onclick="startChallenge()" style="width: 50%;" >Start Challenge </button>
+			  <button id="btnChallenge" type="submit" class="button success" onclick="challengePlayer()" style="width: 50%; float: right; display: none;">Challenge</button>
+			</div>
+		</div>
+		
+		<div style="text-align: center;">
+			<button type="submit" class="button success" onclick="guau()" style="width: 50%;" >GUAU!!! </button>
+			<div id="playerToChallenge"  style="display: none;" class="large-2 large-offset-9 columns">
+				<input id="idPlayerToChallenge" value="0" pattern="N|n|\d" type="text"></input>
+			</div> 
+		</div>
 <br></br>
-		<center>
+		<div style="text-align: center; display: none;" id="control" >
 			<div class="row">
 				<div class="large-2 large-offset-9 columns">
 					<input type="image" src="/static/images/blank.png" width="75em" height="55em"></input>
@@ -76,9 +89,9 @@
 			
 			<div class="row">
 				<div class="large-2 large-offset-9 columns">
-					<input type="image" src="/static/images/left.png" onclick="moveBoardToLeftPro()" width="75em" height="55em"></input>
+					<input type="image" src="/static/images/left.png" onclick="moveBoardToLeft()" width="75em" height="55em"></input>
 					<input type="image" src="/static/images/blank.png" width="75em" height="55em"></input>
-					<input type="image" src="/static/images/right.png" onclick="moveBoardToRightPro()" width="75em" height="55em"></input>
+					<input type="image" src="/static/images/right.png" onclick="moveBoardToRight()" width="75em" height="55em"></input>
 				</div>
 			</div>	
 			
@@ -89,7 +102,7 @@
 					<input type="image" src="/static/images/blank.png" width="75em" height="55em"></input>	
 				</div>
 			</div>				
-		</center>	
+		</div>	
 
 	</div>	
 	

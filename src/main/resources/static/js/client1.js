@@ -22,40 +22,112 @@ var idPlayer;
  */
 var namePlayer;
 
-//--------------------------------------------------------------Funciones------------------------------------------------------------------
 
-/**--------------------------------------------------------------Creacion-----------------------------------------------------------------*/
+//--------------------------------------------------------------Functions------------------------------------------------------------------
+
+
+function missingValues( usedValues )
+{
+	console.log( usedValues );
+ for( var i = 0; i < usedValues.length; i++ )
+ {
+	 if ( !usedValues[i] )
+		 return true;
+ }
+ return false;
+}
+
+
+/**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
+
+/**
+ * Crea un nuevo objeto Board para representar la informacion del tablero Taquin.
+ * Asignar la posicion de la pieza en blanco y asignar valores aleatorios a la matriz.
+ */
+function createMatrix( )
+{
+	var size = $("#sizeBoard").val()
+	var row = $("#blankRow").val() - 1;
+	var column = $("#blankColumn").val() - 1;
+	
+	if( size < 2 )
+	{
+		alert( "Board's size cannot be less than two!!" );
+		return null;
+	}
+	
+	if ( row < 0 || row >= size || column < 0 || column >= size )
+	{
+		alert( "Blank piece's positon invalid!! ")
+		return null;
+	}
+
+	var matrix = new Object( );
+	var value = 0;
+	var maxValue = size * size - 2;
+	var usedValues = new Array( maxValue );
+		
+	console.log( usedValues.length );
+	matrix.movements = 0;	
+	matrix.blank = new Object ();
+	matrix.blank.row = row;
+	matrix.blank.column = column;
+	matrix.currentState = new Array( size );
+	
+		for( var i = 0; i < maxValue; i++ )
+			usedValues[i] = false;
+		
+	for( var i = 0; i < size; i++)
+		matrix.currentState[i] = new Array( size );
+
+	for( var i = 0 ; i < size; i++)
+	{
+		for( var j = 0 ; j < size; j++)
+		{
+			matrix.currentState[i][j] = "-1";
+		}
+	}
+					
+	while( missingValues( usedValues ) )
+	{
+		for( var i = 0 ; i < size; i++)
+		{
+			for( var j = 0 ; j < size; j++)
+			{
+				if( i == row && j == column )
+				{
+					matrix.currentState[i][j] = "B";
+				}
+				else
+				{
+					value = Math.round ( Math.random( ) * maxValue );
+					console.log( "GENRO: " + value );
+					if( !usedValues[value] && matrix.currentState[i][j] === "-1" )
+					{
+						usedValues[value] = true;
+						matrix.currentState[i][j] = (value + 1) + "";
+						
+					}
+				}
+			//	matrix.currentState[i][j] = p++;
+			}
+		}
+	}	
+	
+	return matrix;
+}
 /**
  * Crea un nuevo objeto Board para representar la informacion del tablero Taquin.
  * Asignar la posicion de la pieza en blanco y asignar valores aleatorios a la matriz.
  * consumiendo el servicio de la URL "/api/board/new/", para esto debe enviar el objeto Board serializado como datos de la peticion HTTP.
  * Se debe usar SERIALIZACION pero basica.
  */
-function generateMatrix( )
+function generateBoard( )
 {
-	var size = $("#sizeBoard").val()
-	if(size < 2 )
-		size = 2;
+	board = createMatrix ( );
+	if( board != null )
+		postForObject( board, "/api/board/new/", function(data){}, function(data){})
 	
-	board.movements = 0;
-	board.blank = new Object ();
-	board.blank.row = $("#blankRow").val() - 1;
-	board.blank.column = $("#blankColumn").val() - 1;
-
-	board.currentState = new Array( size );
-	for (var i = 0; i < size; i++)
-		board.currentState[i] = new Array( size );
-
-	for( var i = 0 ; i < size; i++)
-	{
-		for( var j = 0 ; j < size; j++)
-		{
-			board.currentState[i][j] = Math.round ( Math.random( ) * size );
-		}
-	}
-	console.log( board );
-	postForObject( board, "/api/board/new/", function(data){}, function(data){})
-	//showGeneratedBoard( );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -67,9 +139,9 @@ function generateMatrix( )
  */
 function generatePlayerPro( )
 {
-	createPlayer();
-	//console.log( player );
-	$.ajax({
+	if ( createPlayer() )
+	{	
+		$.ajax({
 		type : "post",
 		url : "/api/player/new/",
 		data : JSON.stringify( playerPlay ),
@@ -80,6 +152,16 @@ function generatePlayerPro( )
 				playerPlay.board = data.board;
 				board = data.board;
 				showGeneratedBoard( );
+				
+				$("#playerId").val( idPlayer );
+				$("#playerName").val( namePlayer );
+				$("#playerId").attr( {readOnly:"readOnly"} );
+				$("#playerName").attr( {readOnly:"readOnly"} );
+				$( "#btnCreatePlayer").attr( "disabled", "disabled" );
+				$( "#btnCreatePlayer").css( "background-color", "#gray" );
+				$( "#btnCreateMatrix").attr( "disabled", "disabled" );
+				$( "#btnCreateMatrix").css( "background-color", "gray" );
+				$( "#control").css( { display: "" } );	
 			}
 			else
 			{
@@ -89,121 +171,238 @@ function generatePlayerPro( )
 		error :function(data)
 		{
 		}
-	});
+		});
+	}
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Informa nombre y id para identificarse como nuevo jugador ante la vista
- * consumiendo el servicio de la URL "/api/player{idPlayer}/new{namePlayer}/", 
+ * consumiendo el servicio de la URL "/api/player/{idPlayer}/new/{namePlayer}/", 
  * donde en {idPlayer} se debe colocar el id unico del jugador y en 
  * {namePlayer} el nombre a asignar al jugador.
- * Ejemplo: url: /api/player1/newdadsez/
+ * Ejemplo: url: /api/player/1/new/dadsez/
  * 			Se identifica ante la vista como jugador No. 1 con el nombre dadsez.
  * NO se usa SERIALIZACION.
  */
 function generatePlayer( )
 {
-	createPlayer();
-	var url = "/api/player"+idPlayer+"/new"+namePlayer+"/";
-
-	$.ajax(
+	if ( createPlayer() )
 	{
-		url : url,
-	    contentType: 'application/json; charset=utf-8',
-		success : function(data){
-			if ( data.name == undefined )
-			{
-				alert("Cannot create player because there isn't board challenge yet!!");
-			}
-			else
-			{
-				//Solo se usa para actalizar el tablero del Cliente JS. Se puede quitar no es relevante.
-				playerPlay.board = data.board;
-				board = data.board;
-				showGeneratedBoard( );
-			}
-		},
-		error :function(data)
+		var url = "/api/player/"+idPlayer+"/new/"+namePlayer+"/";
+	
+		$.ajax(
 		{
-		}
-	});
+			type : "post",
+			url : url,
+		    contentType: 'application/json; charset=utf-8',
+			success : function(data){
+				if ( data.name == undefined )
+				{
+					alert("Cannot create player because there isn't board challenge yet!!");
+				}
+				else
+				{
+					//Solo se usa para actalizar el tablero del Cliente JS. Se puede quitar no es relevante.
+					playerPlay.board = data.board;
+					board = data.board;
+					showGeneratedBoard( );
+					
+					$("#playerId").attr( {readOnly:"readOnly"} );
+					$("#playerName").attr( {readOnly:"readOnly"} );
+					$( "#btnCreatePlayer").attr( "disabled", "disabled" );
+					$( "#btnCreatePlayer").css( "background-color", "#gray" );
+					$( "#btnCreateMatrix").attr( "disabled", "disabled" );
+					$( "#btnCreateMatrix").css( "background-color", "gray" );
+					$( "#control").css( { display: "" } );	
+				}
+			},
+			error :function(data)
+			{
+			}
+		});
+	}
 }
 
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Informa nombre y id para identificarse como nuevo jugador ante la vista
+ * consumiendo el servicio de la URL "/api/player/{idPlayer}/new/{namePlayer}/", 
+ * donde en {idPlayer} se debe colocar el id unico del jugador y en 
+ * {namePlayer} el nombre a asignar al jugador.
+ * Ejemplo: url: /api/player/1/new/dadsez/
+ * 			Se identifica ante la vista como jugador No. 1 con el nombre dadsez.
+ * NO se usa SERIALIZACION.
+ */
 function createPlayer( )
 {
 	var player = new Object();
-	idPlayer = $("#playerId").val();
-	playerPlay.id = idPlayer;
 	
+	$("#playerId").removeAttr( "readOnly" );
+	$("#playerName").removeAttr( "readOnly" );
+
+	idPlayer = $("#playerId").val();
 	namePlayer = $("#playerName").val();
+	
+	if ( idPlayer <= 0 || idPlayer == undefined )
+	{
+		alert( "Sorry, we don't accept negative or zero players :C Only positive people! :D");
+		return false;
+	}
+	
+	if ( namePlayer.length == 0 || namePlayer == undefined )
+	{
+		alert( "Please, write your player name!! ");
+		return false;
+	}
+	
+	playerPlay.id = idPlayer;
 	playerPlay.name = namePlayer;
 	playerPlay.points = 0;
 	playerPlay.board = new Object();
-
-	$("#playerIdLabel").text( "Id Player: " + idPlayer );
-	$("#playerNameLabel").text( "Player " + idPlayer + ": " + namePlayer );
+			
+	return true;
 }
 
-/**--------------------------------------------------------------Movimiento---------------------------------------------------------------*/
+/**--------------------------------------------------------------Assignment---------------------------------------------------------------*/
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Informa id del jugador al que le asignara el tablero reto
+ * consumiendo el servicio de la URL "/api/player/{idPlayer}/challenge/new", 
+ * donde en {idPlayer} se debe colocar el id unico del jugador a retar
+ * Ejemplo: url: /api/player/3/challenge/new/
+ * 			Envia un nuevo tablero reto al jgador  No. 3.
+ * NO se usa SERIALIZACION.
+ */
+function startChallenge( )
+{	
+	$("#labelSize").text( "Challenge size:" );	
+	$("#labelBlankPiece").text( "Challenge blank piece:" );
+	
+	$("#sizeBoard").val( 0 )
+	$("#blankRow").val( 0 )
+	$("#blankColumn").val( 0 ) 
+	$( "#sizeBoard" ).removeAttr( "readOnly" );	
+	$( "#blankColumn" ).removeAttr( "readOnly" );
+	$( "#blankRow" ).removeAttr( "readOnly" );
+	$( "#btnChallenge ").css( "display", "");
+	$("#playerToChallenge").css( "display", "");
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+/**
+ * Informa id del jugador al que le asignara el tablero reto
+ * consumiendo el servicio de la URL "/api/player/{idPlayer}/challenge/new", 
+ * donde en {idPlayer} se debe colocar el id unico del jugador a retar
+ * Ejemplo: url: /api/player/3/challenge/new/
+ * 			Envia un nuevo tablero reto al jugador No. 3.
+ * NO se usa SERIALIZACION.
+ */
+function challengePlayer( )
+{
+	var create = true;
+	var size = $("#sizeBoard").val()
+	var row = $("#blankRow").val() - 1;
+	var column = $("#blankColumn").val() - 1;
+	var idPlayerStr = $("#idPlayerToChallenge").val();
+	
+	if( idPlayerStr === "N" )
+	{
+		var boardAux = createMatrix( );
+		if( boardAux != null )
+			postForObject( boardAux, "/api/board/new/", function(data){}, function(data){})
+	}	
+	else
+	{	
+		var idPlayer = parseInt( idPlayerStr );
+		
+		if ( idPlayer <= 0 || idPlayer == undefined )
+		{
+			alert( "Sorry, we don't have negative or zero players :C Only positive people! :D");
+			create = false;
+		}
+			
+		if( create )
+		{
+			var boardChallenge = createMatrix( );
+			if( boardChallenge != null )
+				postForObject( boardChallenge, "/api/player/"+idPlayer+"/challenge/", function(data){}, function(data){});
+		}
+	}
+	
+	$("#labelSize").text( "Board Size :" );	
+	$("#labelBlankPiece").text( "Blank piece:" );
+	$("#blankRow").val( board.blank.row + 1 );
+	$("#blankColumn").val( board.blank.column + 1 );
+	$("#sizeBoard").val( board.currentState.length );	
+	$("#sizeBoard").attr( {readOnly:"readOnly"} );	
+	$("#blankColumn").attr( {readOnly:"readOnly"} );
+	$("#blankRow").attr( {readOnly:"readOnly"} );
+	$( "#btnChallenge ").css( "display", "none");
+	$("#playerToChallenge").css( "display", "none");
+}
+
+
+/**--------------------------------------------------------------Movement---------------------------------------------------------------*/
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia la derecha.
- * Para esto consume el servicio de la URL "/api/board{idPlayer}/move/right"
+ * Para esto consume el servicio de la URL "/api/player/{idPlayer}/board/move/right"
  * donde en {idPlayer} se debe colocar el id unico del jugador con el fin de saber que tablero editar.
- * Ejemplo: url: /api/board{1}/move/right/
+ * Ejemplo: url: /api/player/1/board/move/right/
  * 			Se movera la pieza blanca hacia la derecha del tablero del jugador No. 1.
  * NO se usa SERIALIZACION.
  */
 function moveBoardToRight( )
 {
-	var url = "/api/board"+idPlayer+"/move/right/";
+	var url = "/api/player/"+idPlayer+"/board/move/right/";
 	moveBoard( url );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia la izquierda.
- * Para esto consume el servicio de la URL "/api/board{idPlayer}/move/left"
+ * Para esto consume el servicio de la URL "/api/player/{idPlayer}/board/move/left"
  * donde en {idPlayer} se debe colocar el id unico del jugador con el fin de saber que tablero editar.
- * Ejemplo: url: /api/board{1}/move/left/
+ * Ejemplo: url: /api/player/{1}/board/move/left/
  * 			Se movera la pieza blanca hacia la izquierda del tablero del jugador No. 1.
  * NO se usa SERIALIZACION.
  */
 function moveBoardToLeft( )
 {
-	var url = "/api/board"+idPlayer+"/move/left/";
+	var url = "/api/player/"+idPlayer+"/board/move/left/";
 	moveBoard( url );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia arriba.
- * Para esto consume el servicio de la URL "/api/board{idPlayer}/move/up"
+ * Para esto consume el servicio de la URL "/api/player/{idPlayer}/board/move/up"
  * donde en {idPlayer} se debe colocar el id unico del jugador con el fin de saber que tablero editar.
- * Ejemplo: url: /api/board{1}/move/up/
+ * Ejemplo: url: /api/player/{1}/board/move/up/
  * 			Se movera lapieza blanca hacia arriba del tablero del jugador No. 1.
  * NO se usa SERIALIZACION.
  */
 function moveBoardToUp( )
 {
-	var url = "/api/board"+idPlayer+"/move/up/";
+	var url = "/api/player/"+idPlayer+"/board/move/up/";
 	moveBoard( url );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia abajo.
- * Para esto consume el servicio de la URL "/api/board{idPlayer}/move/down"
+ * Para esto consume el servicio de la URL "/api/player/{idPlayer}/board/move/down"
  * donde en {idPlayer} se debe colocar el id unico del jugador con el fin de saber que tablero editar.
- * Ejemplo: url: /api/board{1}/move/down/
+ * Ejemplo: url: /api/player/{1}/board/move/down/
  * 			Se movera la pieza blanca hacia abajo del tablero del jugador No. 1.
  * NO se usa SERIALIZACION.
  */
 function moveBoardToDown( )
 {
-	var url = "/api/board"+idPlayer+"/move/down/";
+	var url = "/api/player/"+idPlayer+"/board/move/down/";
 	moveBoard( url );	
 }
 
@@ -216,6 +415,7 @@ function moveBoard( url )
 {
 	$.ajax(
 		{
+			type : "post",
 			url : url,
 			contentType: 'application/json; charset=utf-8',
 			success : function(data){
@@ -223,9 +423,7 @@ function moveBoard( url )
 			{
 				//Solo se usa para actualizar el tablero del Cliente JS. Se puede quitar no es relevante.
 				playerPlay.board = data.board;
-				board = data.board;
-				console.log("VA A MOSTRAR MATRIZ");
-				console.log( data );				
+				board = data.board;				
 				showGeneratedBoard( );
 			}
 			else
@@ -241,7 +439,7 @@ function moveBoard( url )
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia la izquierda.
- * Para esto consume el servicio de la URL "/api/board/move/" y se debe 
+ * Para esto consume el servicio de la URL "/api/player//board/move/" y se debe 
  * enviar como datos de la peticion HTTP un objeto Player, serializado, 
  * donde su objeto Piece de Board este moificado de tal manera que represente el
  * movimiento hacia la izquierda.
@@ -252,14 +450,13 @@ function moveBoard( url )
 function moveBoardToLeftPro( )
 {
 	playerPlay.board.blank.column--;
-	//console.log( player );
 	moveBoardPro( );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia la derecha.
- * Para esto consume el servicio de la URL "/api/board/move/" y se debe 
+ * Para esto consume el servicio de la URL "/api/player//board/move/" y se debe 
  * enviar como datos de la peticion HTTP un objeto Player, serializado, 
  * donde su objeto Piece de Board este moificado de tal manera que represente el
  * movimiento hacia la derecha.
@@ -270,14 +467,13 @@ function moveBoardToLeftPro( )
 function moveBoardToRightPro( )
 {
 	playerPlay.board.blank.column++;
-	//console.log( player );
 	moveBoardPro( );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia arriba.
- * Para esto consume el servicio de la URL "/api/board/move/" y se debe 
+ * Para esto consume el servicio de la URL "/api/player//move/" y se debe 
  * enviar como datos de la peticion HTTP un objeto Player, serializado, 
  * donde su objeto Piece de Board este moificado de tal manera que represente el
  * movimiento hacia arriba.
@@ -288,14 +484,13 @@ function moveBoardToRightPro( )
 function moveBoardToUpPro( )
 {
 	playerPlay.board.blank.row--;
-	//console.log( player );
 	moveBoardPro( );
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Mueve la pieza en blanco del tablero Taquin hacia abajo.
- * Para esto consume el servicio de la URL "/api/board/move/" y se debe 
+ * Para esto consume el servicio de la URL "/api/player//move/" y se debe 
  * enviar como datos de la peticion HTTP un objeto Player, serializado, 
  * donde su objeto Piece de Board este moificado de tal manera que represente el
  * movimiento hacia abajo.
@@ -306,7 +501,6 @@ function moveBoardToUpPro( )
 function moveBoardToDownPro( )
 {
 	playerPlay.board.blank.row++;
-	//console.log( player );
 	moveBoardPro( );
 }
 
@@ -329,8 +523,6 @@ function moveBoardPro( )
 				board = data.board;
 				playerPlay.points = data.points;
 				playerPlay.board = data.board;
-				console.log("VA A MOSTRAR MATRIZ");
-				console.log( data );
 				showGeneratedBoard( data.board );
 			}
 			else
@@ -363,14 +555,56 @@ function showGeneratedBoard( )
 		for( var j = 0 ; j < size; j++)
 		{
 			var templateCopy = $( $( $("#piece-template").html() ).clone() );
+			
+			templateCopy.css( "backgroun-color", "" );
 			templateCopy.css( { minWidth : ( (100 / size ) - 1 +"%" ), minHeight : 70 / size + "vh"  } );
 			
 			if( i == board.blank.row && j == board.blank.column )
-				templateCopy.text( "B" );
-			else
-				templateCopy.text( board.currentState[i][j] );
+				templateCopy.css( "background-color", "black" );
+			
+			templateCopy.text( board.currentState[i][j] );
 			
 			$( "#board" ).append( templateCopy );
 		}
 	}
+}
+
+function guau( )
+{
+	moveBoardToRight();
+	moveBoardToRight();
+	moveBoardToRight();
+	moveBoardToRight();
+	moveBoardToDown();
+	moveBoardToLeft();
+	moveBoardToDown();
+	moveBoardToRight();
+	moveBoardToDown();
+	moveBoardToUp();
+	moveBoardToDown();
+	moveBoardToDown();
+	moveBoardToLeft();
+	moveBoardToLeft();
+	moveBoardToLeft();
+	moveBoardToUp();
+	moveBoardToLeft();
+	moveBoardToUp();
+	moveBoardToUp();
+	moveBoardToUp();
+	moveBoardToRight( );
+	/*	moveBoardToDown();
+	moveBoardToRight();
+	moveBoardToUp();
+	moveBoardToLeft();
+	moveBoardToDown();	
+	moveBoardToLeft();
+	moveBoardToLeft();
+	moveBoardToUp();
+	moveBoardToDown();
+	moveBoardToDown();
+	moveBoardToDown();
+	moveBoardToRight();
+	moveBoardToUp();
+	moveBoardToUp();
+	moveBoardToUp();*/
 }
