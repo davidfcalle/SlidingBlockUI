@@ -493,9 +493,9 @@ public class Game
 
 		/*Actualizar la tablero de juego del juagdor teniendo en cuenta hacia donde se movio la pieza en blanco*/
 		String board [][] = player.getBoard().getCurrentState();
-		System.out.println( "A: " +board[blankActualPos.getRow()][blankActualPos.getColumn()] + "LEMETo: " + board[blankNewPos.getRow()][blankNewPos.getColumn()]);
 		board[blankActualPos.getRow()][blankActualPos.getColumn()] = board[blankNewPos.getRow()][blankNewPos.getColumn()];
 		board[blankNewPos.getRow()][blankNewPos.getColumn()] = "B";
+		player.print( board );
 		
 		player.getBoard().setCurrentState( board );
 		player.getBoard().setBlank( blankNewPos );
