@@ -99,6 +99,6 @@ public class Player
 				System.out.print( board2[i][j] + " ");
 			}
 			System.out.println("\n");
-		}
-	}*/
+		}*/
+	}
 }
