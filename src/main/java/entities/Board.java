@@ -1,28 +1,37 @@
 package entities;
 
+import java.util.Arrays;
 import java.util.Random;
 
 
-public class Board {
+/**
+ * @author David Suarez
+ *
+ */
+public class Board 
+{
+
+/**--------------------------------------------------------------Attributtes--------------------------------------------------------------*/
 	
 	/**
-	 * @param currentState: Valores del tablero y su organizacion.
+	 * currentState: Valores del tablero y su organizacion.
 	 */
 	private String[][] currentState;
 		
 	/**
-	 * @param movements: Cantidad de movimientos que se han ejecutado sobre el tablero.
+	 * movements: Cantidad de movimientos que se han ejecutado sobre el tablero.
 	 */
 	private Integer movements;
 	
 	
 	/**
-	 * @param blank: Representa la ubicacion de la pieza blanca en el tablero.
+	 * blank: Representa la ubicacion de la pieza blanca en el tablero.
 	 */
 	private Piece blank;
 	
 	
-/**--------------------------------------------------------------Constructor--------------------------------------------------------------*/	
+/**--------------------------------------------------------------Creation--------------------------------------------------------------*/	
+
 	/**
 	 * Constructor.
 	 */
@@ -33,6 +42,7 @@ public class Board {
 
 	
 /**--------------------------------------------------------------Getter&Setter----------------------------------------------------------*/	
+	
 	/**
 	 * @return the currentState
 	 */
@@ -81,7 +91,16 @@ public class Board {
 		this.blank = blank;
 	}
 
-/**--------------------------------------------------------------Negocio-----------------------------------------------------------------*/
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Board [currentState=" + Arrays.toString(currentState) + ", movements=" + movements + ", blank=" + blank
+				+ "]";
+	}
+	
+/**-----------------------------------------------------------------------------------------------------------------------------------*/
 	
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
