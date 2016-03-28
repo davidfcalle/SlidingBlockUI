@@ -92,7 +92,7 @@ public class Player
 	}
 
 	public void print(String[][] board2) {
-		for( int i =0; i < board2.length; i ++ )
+	/*	for( int i =0; i < board2.length; i ++ )
 		{
 			for(int j = 0; j < board2.length; j++ )
 			{
@@ -100,8 +100,5 @@ public class Player
 			}
 			System.out.println("\n");
 		}
-	}
-
-	
-	
+	}*/
 }

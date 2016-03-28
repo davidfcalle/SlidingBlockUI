@@ -297,6 +297,7 @@ public class Game
 	 */
 	public Player addBoardToPlayer( Player player ) 
 	{
+	//	System.out.println( "boards: "+ this.numPlayers + "Players: " + this.players.size( ) + " id pedido: " + player.getId( ) );
 		if( this.numPlayers >= this.players.size() || player.getId() > this.players.size() )
 			return null;
 		

@@ -28,7 +28,7 @@ var namePlayer;
 
 function missingValues( usedValues )
 {
-	console.log( usedValues );
+//	console.log( usedValues );
  for( var i = 0; i < usedValues.length; i++ )
  {
 	 if ( !usedValues[i] )
@@ -67,7 +67,7 @@ function createMatrix( )
 	var maxValue = size * size - 2;
 	var usedValues = new Array( maxValue );
 		
-	console.log( usedValues.length );
+//	console.log( usedValues.length );
 	matrix.movements = 0;	
 	matrix.blank = new Object ();
 	matrix.blank.row = row;
@@ -357,7 +357,7 @@ function challengePlayer( )
 function moveBoardToRight( )
 {
 	var url = "/api/player/"+idPlayer+"/board/move/right/";
-	console.log("DERECHA");
+//	console.log("DERECHA");
 	moveBoard( url );
 }
 
@@ -373,7 +373,7 @@ function moveBoardToRight( )
 function moveBoardToLeft( )
 {
 	var url = "/api/player/"+idPlayer+"/board/move/left/";
-	console.log("IZQUIERDA");
+//	console.log("IZQUIERDA");
 	moveBoard( url );
 }
 
@@ -389,7 +389,7 @@ function moveBoardToLeft( )
 function moveBoardToUp( )
 {
 	var url = "/api/player/"+idPlayer+"/board/move/up/";
-	console.log("ARRIBA");
+//	console.log("ARRIBA");
 	moveBoard( url );
 }
 
@@ -405,7 +405,7 @@ function moveBoardToUp( )
 function moveBoardToDown( )
 {
 	var url = "/api/player/"+idPlayer+"/board/move/down/";
-	console.log("ABAJO");
+//	console.log("ABAJO");
 	moveBoard( url );	
 }
 
