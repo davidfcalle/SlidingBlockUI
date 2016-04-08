@@ -8,9 +8,8 @@ import java.util.List;
  * @author David Suarez
  *
  */
-public class Game 
-{
-	
+public class Game {
+
 	private List<Player> players;
 	private int numPlayers;
 	private int idPlayerToUpd;
@@ -21,9 +20,9 @@ public class Game
 	private boolean newPlayer;
 	private boolean newSuscriber;
 	private boolean moveBoard;
-	
-	
-/**--------------------------------------------------------------Constructor--------------------------------------------------------------*/	
+
+
+/**--------------------------------------------------------------Constructor--------------------------------------------------------------*/
 	public Game()
 	{
 		players = new ArrayList<>();
@@ -35,7 +34,7 @@ public class Game
 		newBoard = false;
 		newSuscriber = false;
 		moveBoard = false;
-		newPlayer = false;	
+		newPlayer = false;
 	}
 
 	public Game( Game other )
@@ -49,16 +48,16 @@ public class Game
 		newBoard = other.newBoard;
 		newSuscriber = other.newSuscriber;
 		moveBoard = other.moveBoard;
-		newPlayer = other.newPlayer;	
+		newPlayer = other.newPlayer;
 	}
-	
-	
-/**--------------------------------------------------------------Getter&Setter----------------------------------------------------------*/		
-	
+
+
+/**--------------------------------------------------------------Getter&Setter----------------------------------------------------------*/
+
 	/**
 	 * @return the jugadores
 	 */
-	public List<Player> getJugadores() 
+	public List<Player> getJugadores()
 	{
 		return players;
 	}
@@ -66,7 +65,7 @@ public class Game
 	/**
 	 * @param jugadores the jugadores to set
 	 */
-	public void setJugadores(List<Player> jugadores) 
+	public void setJugadores(List<Player> jugadores)
 	{
 		this.players = jugadores;
 	}
@@ -74,7 +73,7 @@ public class Game
 	/**
 	 * @return the numPlayers
 	 */
-	public int getNumPlayers() 
+	public int getNumPlayers()
 	{
 		return numPlayers;
 	}
@@ -82,11 +81,11 @@ public class Game
 	/**
 	 * @param numPlayers the numPlayers to set
 	 */
-	public void setNumPlayers(int numPlayers) 
+	public void setNumPlayers(int numPlayers)
 	{
 		this.numPlayers = numPlayers;
 	}
-	
+
 	/**
 	 * @return the idPlayerToUpd
 	 */
@@ -106,7 +105,7 @@ public class Game
 	/**
 	 * @return the newBoard
 	 */
-	public boolean isNewBoard() 
+	public boolean isNewBoard()
 	{
 		return newBoard;
 	}
@@ -114,15 +113,15 @@ public class Game
 	/**
 	 * @param newBoard the newBoard to set
 	 */
-	public void setNewBoard(boolean newBoard) 
+	public void setNewBoard(boolean newBoard)
 	{
 		this.newBoard = newBoard;
 	}
-	
+
 	/**
 	 * @return the newPlayer
 	 */
-	public boolean isNewPlayer() 
+	public boolean isNewPlayer()
 	{
 		return newPlayer;
 	}
@@ -130,16 +129,16 @@ public class Game
 	/**
 	 * @param newPlayer the newPlayer to set
 	 */
-	public void setNewPlayer(boolean newPlayer) 
+	public void setNewPlayer(boolean newPlayer)
 	{
 		this.newPlayer = newPlayer;
 	}
 
-	
+
 	/**
 	 * @return the newSuscriber
 	 */
-	public boolean isNewSuscriber() 
+	public boolean isNewSuscriber()
 	{
 		return newSuscriber;
 	}
@@ -155,7 +154,7 @@ public class Game
 	/**
 	 * @return the typeMovement
 	 */
-	public int getTypeMovement() 
+	public int getTypeMovement()
 	{
 		return typeMovement;
 	}
@@ -163,7 +162,7 @@ public class Game
 	/**
 	 * @param typeMovement the typeMovement to set
 	 */
-	public void setTypeMovement(int typeMovement) 
+	public void setTypeMovement(int typeMovement)
 	{
 		this.typeMovement = typeMovement;
 	}
@@ -171,7 +170,7 @@ public class Game
 	/**
 	 * @return the moveBoard
 	 */
-	public boolean isMoveBoard() 
+	public boolean isMoveBoard()
 	{
 		return moveBoard;
 	}
@@ -179,16 +178,16 @@ public class Game
 	/**
 	 * @param moveBoard the moveBoard to set
 	 */
-	public void setMoveBoard(boolean moveBoard) 
+	public void setMoveBoard(boolean moveBoard)
 	{
 		this.moveBoard = moveBoard;
 	}
 
-	
+
 	/**
 	 * @return the piece_1_ToMove
 	 */
-	public int getPiece_1_ToMove() 
+	public int getPiece_1_ToMove()
 	{
 		return piece_1_ToMove;
 	}
@@ -196,7 +195,7 @@ public class Game
 	/**
 	 * @param piece_1_ToMove the piece_1_ToMove to set
 	 */
-	public void setPiece_1_ToMove(int piece_1_ToMove) 
+	public void setPiece_1_ToMove(int piece_1_ToMove)
 	{
 		this.piece_1_ToMove = piece_1_ToMove;
 	}
@@ -222,10 +221,10 @@ public class Game
 				+ piece_2_ToMove + ", newBoard=" + newBoard + ", newPlayer=" + newPlayer + ", newSuscriber="
 				+ newSuscriber + ", moveBoard=" + moveBoard + "]";
 	}
-	
-	
+
+
 /**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
-	
+
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Se encarga de crear un Player vacio, es deicr, sin nombre ni id como un "cascaron"
@@ -233,39 +232,39 @@ public class Game
 	 * Por ultimo prende las banderas necesarias para informar a la vista que secciones debe actualizar.
 	 * @param board: Tablero de juego que se agrego al juego.
 	 */
-	public Board addBoard( Board board ) 
+	public Board addBoard( Board board )
 	{
 		Player player = new Player( );
-		
+
 		board.setMovements( 0 );
 		player.setId( this.getJugadores().size() + 1 );
 		player.setBoard( board );
 		player.setPoints( 0 );
 		player.setName( "Player " + player.getId() + " - No Player Yet!" );
-		
+
 		this.addPlayer( player );
-		
+
 		this.idPlayerToUpd = player.getId() - 1;
 		this.newBoard = true;
 		this.newPlayer = true;
 		this.moveBoard = false;
 		this.newSuscriber = true;
-		
+
 		return player.getBoard();
 	}
-	
+
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Se encarga de agregar un Player a la lista de juagdores.
 	 * @param p: Player a agregar.
-	 */	public void addPlayer( Player p ) 
+	 */	public void addPlayer( Player p )
 	{
 		this.players.add( p );
 	}
-	 
-	 
+
+
 /**--------------------------------------------------------------Assignment---------------------------------------------------------------*/
-		
+
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Verifica si el juagdor con id idPlayer existe y esta disponible.
@@ -274,40 +273,40 @@ public class Game
 	 * @param idPlayer: Id del jugador al que se le buscara el tablero.
 	 * @return playerCreated: Board asociado al jugador
 	 * 						 Null si el jugador no existe o no esta disponible.
-	 */	 
+	 */
 	 public Board getBoardByPlayer(Integer idPlayer) {
 			if( idPlayer > this.numPlayers )
 				return null;
-			
+
 			return this.players.get( idPlayer - 1 ).getBoard();
 		}
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
-	 * Verifica si el tablero que se ha pedido (representado en el atributo id de player) 
-	 * existe y esta disponible, tambien si hay tableros suficientes para el nuevo player. 
+	 * Verifica si el tablero que se ha pedido (representado en el atributo id de player)
+	 * existe y esta disponible, tambien si hay tableros suficientes para el nuevo player.
 	 * SI lo anterior se cumple se encarga de asignar el tablero pedido a Player.
 	 * Donde player es, playerCreated, la instancia de Player creada anteriormente pero
-	 * que solo contiene un tablero, es decir, aun no tiene un id y nombre de jugador 
-	 * asignados, por ende a este "cascaron de Pllayer" se le asiganra el id y nombre 
+	 * que solo contiene un tablero, es decir, aun no tiene un id y nombre de jugador
+	 * asignados, por ende a este "cascaron de Pllayer" se le asiganra el id y nombre
 	 * que contiene player, simuando asi la asignacion del tablero.
 	 * Por ultimo prende las banderas necesarias para informar a la vista que secciones debe actualizar.
 	 * @param player: Jugador al que se le asignara un tablero.
 	 * @return playerCreated: Una instancia de Player si se pudo crear y asignarle el tablero.
 	 * 						 Null si el tablero pedido aun no existe o no esta disponible.
 	 */
-	public Player addBoardToPlayer( Player player ) 
+	public Player addBoardToPlayer( Player player )
 	{
 	//	System.out.println( "boards: "+ this.numPlayers + "Players: " + this.players.size( ) + " id pedido: " + player.getId( ) );
 		if( this.numPlayers >= this.players.size() || player.getId() > this.players.size() )
 			return null;
-		
+
 		Player playerCreated = this.players.get( player.getId() - 1 );
 		playerCreated.setId( player.getId() );
 		playerCreated.setName( player.getName( ) );
 		playerCreated.setPoints( player.getPoints() );
 		playerCreated.getBoard().setMovements( 0 );
 		this.numPlayers++;
-		
+
 		this.idPlayerToUpd = playerCreated.getId() - 1;
 		this.newBoard = false;
 		this.newPlayer = true;
@@ -318,22 +317,22 @@ public class Game
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Verifica si el juagdor con id idPlayer existe y esta disponible.
-	 * SI lo anterior se cumple se encarga de asignar el nuevo tablero 
+	 * SI lo anterior se cumple se encarga de asignar el nuevo tablero
 	 * que viene en board a un Player con id idPlayer
 	 * Por ultimo prende las banderas necesarias para informar a la vista que secciones debe actualizar.
 	 * @param player: Jugador al que se le asignara un tablero.
 	 * @return playerCreated: Una instancia de Player si se pudo crear y asignarle el tablero.
 	 * 						 Null si el tablero pedido aun no existe o no esta disponible.
 	 */
-	public Player assignBoardToPlayer(Integer idPlayer, Board board ) 
+	public Player assignBoardToPlayer(Integer idPlayer, Board board )
 	{
 		if( idPlayer > this.players.size() )
 			return null;
-		
+
 		Player player = this.players.get( idPlayer - 1 );
 		player.setBoard( board );
 		player.getBoard().setMovements( 0 );
-		
+
 		this.idPlayerToUpd = player.getId() - 1;
 		this.newBoard = true;
 		this.newPlayer = false;
@@ -341,98 +340,98 @@ public class Game
 		return player;
 	}
 
-	
+
 /**--------------------------------------------------------------Movement---------------------------------------------------------------*/
 
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Obtiene el jugador cuyo id es @idPlayerque, quien posee
 	 * el tablero al que se le movera la pieza blanca. Para esto
-	 * crea newPosBlank un objeto Piece con el que se  simula 
+	 * crea newPosBlank un objeto Piece con el que se  simula
 	 * el movimiento de la pieza blanca hacia la derecha.
-	 * Luego se apoya en el metodo movePieceOnBoard para mover 
+	 * Luego se apoya en el metodo movePieceOnBoard para mover
 	 * la pieza blanca a la nueva posicion representada en newPosBlank.
 	 * @param idPlayer: Jugador que tiene el tablero donde se moveran las piezas.
 	 * @return player: Jugador con el tablero actualizado luego de mover la pieza blanca.
 	 */
-	public Player movePieceOnBoardToRight( Integer idPlayer ) 
+	public Player movePieceOnBoardToRight( Integer idPlayer )
 	{
 		Player player = this.players.get( idPlayer - 1 );
 		Piece newPosBlank = new Piece();
 		newPosBlank.setColumn( player.getBoard().getBlank().getColumn() + 1 );
 		newPosBlank.setRow( player.getBoard().getBlank().getRow() );
-		
-		return this.movePieceOnBoard( player, newPosBlank );	
+
+		return this.movePieceOnBoard( player, newPosBlank );
 	}
-	
+
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Obtiene el jugador cuyo id es @idPlayerque, quien posee
 	 * el tablero al que se le movera la pieza blanca. Para esto
-	 * crea newPosBlank un objeto Piece con el que se  simula 
+	 * crea newPosBlank un objeto Piece con el que se  simula
 	 * el movimiento de la pieza blanca hacia la izquierda.
-	 * Luego se apoya en el metodo movePieceOnBoard para mover 
+	 * Luego se apoya en el metodo movePieceOnBoard para mover
 	 * la pieza blanca a la nueva posicion representada en newPosBlank.
 	 * @param idPlayer: Jugador que tiene el tablero donde se moveran las piezas.
 	 * @return player: Jugador con el tablero actualizado luego de mover la pieza blanca.
 	 */
-	public Player movePieceOnBoardToLeft( Integer idPlayer ) 
+	public Player movePieceOnBoardToLeft( Integer idPlayer )
 	{
 		Player player = this.players.get( idPlayer - 1 );
 		Piece newPosBlank = new Piece();
 		newPosBlank.setColumn( player.getBoard().getBlank().getColumn() - 1 );
 		newPosBlank.setRow( player.getBoard().getBlank().getRow() );
-		
-		return this.movePieceOnBoard( player, newPosBlank );	
+
+		return this.movePieceOnBoard( player, newPosBlank );
 	}
-	
+
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Obtiene el jugador cuyo id es @idPlayerque, quien posee
 	 * el tablero al que se le movera la pieza blanca. Para esto
-	 * crea newPosBlank un objeto Piece con el que se  simula 
+	 * crea newPosBlank un objeto Piece con el que se  simula
 	 * el movimiento de la pieza blanca hacia arriba.
-	 * Luego se apoya en el metodo movePieceOnBoard para mover 
+	 * Luego se apoya en el metodo movePieceOnBoard para mover
 	 * la pieza blanca a la nueva posicion representada en newPosBlank.
 	 * @param idPlayer: Jugador que tiene el tablero donde se moveran las piezas.
 	 * @return player: Jugador con el tablero actualizado luego de mover la pieza blanca.
 	 */
-	public Player movePieceOnBoardToUp( Integer idPlayer ) 
+	public Player movePieceOnBoardToUp( Integer idPlayer )
 	{
 		Player player = this.players.get( idPlayer - 1 );
 		Piece newPosBlank = new Piece();
 		newPosBlank.setColumn( player.getBoard().getBlank().getColumn() );
 		newPosBlank.setRow( player.getBoard().getBlank().getRow() -1 );
-		
-		return this.movePieceOnBoard( player, newPosBlank );	
+
+		return this.movePieceOnBoard( player, newPosBlank );
 	}
-	
+
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Obtiene el jugador cuyo id es @idPlayerque, quien posee
 	 * el tablero al que se le movera la pieza blanca. Para esto
-	 * crea newPosBlank un objeto Piece con el que se  simula 
+	 * crea newPosBlank un objeto Piece con el que se  simula
 	 * el movimiento de la pieza blanca hacia abajo.
-	 * Luego se apoya en el metodo movePieceOnBoard para mover 
+	 * Luego se apoya en el metodo movePieceOnBoard para mover
 	 * la pieza blanca a la nueva posicion representada en newPosBlank.
 	 * @param idPlayer: Jugador que tiene el tablero donde se moveran las piezas.
 	 * @return player: Jugador con el tablero actualizado luego de mover la pieza blanca.
 	 */
-	public Player movePieceOnBoardToDown( Integer idPlayer ) 
+	public Player movePieceOnBoardToDown( Integer idPlayer )
 	{
 		Player player = this.players.get( idPlayer - 1 );
 		Piece newPosBlank = new Piece();
 		newPosBlank.setColumn( player.getBoard().getBlank().getColumn() );
 		newPosBlank.setRow( player.getBoard().getBlank().getRow() + 1 );
-		
-		return this.movePieceOnBoard( player, newPosBlank );	
-	}	
+
+		return this.movePieceOnBoard( player, newPosBlank );
+	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
-	 * Identifica hacia que posicion se movio la casilla en blanco, 
+	 * Identifica hacia que posicion se movio la casilla en blanco,
 	 * y guarda en piece_1_ToMove y piece_2_ToMove las dos casillas afecatadas.
-	 * Luego verifica si el movimiento es valido. Si lo anterior se cumple mueve 
-	 * la pieza blanca hacia su nueva posicion y guarda en typeMovement hacia 
+	 * Luego verifica si el movimiento es valido. Si lo anterior se cumple mueve
+	 * la pieza blanca hacia su nueva posicion y guarda en typeMovement hacia
 	 * donde se movio la pieza blanca para informarlo a la vista.
 	 * Por ultimo prende las banderas necesarias para informar a la vista que secciones debe actualizar.
 	 * @param player: Jugador que tiene el tablero donde se moveran las piezas.
@@ -440,7 +439,7 @@ public class Game
 	 * @return player: Jugador con el tablero actualizado luego de mover a pieza blanca.
 	 * 				   Null si el movimiento no es valido.
 	 */
-	public Player movePieceOnBoard( Player p, Piece blankNewPos ) 
+	public Player movePieceOnBoard( Player p, Piece blankNewPos )
 	{
 		Player player = this.players.get( p.getId() - 1 );
 		Piece blankActualPos = player.getBoard().getBlank();
@@ -450,11 +449,11 @@ public class Game
 
 		if( blankNewPos.getRow() < 0 || blankNewPos.getRow() >= size || blankNewPos.getColumn() < 0 || blankNewPos.getColumn() >= size )
 			return null;
-		
+
 		if( blankActualPos.getRow() == blankNewPos.getRow() )
 		{
 			//Movio en columnas solo puede moverse a izquierda o derecha.
-			
+
 			int columnsMoves = blankNewPos.getColumn() - blankActualPos.getColumn();
 
 			if( Math.abs( columnsMoves ) == 1 )
@@ -468,11 +467,11 @@ public class Game
 			{
 				return null;
 			}
-		}	
+		}
 		else if( blankActualPos.getColumn() == blankNewPos.getColumn() )
 		{
 			//Movio en filas solo puede moverse arriba o abajo.
-			
+
 			int rowsMoves = blankNewPos.getRow() - blankActualPos.getRow();
 
 			if( Math.abs( rowsMoves ) == 1 )
@@ -497,19 +496,19 @@ public class Game
 		board[blankActualPos.getRow()][blankActualPos.getColumn()] = board[blankNewPos.getRow()][blankNewPos.getColumn()];
 		board[blankNewPos.getRow()][blankNewPos.getColumn()] = "B";
 		player.print( board );
-		
+
 		player.getBoard().setCurrentState( board );
 		player.getBoard().setBlank( blankNewPos );
 		player.getBoard().addMovement();
 
-		
+
 		this.idPlayerToUpd = player.getId() - 1;
 		this.newBoard = false;
 		this.newPlayer = false;
 		this.newSuscriber = false;
-		this.moveBoard = true;	
-		
+		this.moveBoard = true;
+
 		return player;
-		
+
 	}
 }
