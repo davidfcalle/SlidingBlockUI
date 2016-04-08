@@ -44,8 +44,7 @@ public class GameController
 	 * @param template: Encargado de enviar mensajes usando WebSokets para actualizar la vista.
 	 */
 	@Autowired
-	public GameController(SimpMessagingTemplate template) 
-	{
+	public GameController(SimpMessagingTemplate template) {
 		this.game = new Game();  //QUE SE ACTAULIZAN AL ENTRAR.i
 		this.eventsQueue = new ArrayList<>();
 		this.updatingQueue = false;
@@ -54,23 +53,28 @@ public class GameController
 		this.reviewer.start();
 	}
 	
+	public synchronized boolean canObtainLock(){
+		if( !updatingQueue ){
+			updatingQueue = true;
+			return true;
+		}
+		return false;
+	}
+	
+	
 	//---------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Agrega un nuevo evento, para luego notificar a la vista su respectiva actualizacion,
 	 * a la cola de eventos controlando en no entrar en condicion de carrera.
 	 */
-	public void addEvent()
-	{
-		while( updatingQueue );
-		
-		updatingQueue = true;
+	public void addEvent(){
+		while( !canObtainLock() );
 		this.eventsQueue.add( new Game( this.game ) );
 		updatingQueue = false;		
 	}
 
 	//---------------------------------------------------------------------------------------------------------------------------------------
-	public void sendGameUpdate( Game newGame )
-	{
+	public synchronized void sendGameUpdate( Game newGame ){
 	//	System.out.println("SACO TIPO MOV: "+ newGame.getTypeMovement() +"\n");
 		template.convertAndSend( TOPIC_URI , newGame );
 	}
@@ -85,8 +89,7 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/game/new", method = RequestMethod.POST)
-	public Game startNewGame()
-	{
+	public Game startNewGame(){
 		this.game.setNewSuscriber(true );
 		this.addEvent();
 		return game;
@@ -100,8 +103,7 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/board/new", method = RequestMethod.POST)
-	public void startNewBoard( @RequestBody Board board )
-	{	
+	public void startNewBoard( @RequestBody Board board ){	
 		this.game.addBoard( board );
 		this.addEvent();
 	}
@@ -117,8 +119,7 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/player/new", method = RequestMethod.POST)
-	public Player startNewPlayerPro( @RequestBody Player player )
-	{
+	public Player startNewPlayerPro( @RequestBody Player player ){
 		Player p = this.game.addBoardToPlayer( player );
 		
 		if ( p != null ) 
@@ -139,8 +140,7 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/player/{idPlayer}/new/{namePlayer}", method = RequestMethod.POST)
-	public Player startNewPlayer( @PathVariable Integer idPlayer, @PathVariable String namePlayer )
-	{
+	public Player startNewPlayer( @PathVariable Integer idPlayer, @PathVariable String namePlayer ){
 		Player player  = new Player( );
 		player.setId( idPlayer );
 		player.setName( namePlayer );
@@ -158,8 +158,7 @@ public class GameController
 	 * Notifica que ya se ha actualizado el nuevo suscriptor. //AUN NO LO USO
 	 */
 	@RequestMapping(value="/api/game/endUpdate", method = RequestMethod.GET)
-	public void gameStarted()
-	{
+	public void gameStarted(){
 		this.game.setNewSuscriber(false );
 	}
 
@@ -176,8 +175,7 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/board/{idPlayer}/", method = RequestMethod.GET )
-	public Board getCurrentBoard( @PathVariable Integer idPlayer  )
-	{
+	public Board getCurrentBoard( @PathVariable Integer idPlayer  ){
 		return this.game.getBoardByPlayer( idPlayer );
 	}
 	
@@ -193,8 +191,7 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/player/{idPlayer}/challenge", method = RequestMethod.POST)
-	public Player assignBoardToPlayer( @PathVariable Integer idPlayer, @RequestBody Board board )
-	{
+	public Player assignBoardToPlayer( @PathVariable Integer idPlayer, @RequestBody Board board) {
 		Player p = this.game.assignBoardToPlayer( idPlayer, board );
 		
 		if ( p != null ) 
@@ -304,8 +301,7 @@ public class GameController
 		return p;
 	}
 	
-	public class Reviewer extends Thread
-	{
+	public class Reviewer extends Thread{
 
 		private boolean running;
 	    
@@ -315,36 +311,26 @@ public class GameController
 	    }
 
 	    @Override
-	    public void run()
-	    {
-	      while ( this.running )
-	      {
-	        while ( !updatingQueue )
-	        {
-	        	updatingQueue = true;
-	        	if( eventsQueue.size() > 0 )
-	        	{
+	    public void run(){
+	      while ( this.running ){
+	        while ( !canObtainLock() ){
+	        	if( eventsQueue.size() > 0 ){
 	        		Game newGame = eventsQueue.get( 0 );
 		        	eventsQueue.remove( 0 );
 		        	sendGameUpdate( newGame );
 	        	}
 	        	updatingQueue = false;
-	        	
-	        	try 
-	        	{
+	        	try {
 					Thread.sleep( 150 );
 				} 
-	        	catch (InterruptedException e) 
-	        	{
+	        	catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 	        }
-	        try 
-        	{
+	        try {
 				Thread.sleep( 150 );
 			} 
-	        catch (InterruptedException e) 
-        	{
+	        catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 	      }
