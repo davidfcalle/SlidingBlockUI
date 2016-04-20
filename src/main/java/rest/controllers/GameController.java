@@ -59,7 +59,7 @@ public class GameController
 	 * Agrega un nuevo evento, para luego notificar a la vista su respectiva actualizacion,
 	 * a la cola de eventos controlando en no entrar en condicion de carrera.
 	 */
-	public void addEvent()
+	public synchronized void addEvent()
 	{
 		while( updatingQueue );
 		
