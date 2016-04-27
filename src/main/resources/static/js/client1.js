@@ -422,17 +422,11 @@ function moveBoard( url )
 			url : url,
 			contentType: 'application/json; charset=utf-8',
 			success : function(data){
-			if ( data.name != undefined )
-			{
 				//Solo se usa para actualizar el tablero del Cliente JS. Se puede quitar no es relevante.
 				playerPlay.board = data.board;
 				board = data.board;				
 				showGeneratedBoard( );
-			}
-			else
-			{
-				alert("Invalid Move!!");
-			}},
+			},
 			error :function(data)
 			{
 			}
@@ -578,6 +572,7 @@ function guau( )
 	moveBoardToRight();
 	moveBoardToRight();
 	moveBoardToRight();
+
 	moveBoardToDown();
 	moveBoardToDown();
 	moveBoardToDown();

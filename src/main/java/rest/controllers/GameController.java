@@ -2,7 +2,9 @@ package rest.controllers;
 
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import entities.Board;
 import entities.Game;
+import entities.Piece;
 import entities.Player;
 
 
@@ -30,8 +33,10 @@ public class GameController
 	public final static String TOPIC_URI = "/topics/game";
 
 	private Game game;
-	private List<Game> eventsQueue;
+	private Map<Integer, Piece> eventsQueue;
 	private boolean updatingQueue;
+	private static int PUSH_COUNT = 0;
+	private static int PULL_COUNT = 0;
 	private Reviewer reviewer;
 	private SimpMessagingTemplate template;
 
@@ -46,7 +51,7 @@ public class GameController
 	@Autowired
 	public GameController(SimpMessagingTemplate template) {
 		this.game = new Game();  //QUE SE ACTAULIZAN AL ENTRAR.i
-		this.eventsQueue = new ArrayList<>();
+		this.eventsQueue = new Hashtable();
 		this.updatingQueue = false;
 		this.reviewer = new Reviewer();
 		this.template = template;
@@ -67,10 +72,12 @@ public class GameController
 	 * Agrega un nuevo evento, para luego notificar a la vista su respectiva actualizacion,
 	 * a la cola de eventos controlando en no entrar en condicion de carrera.
 	 */
-	public synchronized void addEvent()
+	public synchronized void addEvent( Piece p )
 	{
-		while( !canObtainLock() );
-			this.eventsQueue.add( new Game( this.game ) );
+		while( updatingQueue ){System.out.println("esperando para meter");};
+		updatingQueue = true;
+		System.out.println("METIOOO");
+		this.eventsQueue.put( PUSH_COUNT++, p );
 		updatingQueue = false;
 	}
 
@@ -212,7 +219,7 @@ public class GameController
 	 * @return p: Objeto Player que posee el tablero al que se le movio la pieza blanca.
 	 * 			   Null si el movimiento no es valido.
 	 */
-	@CrossOrigin(origins="*")
+	/*@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/board/move", method = RequestMethod.POST)
 	public Player movePieceOnBoardPro( @RequestBody Player player )
 	{
@@ -222,7 +229,7 @@ public class GameController
 			this.addEvent();
 
 		return p;
-	}
+	}*/
 
 	/**
 	 * Delega al objeto Game cambiar de posicion la pieza blanca hacia la derecha.
@@ -233,14 +240,13 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/player/{idPlayer}/board/move/right", method = RequestMethod.POST)
-	public Player movePieceOnBoardToRight( @PathVariable Integer idPlayer )
+	public void movePieceOnBoardToRight( @PathVariable Integer idPlayer )
 	{
-		Player p = this.game.movePieceOnBoardToRight( idPlayer );
+		//Player p = this.game.movePieceOnBoardToRight( idPlayer );
+		Piece p = new Piece( idPlayer, 0 );
 		System.out.println("Metio DERECHA:\n");
 		if ( p != null )
-			this.addEvent();
-
-		return p;
+			this.addEvent( p );
 	}
 
 	/**
@@ -252,15 +258,13 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/player/{idPlayer}/board/move/left", method = RequestMethod.POST)
-	public Player movePieceOnBoardToLeft( @PathVariable Integer idPlayer )
+	public void movePieceOnBoardToLeft( @PathVariable Integer idPlayer )
 	{
-		Player p = this.game.movePieceOnBoardToLeft( idPlayer );
-
+		//Player p = this.game.movePieceOnBoardToLeft( idPlayer );
+		Piece p = new Piece( idPlayer, 1 );
 		System.out.println("Metio IZQUIERDA:\n");
 		if ( p != null )
-			this.addEvent();
-
-		return p;
+			this.addEvent( p );
 	}
 
 	/**
@@ -272,15 +276,14 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/player/{idPlayer}/board/move/up", method = RequestMethod.POST)
-	public Player movePieceOnBoardToUp( @PathVariable Integer idPlayer )
+	public void movePieceOnBoardToUp( @PathVariable Integer idPlayer )
 	{
-		Player p = this.game.movePieceOnBoardToUp( idPlayer );
-
+		//Player p = this.game.movePieceOnBoardToUp( idPlayer );
+		Piece p = new Piece( idPlayer, 2 );
 		System.out.println("Metio ARRIBA:\n");
 		if ( p != null )
-			this.addEvent();
+			this.addEvent( p );
 
-		return p;
 	}
 
 	/**
@@ -292,15 +295,14 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/player/{idPlayer}/board/move/down", method = RequestMethod.POST)
-	public Player movePieceOnBoardToDown( @PathVariable Integer idPlayer )
+	public void movePieceOnBoardToDown( @PathVariable Integer idPlayer )
 	{
-		Player p = this.game.movePieceOnBoardToDown( idPlayer );
-		
+		//Player p = this.game.movePieceOnBoardToDown( idPlayer );
+		Piece p = new Piece( idPlayer, 3 );
 		System.out.println("Metio ABAJO:\n");
 		if ( p != null )
-			this.addEvent();
+			this.addEvent( p );
 
-		return p;
 	}
 
 	public class Reviewer extends Thread{
@@ -316,11 +318,29 @@ public class GameController
 	      while ( this.running ){
 	        while ( !canObtainLock() )
 	        {
+	        	updatingQueue = true;
+	        	//System.out.println("esperando para sacar");
 	        	if( eventsQueue.size() > 0 )
 	        	{
-	        		Game newGame = eventsQueue.get( 0 );
-		        	eventsQueue.remove( 0 );
-		        	sendGameUpdate( newGame );
+	        		Piece p = eventsQueue.get( PULL_COUNT );
+		        	eventsQueue.remove( PULL_COUNT++ );
+		        	int typeMovement = p.getColumn();
+		        	switch( typeMovement )
+		        	{
+			    	    case 0:
+			    	    	game.movePieceOnBoardToRight( p.getRow() );
+			    	        break;
+			    	    case 1:
+			    	    	game.movePieceOnBoardToLeft( p.getRow() );
+			    	        break;
+			    	    case 2:
+			    	    	game.movePieceOnBoardToUp( p.getRow() );
+			    	        break;
+			    	    case 3:
+			    	    	game.movePieceOnBoardToDown( p.getRow() );
+			    	        break;
+		        	}
+		        	sendGameUpdate( game );
 	        	}
 	        	updatingQueue = false;
 	        	try {
