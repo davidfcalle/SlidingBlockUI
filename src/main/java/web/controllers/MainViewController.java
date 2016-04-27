@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 
 @Controller
-public class MainViewController 
+public class MainViewController
 {
-	
-	
-	@RequestMapping(value = { "/taquin", "/taquin/" } )
+
+
+	@RequestMapping(value = { "/taquin", "/taquin/" , "/"} )
 	public String webSocketExample()
 	{
 		return "index";
-	}	
-	
-	@RequestMapping(value = { "/clienteJS", "/ctlienteJS/" } )
+	}
+
+	@RequestMapping(value = { "/clienteJS", "/clientejs/" } )
 	public String createClientJS()
 	{
 		return "client1";

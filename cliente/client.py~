@@ -28,12 +28,18 @@ def challenge( domain , matrix , row , column, opponentId ):
     print domain + "/api/player/%i/challenge/" % ( opponentId )
     response = requests.post( domain + "/api/player/%i/challenge" % ( opponentId ) ,  data=json.dumps(body), headers={"content-type": "application/json"})
     print response
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 150d00201e372fda6bf4b31d034d75b9eeffae73
 """
     funcion que retorna la matriz del reto que hizo un jugador
 """
 def get_challenge( domain , pId ):
     r = requests.get( domain + "/api/board/%i/" % ( pId ))
+<<<<<<< HEAD
+=======
 
 """
     funcion que retorna la matriz del reto que hizo un jugador
@@ -41,13 +47,25 @@ def get_challenge( domain , pId ):
 def get_board( domain, pId ):
     r = requests.get( domain + "/api/board/%i/" % ( pId ))
     return json.loads( r.text )
+>>>>>>> 150d00201e372fda6bf4b31d034d75b9eeffae73
 
+"""
+    funcion que retorna la matriz del reto que hizo un jugador
+"""
+def get_board( domain, pId ):
+    r = requests.get( domain + "/api/board/%i/" % ( pId ))
+    return json.loads( r.text )
+    
 """
 esta funcion recibe  el pid del jugador actual y mueve la ficha en blanco a la izquerda
 """
 def move_left( domain , pId ):
     response = requests.post( domain + "/api/player/%i/board/move/left/" % ( pId ) )
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 150d00201e372fda6bf4b31d034d75b9eeffae73
 """
 esta funcion recibe  el pid del jugador actual y mueve la ficha en blanco a la derecha
 """
@@ -59,7 +77,11 @@ esta funcion recibe  el pid del jugador actual y mueve la ficha en blanco a la a
 """
 def move_up( domain , pId ):
     response = requests.post( domain + "/api/player/%i/board/move/up/" % ( pId ) )
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 150d00201e372fda6bf4b31d034d75b9eeffae73
 """
 esta funcion recibe  el pid del jugador actual y mueve la ficha en blanco hacia abajo
 """
@@ -97,4 +119,8 @@ def check( domain , pid):
     move_up( domain , pid )
     move_up( domain , pid )
     move_up( domain , pid )
+<<<<<<< HEAD
+    move_up( domain , pid ) 
+=======
     move_up( domain , pid )
+>>>>>>> 150d00201e372fda6bf4b31d034d75b9eeffae73
