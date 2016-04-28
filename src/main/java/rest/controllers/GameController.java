@@ -1,9 +1,7 @@
 package rest.controllers;
 
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +49,7 @@ public class GameController
 	@Autowired
 	public GameController(SimpMessagingTemplate template) {
 		this.game = new Game();  //QUE SE ACTAULIZAN AL ENTRAR.i
-		this.eventsQueue = new Hashtable();
+		this.eventsQueue = new Hashtable<Integer, Piece>();
 		this.updatingQueue = false;
 		this.reviewer = new Reviewer();
 		this.template = template;
@@ -60,7 +58,7 @@ public class GameController
 
 	public synchronized boolean canObtainLock(){
 		if( updatingQueue ){
-			updatingQueue = true;
+			//updatingQueue = true;
 			return true;
 		}
 		return false;
@@ -76,7 +74,7 @@ public class GameController
 	{
 		while( updatingQueue ){System.out.println("esperando para meter");};
 		updatingQueue = true;
-		System.out.println("METIOOO");
+		//System.out.println("METIOOO");
 		this.eventsQueue.put( PUSH_COUNT++, p );
 		updatingQueue = false;
 	}
@@ -305,59 +303,66 @@ public class GameController
 
 	}
 
-	public class Reviewer extends Thread{
+	public class Reviewer extends Thread
+	{
 
 		private boolean running;
-		private final static int UPDATE_TIME = 150;
-		public Reviewer(){
+		private final static int UPDATE_TIME = 250;
+		public Reviewer()
+		{
 	      this.running = true;
-	  }
+		}
 
 	    @Override
-	    public void run(){
-	      while ( this.running ){
-	        while ( !canObtainLock() )
-	        {
-	        	updatingQueue = true;
-	        	//System.out.println("esperando para sacar");
-	        	if( eventsQueue.size() > 0 )
-	        	{
-	        		Piece p = eventsQueue.get( PULL_COUNT );
-		        	eventsQueue.remove( PULL_COUNT++ );
-		        	int typeMovement = p.getColumn();
-		        	switch( typeMovement )
+	    public void run()
+	    {
+	    	while ( this.running )
+	    	{
+	    		while( !updatingQueue )//{System.out.println("esperando para sacar");};
+		    	{
+		    		//System.out.println("esperando para sacar");
+		        	if( eventsQueue.size() > 0 )
 		        	{
-			    	    case 0:
-			    	    	game.movePieceOnBoardToRight( p.getRow() );
-			    	        break;
-			    	    case 1:
-			    	    	game.movePieceOnBoardToLeft( p.getRow() );
-			    	        break;
-			    	    case 2:
-			    	    	game.movePieceOnBoardToUp( p.getRow() );
-			    	        break;
-			    	    case 3:
-			    	    	game.movePieceOnBoardToDown( p.getRow() );
-			    	        break;
+		        		updatingQueue = true;
+		        		Piece p = eventsQueue.get( PULL_COUNT );
+			        	eventsQueue.remove( PULL_COUNT++ );
+			        	updatingQueue = false;
+			        	int typeMovement = p.getColumn();
+			        	switch( typeMovement )
+			        	{
+				    	    case 0:
+				    	    	game.movePieceOnBoardToRight( p.getRow() );
+				    	        break;
+				    	    case 1:
+				    	    	game.movePieceOnBoardToLeft( p.getRow() );
+				    	        break;
+				    	    case 2:
+				    	    	game.movePieceOnBoardToUp( p.getRow() );
+				    	        break;
+				    	    case 3:
+				    	    	game.movePieceOnBoardToDown( p.getRow() );
+					    	    break;
+				        }
+				        sendGameUpdate( game );
 		        	}
-		        	sendGameUpdate( game );
-	        	}
-	        	updatingQueue = false;
-	        	try {
-					Thread.sleep( UPDATE_TIME );
-				}
-	        	catch (InterruptedException e) {
+			    	try 
+			        {
+						Thread.sleep( UPDATE_TIME );
+					}
+			        catch (InterruptedException e) 
+			        {
+						e.printStackTrace();
+					}
+			   }
+		       try 
+		       {
+		    	   Thread.sleep( UPDATE_TIME );
+		       }
+		        catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-	        }
-	        try {
-				Thread.sleep( UPDATE_TIME );
-			}
-	        catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-	      }
-	   }
+	    	}
+	    }
 
 	   public void stopReview()
 	   {

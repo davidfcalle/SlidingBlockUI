@@ -15,6 +15,17 @@ def generate_matrix( n ):
             matrix[i][j] = randint( 1, n )
     return matrix
 
+"""
+esta funcion recibe la matriz y la posicion x , y donde esta la posicion en blanco
+"""
+def generateBoard( domain , matrix , row , column ):
+    body = {
+        "currentState" : matrix,
+        "movements" : 0,
+        "blank" : { "row" : row , "column" : column }
+    }
+    response = requests.post( domain + "/api/board/new/",  data=json.dumps(body), headers={"content-type": "application/json"})
+    print response
 
 """
 esta funcion recibe la matriz y la posicion x , y donde esta la posicion en blanco

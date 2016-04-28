@@ -1,13 +1,15 @@
 import client as taquin
 
 def main():
-    matrix = taquin.generate_matrix( 5 )
+    matrixG = taquin.generate_matrix( 12 )
+    matrix = taquin.generate_matrix( 9 )
     domain = raw_input( "Ingrese el nombre de dominio: " )
     pid = raw_input("Ingrese el id del jugador: ")
     pid = int( pid )
     oponnent = raw_input( "Ingrese el id del oponente: ")
     oponnent = int( oponnent )
     name = raw_input( "Ingrese el nombre del jugador: " )
+    taquin.generateBoard( domain , matrixG , 1 , 1 )
     taquin.create_player( domain , pid , name )
     taquin.challenge( domain , matrix , 1 , 1 , oponnent )
     while True:
@@ -22,9 +24,10 @@ def main():
             taquin.move_down( domain , pid )
         elif direccion == "magic":
             taquin.check( domain , pid )
-        print "Tablero actual:"
-        print taquin.get_board( domain, pid )
-
+       	    taquin.check( domain , pid )
+       	    taquin.check( domain , pid )
+       	    taquin.check( domain , pid )
+       	    taquin.check( domain , pid )
 
 if __name__ == '__main__':
     main()
