@@ -1,35 +1,35 @@
 //--------------------------------------------------------------Variables---------------------------------------------------------------
 /**
- * @param TAG_ID_NAME: Variable estatica y constante que contiene 
- * 					   como se se debe nombrar el ID para referecniar 
+ * @param TAG_ID_NAME: Variable  que contiene
+ * 					   como se se debe nombrar el ID para referecniar
  * 					   el elemento HTML que muestra el nombre de cada jugador.
  */
 var TAG_ID_NAME = "NamePlayer"; // + No. de Jugador.
 
 /**
- * @param TAG_ID_POINTS: Variable estatica y constante que contiene 
- * 					     como se se debe nombrar el ID para referecniar 
+ * @param TAG_ID_POINTS: Variable que contiene
+ * 					     como se se debe nombrar el ID para referecniar
  * 					     el elemento HTML que muestra los puntos de cada jugador.
  */
 var TAG_ID_POINTS = "PointsPlayer"; // + No. de Jugador.
 
 /**
- * @param TAG_ID_MOVEMENTS: Variable estatica y constante que contiene 
- * 					        como se se debe nombrar el ID para referecniar 
+ * @param TAG_ID_MOVEMENTS: Variable  que contiene
+ * 					        como se se debe nombrar el ID para referecniar
  * 					        el elemento HTML que muestra los movimientos que ha hehco de cada jugador.
  */
 var TAG_ID_MOVEMENTS = "MovementsPlayer"; // + No. de Jugador.
 
 /**
- * @param TAG_ID_BOARD: Variable estatica y constante que contiene 
- * 					    como se se debe nombrar el ID para referecniar 
+ * @param TAG_ID_BOARD: Variable  que contiene
+ * 					    como se se debe nombrar el ID para referecniar
  * 					    el elmento HTML que muestra el tablero Taquin de cada jugador.
  */
 var TAG_ID_BOARD = "BoardPlayer"; // + No. de Jugador.
 
 /**
- * @param TAG_ID_BOARD: Variable estatica y constante que contiene 
- * 					    como se se debe nombrar el ID para referecniar 
+ * @param TAG_ID_BOARD: Variable que contiene
+ * 					    como se se debe nombrar el ID para referecniar
  * 					    el elmento HTML que muestra el tablero Taquin de cada jugador.
  */
 var TAG_ID_SIZE_BOARD = "SizeBoardPlayer"; // + No. de Jugador.
@@ -45,7 +45,6 @@ var numBoards = 2;
 var stompClient = null;
 
 
-
 //--------------------------------------------------------------Functions------------------------------------------------------------------
 
 /**--------------------------------------------------------------Comunication-------------------------------------------------------------*/
@@ -53,18 +52,15 @@ var stompClient = null;
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Establece la comunicacion via WebSocket en "/hello".
- * Suscribiendose al topico "/topics/game", donde 
+ * Suscribiendose al topico "/topics/game", donde
  * se notificaran las respectivas actualizaciones a la vista
  */
-function connect() 
-{
+function connect(){
 	var socket = new SockJS('/hello');
 	stompClient = Stomp.over(socket);
-	stompClient.connect({}, function(frame) 
-			{
-				stompClient.subscribe('/topics/game', function(game) 
-						{
-							var game = JSON.parse(game.body);
+	stompClient.connect({}, function(frame){
+				stompClient.subscribe('/topics/game', function(game){
+							var game = JSON.parse( game.body );
 							if( game.newSuscriber )
 								firstUpdate( game );
 							else
@@ -72,20 +68,20 @@ function connect()
 						});
 			});
 	//postForObject(null, "/api/game/new/", function(data) {});
-	
+
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Se encarga de desconectar el WebSocket.
  */
-function disconnect() 
+function disconnect()
 {
-	if (stompClient != null) 
+	if (stompClient != null)
 	{
 		stompClient.disconnect();
 	}
-	
+
 }
 
 /**--------------------------------------------------------------Creation-----------------------------------------------------------------*/
@@ -95,8 +91,7 @@ function disconnect()
  * Se encarga de construir y representar un tablero Taquin con elementos HTML.
  * @param player: Jugador que tiene el tabler Taquin a pintar.
  */
-function buildBoard( player )
-{
+function buildBoard( player ){
 	var size = player.board.currentState.length;
 	$("#SizeBoardPlayer"+player.id).html( "Size: " + size+" X "+size );
 	$("#BoardPlayer"+player.id+" .piece").remove();
@@ -111,27 +106,27 @@ function buildBoard( player )
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Se encarga de aregar 2 templates HTML para representar 
+ * Se encarga de aregar 2 templates HTML para representar
  * informacion del usuario y su tablero Taquin asociado.
  */
 function addBoardsTemplates( )
 {
 	var templateCopy = $( $( $("#board-template").html() ).clone() );
-	
+
 	//Se recuperan elementos HTML de cada jugador para cambiarles su ID (NamePlayer1 -> NamePlayerN).
 	var namePlayerField = templateCopy.find("#Name1");
 	var pointsPlayerField = templateCopy.find("#Points1");
 	var movementsPlayerField = templateCopy.find("#Movements1");
 	var boardPlayerField = templateCopy.find("#Board1");
 	var sizeBoardPlayerField = templateCopy.find("#Size1");
-	
+
 	numBoards++;
-	namePlayerField.attr( "id",TAG_ID_NAME+numBoards );
-	pointsPlayerField.attr( "id",TAG_ID_POINTS+numBoards );
-	movementsPlayerField.attr( "id", TAG_ID_MOVEMENTS+numBoards );
-	boardPlayerField.attr( "id", TAG_ID_BOARD+numBoards );
-	sizeBoardPlayerField.attr( "id", TAG_ID_SIZE_BOARD+numBoards );
-	
+	namePlayerField.attr( "id" , TAG_ID_NAME + numBoards );
+	pointsPlayerField.attr( "id" , TAG_ID_POINTS + numBoards );
+	movementsPlayerField.attr( "id" , TAG_ID_MOVEMENTS + numBoards );
+	boardPlayerField.attr( "id", TAG_ID_BOARD + numBoards );
+	sizeBoardPlayerField.attr( "id" , TAG_ID_SIZE_BOARD + numBoards );
+
 	//Se recuperan elementos HTML de cada jugador para cambiarles su ID (NamePlayer2 -> NamePlayerN).
 	namePlayerField = templateCopy.find("#Name2");
 	pointsPlayerField = templateCopy.find("#Point2");
@@ -140,13 +135,13 @@ function addBoardsTemplates( )
 	sizeBoardPlayerField = templateCopy.find("#Size2");
 
 	numBoards++;
-	namePlayerField.attr( "id",TAG_ID_NAME+numBoards );
-	pointsPlayerField.attr( "id",TAG_ID_POINTS+numBoards );
-	movementsPlayerField.attr( "id", TAG_ID_MOVEMENTS+numBoards );
-	boardPlayerField.attr( "id", TAG_ID_BOARD+numBoards );
-	sizeBoardPlayerField.attr( "id", TAG_ID_SIZE_BOARD+numBoards );
-	
-	$("#TableroPrincipal").append(templateCopy);
+	namePlayerField.attr( "id", TAG_ID_NAME + numBoards );
+	pointsPlayerField.attr( "id", TAG_ID_POINTS + numBoards );
+	movementsPlayerField.attr( "id", TAG_ID_MOVEMENTS + numBoards );
+	boardPlayerField.attr( "id", TAG_ID_BOARD + numBoards );
+	sizeBoardPlayerField.attr( "id", TAG_ID_SIZE_BOARD + numBoards );
+
+	$("#TableroPrincipal").append( templateCopy );
 }
 
 /**--------------------------------------------------------------ViewActualization-------------------------------------------------------*/
@@ -159,40 +154,35 @@ function addBoardsTemplates( )
  */
 function updateGame( game )
 {
-	var player = game.jugadores[game.idPlayerToUpd];
-	
-	if( game.jugadores.length > numBoards )
-	{
+	var player = game.jugadores[ game.idPlayerToUpd ];
+
+	if( game.jugadores.length > numBoards ){
 		addBoardsTemplates( );
 	}
-	
-	if( game.newPlayer )
-	{
+
+	if( game.newPlayer ){
 		updateUserInfo( player );
 	}
-	
-	if( game.newBoard )
-	{	
-		buildBoard( player );			
+
+	if( game.newBoard ){
+		buildBoard( player );
 		updateUserBoard( player );
 	}
-	
-	if( game.moveBoard )
-	{
-		movePieceOnBoard(player, game.typeMovement, game.piece_1_ToMove, game.piece_2_ToMove);
-	}	
+
+	if( game.moveBoard ){
+		movePieceOnBoard( player, game.typeMovement, game.piece_1_ToMove, game.piece_2_ToMove );
+	}
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Se encarga de actualizar la seccion de informacion 
+ * Se encarga de actualizar la seccion de informacion
  * de un jugador: Nombre, Puntos y Movimientos.
  * @param game: Informacion con la que se actualizara esta seccion.
  */
-function updateUserInfo( player )
-{
-	$("#NamePlayer"+player.id).html( "Player " + player.id +": " + player.name );
-	$("#PointsPlayer"+player.id).html( "Points: " + player.points );
+function updateUserInfo( player ){
+	$("#NamePlayer" + player.id ).html( "Player " + player.id +": " + player.name );
+	$("#PointsPlayer" + player.id ).html( "Points: " + player.points );
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -204,14 +194,11 @@ function updateUserBoard( player )
 {
 	var position = 0;
 	var blankPos = player.board.blank;
-	
+
 	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
-	for( var i = 0 ; i < player.board.currentState.length; i++)
-	{
-		for( var j = 0 ; j < player.board.currentState.length; j++)
-		{			
-			if( i == blankPos.row && j == blankPos.column )
-			{
+	for( var i = 0 ; i < player.board.currentState.length; i++){
+		for( var j = 0 ; j < player.board.currentState.length; j++){
+			if( i == blankPos.row && j == blankPos.column ){
 				$( $("#BoardPlayer"+player.id+" .piece")[position]).css( "background-color", "black" );
 				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "B" );
 			}
@@ -229,7 +216,7 @@ function updateUserBoard( player )
  * @param newPosition: Nueva posicion de la pieza blanca.
  */
 function updateBlankPosition(  currentPieceBlank,  newPieceBlank )
-{	
+{
 	currentPieceBlank.css( "background-color", ""  );
 	currentPieceBlank.css( { position: "" } );
 	currentPieceBlank.css( { top: "" } );
@@ -245,7 +232,7 @@ function updateBlankPosition(  currentPieceBlank,  newPieceBlank )
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 /**
- * Se encarga de actualizar la interfaz grafica por primera vez 
+ * Se encarga de actualizar la interfaz grafica por primera vez
  * que se suscribe al topico por si ya contiene informacion.
  * @param game: Estado actual del juego.
  */
@@ -253,20 +240,20 @@ function firstUpdate( game )
 {
 	var player;
 	var boardsTam = game.jugadores.length;
-	
+
 	for( var i = 0; i < boardsTam; i++ )
 	{
 		if( game.jugadores.length > numBoards )
 		{
 			addBoardsTemplates( );
 		}
-		
+
 		player = game.jugadores[i]
 		updateUserInfo( player );
-		buildBoard( player );			
+		buildBoard( player );
 		updateUserBoard( player, 0 );
 	}
-	
+
 	getForObject( null, "/api/game/endUpdate/", function(){} );
 }
 
@@ -281,13 +268,13 @@ function moveRightAndLeft( player, blankPiece, piece, right )
 	var animationSize = blankPiece.width();
 	var currentPos = blankPiece;
 	var	newPos = piece;
-	
-	if( !right )
+
+	if( ! right )
 	{
 		currentPos = piece;
 		newPos = blankPiece;
 	}
-		
+
 	blankPiece.animate( { right : "-="+animationSize }, 70, function(){ });
 	piece.animate( { right : "+="+animationSize }, 70, function(){ updateBlankPosition(  currentPos, newPos ); } );
 
@@ -302,15 +289,16 @@ function moveUpAndDown( player, blankPiece, piece, up )
 	var animationSize = blankPiece.height()
 	var currentPos = blankPiece;
 	var	newPos = piece;
-	
-	if( !up )
-	{
+
+	if( !up ){
 		currentPos = piece;
 		newPos = blankPiece;
 	}
-	
+
 	blankPiece.animate( { top : "+="+animationSize }, 70, function(){ });
-	piece.animate( { top : "-="+animationSize }, 70, function(){ updateBlankPosition(  currentPos, newPos ); });
+	piece.animate( { top : "-="+animationSize }, 70, function(){
+		updateBlankPosition(  currentPos, newPos );
+	});
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -319,7 +307,7 @@ function moveUpAndDown( player, blankPiece, piece, up )
  * Simulando el movimiento de la pieza blanca a la direccion indicada.
  * @param player: Jugador que posee el tablero donde se moera la pieza blanca.
  * @param typeMovement: Indica la direccion hacia donde se movera la pieza blanca.
- *		   0: Hacia la derecha. 
+ *		   0: Hacia la derecha.
  *		   1: Hacia la izquierda.
  *		   2: Hacia arriba.
  *		   3: Hacia abajo.
@@ -327,14 +315,13 @@ function moveUpAndDown( player, blankPiece, piece, up )
  * @param piece_2: Posicion de la pieza hacia donde se movera la pieza blanca.
  */
 function movePieceOnBoard( player, typeMovement, piece_1, piece_2 )
-{	
+{
 	var board = player.board;
-	var blankPiece = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_1] );
-	var blankPieceTo = $( $( "#BoardPlayer" + player.id + " .piece" )[piece_2] );
+	var blankPiece = $( $( "#BoardPlayer" + player.id + " .piece" )[ piece_1 ] );
+	var blankPieceTo = $( $( "#BoardPlayer" + player.id + " .piece" )[ piece_2 ] );
 	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
 
-	switch( typeMovement ) 
-	{
+	switch( typeMovement ){
 	    case 0:
 	        moveRightAndLeft( player, blankPiece, blankPieceTo, true );
 	        break;
