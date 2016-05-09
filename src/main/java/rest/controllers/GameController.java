@@ -307,7 +307,7 @@ public class GameController
 	{
 
 		private boolean running;
-		private final static int UPDATE_TIME = 250;
+		private final static int UPDATE_TIME = 350;
 		public Reviewer()
 		{
 	      this.running = true;
@@ -326,7 +326,6 @@ public class GameController
 		        		updatingQueue = true;
 		        		Piece p = eventsQueue.get( PULL_COUNT );
 			        	eventsQueue.remove( PULL_COUNT++ );
-			        	updatingQueue = false;
 			        	int typeMovement = p.getColumn();
 			        	switch( typeMovement )
 			        	{
@@ -344,6 +343,7 @@ public class GameController
 					    	    break;
 				        }
 				        sendGameUpdate( game );
+			        	updatingQueue = false;
 		        	}
 			    	try 
 			        {
@@ -358,7 +358,8 @@ public class GameController
 		       {
 		    	   Thread.sleep( UPDATE_TIME );
 		       }
-		        catch (InterruptedException e) {
+		        catch (InterruptedException e)
+		       {
 					e.printStackTrace();
 				}
 	    	}
