@@ -409,9 +409,6 @@ public class Game {
 		newPosBlank.setColumn( player.getBoard().getBlank().getColumn() );
 		newPosBlank.setRow( player.getBoard().getBlank().getRow() -1 );
 
-		System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
-		System.out.println( "NUEVO BLANCO C: " + newPosBlank.getColumn() + " F: " +newPosBlank.getRow());
-		
 		return this.movePieceOnBoard( player, newPosBlank );
 	}
 
@@ -460,10 +457,13 @@ public class Game {
 		this.piece_2_ToMove = ( size * blankNewPos.getRow() ) + blankNewPos.getColumn();
 
 		if( blankNewPos.getRow() < 0 || blankNewPos.getRow() >= size || blankNewPos.getColumn() < 0 || blankNewPos.getColumn() >= size )
-			return null;
-
-		if( blankActualPos.getRow() == blankNewPos.getRow() )
 		{
+			return null;
+		}
+		else if( blankActualPos.getRow() == blankNewPos.getRow() )
+		{
+			System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
+			System.out.println( "NUEVO BLANCO C: " + blankNewPos.getColumn() + " F: " +blankNewPos.getRow());
 			//Movio en columnas solo puede moverse a izquierda o derecha.
 
 			int columnsMoves = blankNewPos.getColumn() - blankActualPos.getColumn();
@@ -477,11 +477,14 @@ public class Game {
 			}
 			else
 			{
+				System.out.println("ESTE FUE INVALIDO: " + columnsMoves );
 				return null;
 			}
 		}
 		else if( blankActualPos.getColumn() == blankNewPos.getColumn() )
 		{
+			System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
+			System.out.println( "NUEVO BLANCO C: " + blankNewPos.getColumn() + " F: " +blankNewPos.getRow());
 			//Movio en filas solo puede moverse arriba o abajo.
 
 			int rowsMoves = blankNewPos.getRow() - blankActualPos.getRow();
@@ -495,21 +498,23 @@ public class Game {
 			}
 			else
 			{
+				System.out.println("ESTE FUE INVALIDO: " + rowsMoves );
 				return null;
 			}
 		}
 		else
 		{
-			return null;
+			//return null;
+			System.out.println("SIN OPCION");
 		}
 
 		/*Actualizar la tablero de juego del juagdor teniendo en cuenta hacia donde se movio la pieza en blanco*/
 		String board [][] = player.getBoard().getCurrentState();
-		System.out.println("BOARD ANTES:");
+		System.out.println("***********BOARD ANTES:*******");
 		player.print( board );
 		board[blankActualPos.getRow()][blankActualPos.getColumn()] = board[blankNewPos.getRow()][blankNewPos.getColumn()];
 		board[blankNewPos.getRow()][blankNewPos.getColumn()] = "B";
-		System.out.println("BOARD DESPUES*****:");
+		System.out.println("*********BOARD DESPUES*****:");
 		player.print( board );
 
 		player.getBoard().setCurrentState( board );
