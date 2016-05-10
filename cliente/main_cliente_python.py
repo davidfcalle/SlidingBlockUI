@@ -25,9 +25,6 @@ def main():
         elif direccion == "magic":
             taquin.check( domain , pid )
        	    taquin.check( domain , pid )
-       	    taquin.check( domain , pid )
-       	    taquin.check( domain , pid )
-       	    taquin.check( domain , pid )
 
 if __name__ == '__main__':
     main()

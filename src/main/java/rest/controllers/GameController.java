@@ -74,14 +74,14 @@ public class GameController
 	{
 		while( updatingQueue ){System.out.println("esperando para meter");};
 		updatingQueue = true;
-		//System.out.println("METIOOO");
+		////System.out.println("METIOOO");
 		this.eventsQueue.put( PUSH_COUNT++, p );
 		updatingQueue = false;
 	}
 
 	//---------------------------------------------------------------------------------------------------------------------------------------
-	public synchronized void sendGameUpdate( Game newGame ){
-		System.out.println("SACO TIPO MOV: "+ newGame.getTypeMovement() +"\n");
+	public synchronized void sendGameUpdate( Game newGame )
+	{
 		template.convertAndSend( TOPIC_URI , newGame );
 	}
 
@@ -108,7 +108,8 @@ public class GameController
 	 */
 	@CrossOrigin(origins="*")
 	@RequestMapping(value="/api/board/new", method = RequestMethod.POST)
-	public void startNewBoard( @RequestBody Board board ){
+	public void startNewBoard( @RequestBody Board board )
+	{
 		this.game.addBoard( board );
 		this.sendGameUpdate( game );
 	}
@@ -242,9 +243,12 @@ public class GameController
 	{
 		//Player p = this.game.movePieceOnBoardToRight( idPlayer );
 		Piece p = new Piece( idPlayer, 0 );
-		System.out.println("Metio DERECHA:\n");
-		if ( p != null )
+
+		if ( game.validateMovement(idPlayer, 0) )
+		{
 			this.addEvent( p );
+			//System.out.println("Metio DERECHA:\n");
+		}
 	}
 
 	/**
@@ -260,9 +264,12 @@ public class GameController
 	{
 		//Player p = this.game.movePieceOnBoardToLeft( idPlayer );
 		Piece p = new Piece( idPlayer, 1 );
-		System.out.println("Metio IZQUIERDA:\n");
-		if ( p != null )
+
+		if ( game.validateMovement(idPlayer, 1) )
+		{
 			this.addEvent( p );
+			//System.out.println("Metio IZQUIERDA:\n");
+		}
 	}
 
 	/**
@@ -278,10 +285,12 @@ public class GameController
 	{
 		//Player p = this.game.movePieceOnBoardToUp( idPlayer );
 		Piece p = new Piece( idPlayer, 2 );
-		System.out.println("Metio ARRIBA:\n");
-		if ( p != null )
-			this.addEvent( p );
 
+		if ( game.validateMovement(idPlayer, 2 ) )
+		{
+			this.addEvent( p );
+			//System.out.println("Metio ARRIBA:\n");
+		}
 	}
 
 	/**
@@ -297,9 +306,12 @@ public class GameController
 	{
 		//Player p = this.game.movePieceOnBoardToDown( idPlayer );
 		Piece p = new Piece( idPlayer, 3 );
-		System.out.println("Metio ABAJO:\n");
-		if ( p != null )
+
+		if ( game.validateMovement(idPlayer, 3 ) )
+		{
 			this.addEvent( p );
+			//System.out.println("Metio ABAJO:\n");
+		}
 
 	}
 
@@ -307,7 +319,7 @@ public class GameController
 	{
 
 		private boolean running;
-		private final static int UPDATE_TIME = 350;
+		private final static int UPDATE_TIME = 300;
 		public Reviewer()
 		{
 	      this.running = true;
@@ -318,7 +330,7 @@ public class GameController
 	    {
 	    	while ( this.running )
 	    	{
-	    		while( !updatingQueue )//{System.out.println("esperando para sacar");};
+	    		while( !updatingQueue )//{//System.out.println("esperando para sacar");};
 		    	{
 		    		//System.out.println("esperando para sacar");
 		        	if( eventsQueue.size() > 0 )
@@ -330,15 +342,19 @@ public class GameController
 			        	switch( typeMovement )
 			        	{
 				    	    case 0:
+				    	    	//System.out.println("SACO TIPO MOV: DERECHA");
 				    	    	game.movePieceOnBoardToRight( p.getRow() );
 				    	        break;
 				    	    case 1:
+			        			//System.out.println("SACO TIPO MOV: IZQUIERDA");
 				    	    	game.movePieceOnBoardToLeft( p.getRow() );
 				    	        break;
 				    	    case 2:
+			        			//System.out.println("SACO TIPO MOV: ARRIBA");
 				    	    	game.movePieceOnBoardToUp( p.getRow() );
 				    	        break;
 				    	    case 3:
+			        			//System.out.println("SACO TIPO MOV: ABAJO");
 				    	    	game.movePieceOnBoardToDown( p.getRow() );
 					    	    break;
 				        }
