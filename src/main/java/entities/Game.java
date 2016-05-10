@@ -342,7 +342,55 @@ public class Game {
 
 
 /**--------------------------------------------------------------Movement---------------------------------------------------------------*/
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Obtiene el jugador cuyo id es @idPlayerque, quien posee
+	 * el tablero al que se le movera la pieza blanca. Para esto
+	 * crea newPosBlank un objeto Piece con el que se  simula
+	 * el movimiento de la pieza blanca hacia la derecha.
+	 * Luego se apoya en el metodo movePieceOnBoard para mover
+	 * la pieza blanca a la nueva posicion representada en newPosBlank.
+	 * @param idPlayer: Jugador que tiene el tablero donde se moveran las piezas.
+	 * @return player: Jugador con el tablero actualizado luego de mover la pieza blanca.
+	 */
+	public boolean validateMovement( Integer idPlayer, Integer direction )
+	{
+		Integer row = this.players.get( idPlayer - 1 ).getBoard().getBlank().getRow();
+		Integer column = this.players.get( idPlayer - 1 ).getBoard().getBlank().getColumn();
+		int size = this.players.get( idPlayer - 1 ).getBoard().getCurrentState().length;
 
+		int typeMovement = direction;
+	//	boolean validMovement = true;
+    	switch( typeMovement )
+    	{
+    	    case 0:
+    	    	column++;
+    	        break;
+    	    case 1:
+    	    	column--;
+    	        break;
+    	    case 2:
+    	    	row--;
+    	        break;
+    	    case 3:
+    	    	row++;
+	    	    break;
+        }
+		
+    	System.out.println( "ROW: " + row + "COLUMN: " + column );
+		if( row < 0 || row >= size || column < 0 || column >= size )
+		{
+			System.out.println("MALOOOO");
+			return false;
+		}
+		else
+		{
+			System.out.println("BUENOOO");
+			return true;
+		}
+	}
+	
+	
 	//-------------------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Obtiene el jugador cuyo id es @idPlayerque, quien posee
@@ -360,9 +408,6 @@ public class Game {
 		Piece newPosBlank = new Piece();
 		newPosBlank.setColumn( player.getBoard().getBlank().getColumn() + 1 );
 		newPosBlank.setRow( player.getBoard().getBlank().getRow() );
-
-		System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
-		System.out.println( "NUEVO BLANCO C: " + newPosBlank.getColumn() + " F: " +newPosBlank.getRow());
 
 		return this.movePieceOnBoard( player, newPosBlank );
 	}
@@ -384,9 +429,6 @@ public class Game {
 		Piece newPosBlank = new Piece();
 		newPosBlank.setColumn( player.getBoard().getBlank().getColumn() - 1 );
 		newPosBlank.setRow( player.getBoard().getBlank().getRow() );
-
-		System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
-		System.out.println( "NUEVO BLANCO C: " + newPosBlank.getColumn() + " F: " +newPosBlank.getRow());
 		
 		return this.movePieceOnBoard( player, newPosBlank );
 	}
@@ -429,10 +471,7 @@ public class Game {
 		Piece newPosBlank = new Piece();
 		newPosBlank.setColumn( player.getBoard().getBlank().getColumn() );
 		newPosBlank.setRow( player.getBoard().getBlank().getRow() + 1 );
-
-		System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
-		System.out.println( "NUEVO BLANCO C: " + newPosBlank.getColumn() + " F: " +newPosBlank.getRow());
-		
+	
 		return this.movePieceOnBoard( player, newPosBlank );
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------------
@@ -456,8 +495,10 @@ public class Game {
 		this.piece_1_ToMove = ( size * blankActualPos.getRow() ) + blankActualPos.getColumn();
 		this.piece_2_ToMove = ( size * blankNewPos.getRow() ) + blankNewPos.getColumn();
 
+		System.out.println("Va a mover esta: " + this.piece_1_ToMove + " y esta: " + this.piece_2_ToMove );
 		if( blankNewPos.getRow() < 0 || blankNewPos.getRow() >= size || blankNewPos.getColumn() < 0 || blankNewPos.getColumn() >= size )
 		{
+			System.out.println("CHAAO");
 			return null;
 		}
 		else if( blankActualPos.getRow() == blankNewPos.getRow() )
@@ -510,7 +551,7 @@ public class Game {
 
 		/*Actualizar la tablero de juego del juagdor teniendo en cuenta hacia donde se movio la pieza en blanco*/
 		String board [][] = player.getBoard().getCurrentState();
-		System.out.println("***********BOARD ANTES:*******");
+		System.out.println("*********BOARD ANTES:*******");
 		player.print( board );
 		board[blankActualPos.getRow()][blankActualPos.getColumn()] = board[blankNewPos.getRow()][blankNewPos.getColumn()];
 		board[blankNewPos.getRow()][blankNewPos.getColumn()] = "B";

@@ -217,6 +217,7 @@ function updateUserBoard( player )
  */
 function updateBlankPosition(  currentPieceBlank,  newPieceBlank )
 {
+	//console.log( "***********Actualiza: " +currentPieceBlank.text() + " y " + newPieceBlank.text());
 	currentPieceBlank.css( "background-color", ""  );
 	currentPieceBlank.css( { position: "" } );
 	currentPieceBlank.css( { top: "" } );
@@ -228,6 +229,7 @@ function updateBlankPosition(  currentPieceBlank,  newPieceBlank )
 	newPieceBlank.css( { top: "" } );
 	newPieceBlank.css( { right: "" } );
 	newPieceBlank.text( "B" );
+	//console.log("ACT");
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -269,14 +271,14 @@ function moveRightAndLeft( player, blankPiece, piece, right )
 	var currentPos = blankPiece;
 	var	newPos = piece;
 
-	if( ! right )
+	if( !right )
 	{
 		currentPos = piece;
 		newPos = blankPiece;
 	}
 
-	blankPiece.animate( { right : "-="+animationSize }, 70, function(){ });
-	piece.animate( { right : "+="+animationSize }, 70, function(){ updateBlankPosition(  currentPos, newPos ); } );
+	blankPiece.animate( { right : "-="+animationSize }, 90, function(){ });
+	piece.animate( { right : "+="+animationSize }, 90, function(){ } );
 
 }
 
@@ -295,10 +297,10 @@ function moveUpAndDown( player, blankPiece, piece, up )
 		newPos = blankPiece;
 	}
 
-	blankPiece.animate( { top : "+="+animationSize }, 70, function(){ });
-	piece.animate( { top : "-="+animationSize }, 70, function(){
-		updateBlankPosition(  currentPos, newPos );
+	blankPiece.animate( { top : "+="+animationSize }, 90, function(){ });
+	piece.animate( { top : "-="+animationSize }, 90, function(){
 	});
+	//console.log("ANIMOO");
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -324,15 +326,19 @@ function movePieceOnBoard( player, typeMovement, piece_1, piece_2 )
 	switch( typeMovement ){
 	    case 0:
 	        moveRightAndLeft( player, blankPiece, blankPieceTo, true );
+	        updateBlankPosition(  blankPiece, blankPieceTo );
 	        break;
 	    case 1:
 	    	moveRightAndLeft( player, blankPieceTo, blankPiece, false );
+	    	updateBlankPosition(  blankPiece, blankPieceTo );
 	        break;
 	    case 2:
 	        moveUpAndDown( player, blankPiece, blankPieceTo, true );
+	        updateBlankPosition(  blankPiece, blankPieceTo );
 	        break;
 	    case 3:
 	    	moveUpAndDown( player, blankPieceTo, blankPiece, false );
+	    	updateBlankPosition(  blankPiece, blankPieceTo );
 	        break;
 	}
 }
