@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.concurrent.ConcurrentHashMap;
 
 import entities.Board;
 import entities.Game;
@@ -49,7 +50,8 @@ public class GameController
 	@Autowired
 	public GameController(SimpMessagingTemplate template) {
 		this.game = new Game();  //QUE SE ACTAULIZAN AL ENTRAR.i
-		this.eventsQueue = new Hashtable<Integer, Piece>();
+		this.eventsQueue =  new ConcurrentHashMap<>();       
+        // new Hashtable<Integer, Piece>();
 		this.updatingQueue = false;
 		this.reviewer = new Reviewer();
 		this.template = template;
@@ -72,7 +74,7 @@ public class GameController
 	 */
 	public synchronized void addEvent( Piece p )
 	{
-		this.eventsQueue.put( PUSH_COUNT++, p );
+		this.eventsQueue.put( PUSH_COUNT++ , p );
 	}
 
 	//---------------------------------------------------------------------------------------------------------------------------------------
@@ -191,7 +193,7 @@ public class GameController
 	 * 			  Null si el jugador con idPlayer no existe.
 	 */
 	@CrossOrigin(origins="*")
-	@RequestMapping(value="/api/player/{idPlayer}/challenge", method = RequestMethod.POST)
+	@RequestMapping(value="/api/player/{idPlayer}/challenge", method = RequestMethod.POST )
 	public Player assignBoardToPlayer( @PathVariable Integer idPlayer, @RequestBody Board board) {
 		Player p = this.game.assignBoardToPlayer( idPlayer, board );
 
@@ -240,11 +242,11 @@ public class GameController
 		//Player p = this.game.movePieceOnBoardToRight( idPlayer );
 		Piece p = new Piece( idPlayer, 0 );
 
-		if ( game.validateMovement(idPlayer, 0) )
-		{
+		//if ( game.validateMovement( idPlayer, 0 ) )
+		//{
 			this.addEvent( p );
 			//System.out.println("Metio DERECHA:\n");
-		}
+		//}
 	}
 
 	/**
@@ -261,11 +263,11 @@ public class GameController
 		//Player p = this.game.movePieceOnBoardToLeft( idPlayer );
 		Piece p = new Piece( idPlayer, 1 );
 
-		if ( game.validateMovement(idPlayer, 1) )
-		{
+		//if ( game.validateMovement(idPlayer, 1) )
+		//{
 			this.addEvent( p );
 			//System.out.println("Metio IZQUIERDA:\n");
-		}
+		//}
 	}
 
 	/**
@@ -282,11 +284,11 @@ public class GameController
 		//Player p = this.game.movePieceOnBoardToUp( idPlayer );
 		Piece p = new Piece( idPlayer, 2 );
 
-		if ( game.validateMovement(idPlayer, 2 ) )
-		{
+		//if ( game.validateMovement(idPlayer, 2 ) )
+		//{
 			this.addEvent( p );
 			//System.out.println("Metio ARRIBA:\n");
-		}
+		//}
 	}
 
 	/**
@@ -303,11 +305,11 @@ public class GameController
 		//Player p = this.game.movePieceOnBoardToDown( idPlayer );
 		Piece p = new Piece( idPlayer, 3 );
 
-		if ( game.validateMovement(idPlayer, 3 ) )
-		{
+		//if ( game.validateMovement(idPlayer, 3 ) )
+		//{
 			this.addEvent( p );
 			//System.out.println("Metio ABAJO:\n");
-		}
+		//}
 
 	}
 
