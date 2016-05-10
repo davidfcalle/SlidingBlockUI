@@ -196,8 +196,13 @@ function updateUserBoard( player )
 	var blankPos = player.board.blank;
 
 	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
+
 	for( var i = 0 ; i < player.board.currentState.length; i++){
 		for( var j = 0 ; j < player.board.currentState.length; j++){
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css( { position: "" } );
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css( { top: "" } );
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css( { right: "" } );
+			$( $("#BoardPlayer"+player.id+" .piece")[position]).css( "background-color", "" );
 			if( i == blankPos.row && j == blankPos.column ){
 				$( $("#BoardPlayer"+player.id+" .piece")[position]).css( "background-color", "black" );
 				$( $("#BoardPlayer"+player.id+" .piece")[position]).text( "B" );
@@ -323,24 +328,25 @@ function movePieceOnBoard( player, typeMovement, piece_1, piece_2 )
 	var blankPieceTo = $( $( "#BoardPlayer" + player.id + " .piece" )[ piece_2 ] );
 	$("#MovementsPlayer" + player.id ).text( "Movements: " + player.board.movements );
 
-	switch( typeMovement ){
+	/*switch( typeMovement ){
 	    case 0:
-	        moveRightAndLeft( player, blankPiece, blankPieceTo, true );
+	        //moveRightAndLeft( player, blankPiece, blankPieceTo, true );
 	        updateBlankPosition(  blankPiece, blankPieceTo );
 	        break;
 	    case 1:
-	    	moveRightAndLeft( player, blankPieceTo, blankPiece, false );
+	    	//moveRightAndLeft( player, blankPieceTo, blankPiece, false );
 	    	updateBlankPosition(  blankPiece, blankPieceTo );
 	        break;
 	    case 2:
-	        moveUpAndDown( player, blankPiece, blankPieceTo, true );
+	       // moveUpAndDown( player, blankPiece, blankPieceTo, true );
 	        updateBlankPosition(  blankPiece, blankPieceTo );
 	        break;
 	    case 3:
-	    	moveUpAndDown( player, blankPieceTo, blankPiece, false );
+	    	//moveUpAndDown( player, blankPieceTo, blankPiece, false );
 	    	updateBlankPosition(  blankPiece, blankPieceTo );
 	        break;
-	}
+	}*/
+	updateUserBoard( player );
 }
 
 connect();

@@ -315,7 +315,7 @@ public class GameController
 	{
 
 		private boolean running;
-		private final static int UPDATE_TIME = 300;
+		private final static int UPDATE_TIME = 400;
 		public Reviewer()
 		{
 	      this.running = true;
