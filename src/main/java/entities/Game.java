@@ -377,15 +377,15 @@ public class Game {
 	    	    break;
         }
 		
-    	System.out.println( "ROW: " + row + "COLUMN: " + column );
+    	//System.out.println( "ROW: " + row + "COLUMN: " + column );
 		if( row < 0 || row >= size || column < 0 || column >= size )
 		{
-			System.out.println("MALOOOO");
+			//System.out.println("MALOOOO");
 			return false;
 		}
 		else
 		{
-			System.out.println("BUENOOO");
+			//System.out.println("BUENOOO");
 			return true;
 		}
 	}
@@ -495,16 +495,16 @@ public class Game {
 		this.piece_1_ToMove = ( size * blankActualPos.getRow() ) + blankActualPos.getColumn();
 		this.piece_2_ToMove = ( size * blankNewPos.getRow() ) + blankNewPos.getColumn();
 
-		System.out.println("Va a mover esta: " + this.piece_1_ToMove + " y esta: " + this.piece_2_ToMove );
+		//System.out.println("Va a mover esta: " + this.piece_1_ToMove + " y esta: " + this.piece_2_ToMove );
 		if( blankNewPos.getRow() < 0 || blankNewPos.getRow() >= size || blankNewPos.getColumn() < 0 || blankNewPos.getColumn() >= size )
 		{
-			System.out.println("CHAAO");
+			//System.out.println("CHAAO");
 			return null;
 		}
 		else if( blankActualPos.getRow() == blankNewPos.getRow() )
 		{
-			System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
-			System.out.println( "NUEVO BLANCO C: " + blankNewPos.getColumn() + " F: " +blankNewPos.getRow());
+			//System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
+			//System.out.println( "NUEVO BLANCO C: " + blankNewPos.getColumn() + " F: " +blankNewPos.getRow());
 			//Movio en columnas solo puede moverse a izquierda o derecha.
 
 			int columnsMoves = blankNewPos.getColumn() - blankActualPos.getColumn();
@@ -518,14 +518,14 @@ public class Game {
 			}
 			else
 			{
-				System.out.println("ESTE FUE INVALIDO: " + columnsMoves );
+				//System.out.println("ESTE FUE INVALIDO: " + columnsMoves );
 				return null;
 			}
 		}
 		else if( blankActualPos.getColumn() == blankNewPos.getColumn() )
 		{
-			System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
-			System.out.println( "NUEVO BLANCO C: " + blankNewPos.getColumn() + " F: " +blankNewPos.getRow());
+			//System.out.println( "ANTERIOR BLANCO C: " + player.getBoard().getBlank().getColumn() + " F: " +player.getBoard().getBlank().getRow());
+			//System.out.println( "NUEVO BLANCO C: " + blankNewPos.getColumn() + " F: " +blankNewPos.getRow());
 			//Movio en filas solo puede moverse arriba o abajo.
 
 			int rowsMoves = blankNewPos.getRow() - blankActualPos.getRow();
@@ -539,23 +539,23 @@ public class Game {
 			}
 			else
 			{
-				System.out.println("ESTE FUE INVALIDO: " + rowsMoves );
+				//System.out.println("ESTE FUE INVALIDO: " + rowsMoves );
 				return null;
 			}
 		}
 		else
 		{
 			//return null;
-			System.out.println("SIN OPCION");
+			//System.out.println("SIN OPCION");
 		}
 
 		/*Actualizar la tablero de juego del juagdor teniendo en cuenta hacia donde se movio la pieza en blanco*/
 		String board [][] = player.getBoard().getCurrentState();
-		System.out.println("*********BOARD ANTES:*******");
+		//System.out.println("*********BOARD ANTES:*******");
 		player.print( board );
 		board[blankActualPos.getRow()][blankActualPos.getColumn()] = board[blankNewPos.getRow()][blankNewPos.getColumn()];
 		board[blankNewPos.getRow()][blankNewPos.getColumn()] = "B";
-		System.out.println("*********BOARD DESPUES*****:");
+		//System.out.println("*********BOARD DESPUES*****:");
 		player.print( board );
 
 		player.getBoard().setCurrentState( board );

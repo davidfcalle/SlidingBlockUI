@@ -72,11 +72,7 @@ public class GameController
 	 */
 	public synchronized void addEvent( Piece p )
 	{
-		while( updatingQueue ){System.out.println("esperando para meter");};
-		updatingQueue = true;
-		////System.out.println("METIOOO");
 		this.eventsQueue.put( PUSH_COUNT++, p );
-		updatingQueue = false;
 	}
 
 	//---------------------------------------------------------------------------------------------------------------------------------------
