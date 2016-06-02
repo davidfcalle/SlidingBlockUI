@@ -1,0 +1,73 @@
+.btn 
+{
+	position:relative;
+	left: 350px;
+	bottom: 150px;
+}
+
+.competition
+{
+	max-width: 100%;
+	min-height: 60vh;
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+	display: flex;
+	flex-wrap:  wrap ;
+	justify-content: center;
+}
+
+.pìece{
+	min-height: 17vh;
+	margin: 0px;
+    width: 33.33%;
+
+}
+
+.piece.center-align
+{
+	font-size: 2rem;
+	background-color: #03A9F4;
+	border-style: solid ;
+    border-width: 3.5px;
+    border-color: black;
+}
+
+.row
+{
+	margin: 0px;
+}
+
+footer 
+{
+	margin : 0px;
+}
+
+.player-board
+{
+	width : 50%;
+}
+
+.taquin
+{
+	display: flex;
+	flex-wrap:  wrap ;
+	justify-content: center;
+}
+
+.row .col.s5
+{
+	margin-left:0px;
+}
+
+table, th, td 
+{
+   border: 1px solid black;
+   text-align: center;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    height: 50px;
+}

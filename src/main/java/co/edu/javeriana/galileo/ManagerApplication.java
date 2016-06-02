@@ -1,8 +1,6 @@
 package co.edu.javeriana.galileo;
 
-import java.util.Arrays;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -11,27 +9,18 @@ import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 
-import entities.Board;
-import entities.Person;
-import repositories.BoardRepository;
-import repositories.PersonRepository;
-
-@EnableWebMvc
 @SpringBootApplication
 @EnableJpaRepositories(basePackages="repositories")
 @EntityScan(basePackages={"entities"})
@@ -47,34 +36,13 @@ public class ManagerApplication {
 /**
  * Este componente se ejecuta como una aplicaciòn de línea de comandos una vez corre el servidor
  * @author David
- * Es un ejemplo de còmo usar la injecciòn de los respositorios
+ * Es un ejemplo de còmo usar la injeccion de los respositorios
  *
  */
 @Component
-class CommandLineRun implements  CommandLineRunner{
-
-	@Autowired
-	private PersonRepository personRepository;
-	
-	@Autowired
-	private BoardRepository boardRepository;
-	
+class CommandLineRun implements  CommandLineRunner{	
 	@Override
 	public void run(String... args) throws Exception {
-		/*
-		Arrays.asList("Alfredo", "Bermeo", "Juan Pablo", "Maria Jose", "Fabian").forEach( name ->{
-			Person newPerson = new Person(null, name, name, 10);
-			personRepository.save(newPerson);
-			Arrays.asList("b1", "b2", "b3", "b4").forEach( b ->{
-				Board newBoard = new Board();
-				newBoard.setMac(b);
-				newBoard.setMac(b);
-				newBoard.setUser(newPerson);
-				boardRepository.save(newBoard);
-			});
-			
-		});
-		*/
 	}
 }
 
@@ -86,7 +54,6 @@ class RestMVCConfiguration{
 			@Override
 			public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config){
 				config.setBasePath("/api");
-				config.exposeIdsFor(Person.class);
 			}
 		};
 	}
@@ -131,24 +98,5 @@ class StaticResourceConfiguration extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/static/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS).setCachePeriod(0);
 	}
+	
 }
-
-/**
- * Clase encargada de la configuración de spring MVC
- *
- * @author David Calle
- * @version 1.0
- * @since 2015-12-14
- */
-@EnableWebMvc
-@ComponentScan("org.springframework.security.samples.mvc")
-@Configuration
-@Component
-class WebMvcConfiguration extends WebMvcConfigurerAdapter {
-
-	@Override
-	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-	}
-}
-

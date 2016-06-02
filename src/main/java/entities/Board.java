@@ -1,93 +1,131 @@
 package entities;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Random;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
-@Entity
-public class Board {
-	@Id
-	@GeneratedValue
-	private Long id; 
-	private String mac;
-	private String name;
-	@OneToMany(mappedBy="board")
-	private List<BoardxFunction> boardxFunction;
-	@OneToMany(mappedBy="board")
-	private List<Session> sessions;
-	@ManyToOne
-	private Person user;
+/**
+ * @author David Suarez
+ *
+ */
+public class Board 
+{
+
+/**--------------------------------------------------------------Attributtes--------------------------------------------------------------*/
 	
-	public Person getUser() {
-		return user;
-	}
+	/**
+	 * currentState: Valores del tablero y su organizacion.
+	 */
+	private String[][] currentState;
+		
+	/**
+	 * movements: Cantidad de movimientos que se han ejecutado sobre el tablero.
+	 */
+	private Integer movements;
+	
+	
+	/**
+	 * blank: Representa la ubicacion de la pieza blanca en el tablero.
+	 */
+	private Piece blank;
+	
+	
+/**--------------------------------------------------------------Creation--------------------------------------------------------------*/	
 
-
-	public void setUser(Person user) {
-		this.user = user;
-	}
-
-
-	public List<Session> getSessions() {
-		return sessions;
-	}
-
-
-	public void setSessions(List<Session> sessions) {
-		this.sessions = sessions;
-	}
-
-
-	public Board() {
+	/**
+	 * Constructor.
+	 */
+	public Board() 
+	{
 		super();
 	}
 
-
-	public Long getId() {
-		return id;
+	
+/**--------------------------------------------------------------Getter&Setter----------------------------------------------------------*/	
+	
+	/**
+	 * @return the currentState
+	 */
+	public String[][] getCurrentState() 
+	{
+		return currentState;
 	}
 
-
-	public void setId(Long id) {
-		this.id = id;
+	/**
+	 * @param currentState the currentState to set
+	 */
+	public void setCurrentState(String[][] currentState) 
+	{
+		this.currentState = currentState;
 	}
 
-
-	public String getMac() {
-		return mac;
+	/**
+	 * @return the movements
+	 */
+	public Integer getMovements() 
+	{
+		return movements;
 	}
 
-
-	public void setMac(String mac) {
-		this.mac = mac;
+	/**
+	 * @param movements the movements to set
+	 */
+	public void setMovements(Integer movements) 
+	{
+		this.movements = movements;
 	}
 
-
-	public String getName() {
-		return name;
+	/**
+	 * @return the blank
+	 */
+	public Piece getBlank() 
+	{
+		return blank;
 	}
 
-
-	public void setName(String name) {
-		this.name = name;
+	/**
+	 * @param blank the blank to set
+	 */
+	public void setBlank(Piece blank) 
+	{
+		this.blank = blank;
 	}
 
-
-	public List<BoardxFunction> getBoardxFunction() {
-		return boardxFunction;
-	}
-
-
-	public void setBoardxFunction(List<BoardxFunction> boardxFunction) {
-		this.boardxFunction = boardxFunction;
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Board [currentState=" + Arrays.toString(currentState) + ", movements=" + movements + ", blank=" + blank
+				+ "]";
 	}
 	
+/**-----------------------------------------------------------------------------------------------------------------------------------*/
 	
-
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Incrementa en 1 la cantidad de movimientos ejecutados sobre el tablero.
+	 */
+	public void addMovement()
+	{
+		movements++;
+	}
 	
+	//-------------------------------------------------------------------------------------------------------------------------------------
+	/**
+	 * Asigna valores aleatorios a la matriz que representa el tablero Taquin.
+	 */
+	public void randomizeBoard()
+	{	
+		for (int i = 0; i < this.currentState.length ; i++)
+		{
+			for (int j = 0; j < this.currentState.length; j++) 
+			{
+				Random rnumber = new Random();
+				int number	 = rnumber.nextInt( this.currentState.length ) + 1; 
+				currentState[i][j] = number+"";
+			}
+		}
 	
+	}
 }
